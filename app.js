@@ -10,6 +10,9 @@ const logger=require("morgan")
 
 const hbs = require('express-handlebars')
 
+const adminRouter=require('./routes/admin');
+const usersRouter=require('./routes/users')
+
 //express app
 const app = express();
 
@@ -23,12 +26,9 @@ mongoose.connect(dbURI)
   .catch((err) => console.log(err))
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 // express-handlebars view engine setup
-
-
 app.engine('hbs', hbs.engine({
   extname: 'hbs',
   defaultLayout: 'layout',
@@ -54,12 +54,15 @@ app.use(session({
 
 app.use(nocache());
 
+// middleware & static files
+app.use(express.static('public'));
 app.use(logger('dev'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use('/',usersRouter);
+app.use('/admin',adminRouter)
 
 //404 page
 app.use((req,res)=>{
