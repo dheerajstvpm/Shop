@@ -6,23 +6,27 @@ const nocache = require("nocache");
 
 const mongoose = require("mongoose")
 
-const logger=require("morgan")
+const logger = require("morgan")
 
 const hbs = require('express-handlebars')
 
-const adminRouter=require('./routes/admin');
-const usersRouter=require('./routes/users')
+const adminRouter = require('./routes/admin');
+const usersRouter = require('./routes/users')
 
 //express app
 const app = express();
 
-//listening for requests
-app.listen(3000);
+
+
 
 //connect to MongoDB
 const dbURI = "mongodb://0.0.0.0:27017/Shop"
 mongoose.connect(dbURI)
-  .then(() => console.log('connected to db'))
+  .then(() => {
+    console.log('connected to db')
+    //listening for requests
+    app.listen(3000);
+  })
   .catch((err) => console.log(err))
 
 // view engine setup
@@ -37,7 +41,7 @@ app.engine('hbs', hbs.engine({
     allowProtoMethodsByDefault: true
   },
   helpers: {
-    addOne:function (value, options) {
+    addOne: function (value, options) {
       return parseInt(value) + 1;
     }
   }
@@ -61,10 +65,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use('/',usersRouter);
-app.use('/admin',adminRouter)
+app.use('/', usersRouter);
+app.use('/admin', adminRouter)
 
 //404 page
-app.use((req,res)=>{
-    res.status(404).render('error')
+app.use((req, res) => {
+  res.status(404).render('error')
 })
