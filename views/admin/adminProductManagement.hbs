@@ -1,13 +1,13 @@
 <div class="container">
 
-    <div class="d-flex justify-content-between mb-3">
+    <div class="d-flex justify-content-between my-3">
         <h1 class="">Product Management</h1>
         <form action="/admin/adminLogout" method="post" class="">
             <button type="submit" class="btn btn-primary">Logout</button>
         </form>
     </div>
 
-    <form action="/admin/adminSearch" method="post" class="d-flex mb-3">
+    <form action="/admin/adminProductSearch" method="post" class="d-flex mb-3">
         <div>
             <button type="submit" class="btn btn-primary me-1">Search</button>
         </div>
@@ -41,12 +41,12 @@
                     <td>{{this.category}}</td>  
                     <td>{{this.price}}</td>
                     <td>
-                        <a href="/admin/edit/{{this._id}}" class="btn btn-danger"
-                            onclick="return confirm('Are you sure, you want to edit details of user :{{this.username}}?')">edit</a>
+                        <a href="/admin/editProduct/{{this._id}}" class="btn btn-danger"
+                            onclick="return confirm('Are you sure, you want to edit details of product :{{this.productName}}?')">edit</a>
                     </td>
                     <td>
-                        <a href="/admin/delete/{{this._id}}" class="btn btn-danger"
-                            onclick="return confirm('Are you sure, you want to delete user :{{this.username}}?')">delete</a>
+                        <a href="/admin/deleteProduct/{{this._id}}" class="btn btn-danger"
+                            onclick="return confirm('Are you sure, you want to delete product :{{this.productName}}?')">delete</a>
                     </td>
                 </tr>
                 {{/each}}
