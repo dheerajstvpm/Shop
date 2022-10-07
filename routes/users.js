@@ -34,7 +34,12 @@ router.get('/product', (req, res) => {
 
 router.get('/login', (req, res) => {
     session = req.session;
-    if (session.userId) {
+    if (session.userstatus==='blocked') {
+        console.log(session)
+        console.log('5')
+        req.session.destroy();
+        res.render('users/login', { title: 'Login', passwordMessage: 'Username has been blocked' })
+    } else if (session.userId) {
         console.log(session)
         res.redirect('/')
     } else if (session.incorrectId) {
@@ -143,13 +148,14 @@ router.post('/login', function (req, res) {
                     if (bcryptResult) {
                         session = req.session;
                         session.userid = temp.username;
-                        res.redirect('/');
+                        session.userStatus=temp.status;
+                        res.redirect('/login');
                     } else {
                         session = req.session
                         session.incorrectPwd = true;
                         console.log(session)
                         console.log('1')
-                        res.redirect('/login/');
+                        res.redirect('/login');
                         // res.render('users/login', { title: 'Login', passwordMessage: 'Incorrect password' })
                     }
                 })
