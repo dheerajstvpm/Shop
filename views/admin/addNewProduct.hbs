@@ -1,0 +1,67 @@
+<h1>Add New Product</h1>
+
+<form action="/admin/addNewProduct" method="post">
+    <div class="row my-3">
+        <label for="product" class="col-md-1 col-form-label">Product Name</label>
+        <div class="col-md-3">
+            <input type="text" name="productName" class="form-control" id="product">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{productNameMsg}}
+        </div>
+    </div>
+    <div class="row my-3">
+        <label for="description" class="col-md-1 col-form-label">Description</label>
+        <div class="col-md-3">
+            <input type="text" name="description" class="form-control" id="description">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{descriptionMsg}}
+        </div>
+    </div>
+    <div class="row my-3">
+        <label for="price" class="col-md-1 col-form-label">Price</label>
+        <div class="col-md-3">
+            <input type="text" name="price" class="form-control" id="price">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{priceMsg}}
+        </div>
+    </div>
+    <div class="row my-3">
+        <label for="stock" class="col-md-1 col-form-label">Stock</label>
+        <div class="col-md-3">
+            <input type="text" name="stock" class="form-control" id="stock">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{stockMsg}}
+        </div>
+    </div>
+    <div class="row my-3">
+        <label for="image" class="col-md-1 col-form-label">Image</label>
+        <div class="col-md-3">
+            <input type="text" name="name" class="form-control" id="image">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{imageMsg}}
+        </div>
+    </div>
+    <div class="row my-3">
+        <label for="category" class="col-md-1 col-form-label">Category</label>
+        <div class="col-md-3">
+            <input type="text" name="category" class="form-control" id="category">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{categoryMsg}}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="offer" class="col-md-1 col-form-label">Offer</label>
+        <div class="col-md-3">
+            <textarea type="text" id="offer" class="form-control" name="offer"></textarea>
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Add product</button>
+</form>
