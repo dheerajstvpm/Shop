@@ -17,10 +17,11 @@ let adminSession;
 
 router.get('/', (req, res) => {
     adminSession = req.session;
+    console.log(adminSession)
     if (adminSession.adminId) {
-        res.render('/admin/adminHomepage', { title: 'Shop.admin', id: 'adminSession.adminId' })
+        res.render('admin/adminHomepage', { title: 'Shop.admin', id: 'adminSession.adminId' })
     } else {
-        res.render('/admin/adminHomepage', { title: 'Shop.admin' })
+        res.redirect('/admin/adminLogin')
     }
 })
 
@@ -43,7 +44,6 @@ router.get('/adminLogin', (req, res) => {
         console.log('3')
         req.session.destroy();
         res.render('admin/adminLogin', { title: 'Login', usernameMessage: 'Username does not exist' })
-
     } else if (adminSession.incAdminPwd) {
         console.log(adminSession)
         console.log('4')
@@ -77,7 +77,6 @@ router.post('/addNewAdmin',
     function (req, res) {
         const errors = validationResult(req);
         console.log(errors)
-
         const error3 = errors.errors.find(item => item.param === 'username') || '';
         const error4 = errors.errors.find(item => item.param === 'password') || '';
 
@@ -171,11 +170,11 @@ router.post('/adminLogin', function (req, res) {
 
 router.get('/adminProductManagement', function (req, res) {
     adminSession = req.session;
+    console.log(adminSession)
     Product.find({}).sort({ _id: -1 })
         .then((result) => {
             if (adminSession.adminId) {
-
-                res.render('/admin/adminProdctManagement', { result })
+                res.render('admin/adminProductManagement', { result })
             } else {
                 res.redirect('/admin');
             }
@@ -192,7 +191,7 @@ router.post('/adminSearch', function (req, res) {
         Product.find({ $or: [{ productName: req.body.input }, { category: req.body.input }] })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('/admin/adminProdctManagement', { result })
+                    res.render('admin/adminProductManagement', { result })
                 } else {
                     res.redirect('/admin');
                 }
@@ -228,7 +227,7 @@ router.post('/addNewProduct',
     check('description').notEmpty().withMessage('Please enter a description'),
     check('price').notEmpty().withMessage('Please enter price of the product'),
     check('stock').notEmpty().withMessage('Please enter number of items'),
-    check('image').notEmpty().withMessage('Please enter link to image'),
+    // check('image').notEmpty().withMessage('Please enter link to image'),
     check('category').notEmpty().withMessage('Please enter category'),
     function (req, res) {
         const errors = validationResult(req);
@@ -239,10 +238,10 @@ router.post('/addNewProduct',
         var error4 = errors.errors.find(item => item.param === 'stock') || '';
         var error5 = errors.errors.find(item => item.param === 'image') || '';
         var error6 = errors.errors.find(item => item.param === 'category') || '';
-        console.log(error3.msg);
+        console.log(error5.msg);
         adminSession = req.session;
         if (!errors.isEmpty()) {
-            res.render('addNewProduct', { productNameMsg: error1.msg, descriptionMsg: error2.msg, priceMsg: error3.msg, stockMsg: error4.msg, imageMsg: error5.msg, categoryMsg: error6.msg });
+            res.render('admin/addNewProduct', { productNameMsg: error1.msg, descriptionMsg: error2.msg, priceMsg: error3.msg, stockMsg: error4.msg, imageMsg: error5.msg, categoryMsg: error6.msg });
         } else if (adminSession.adminId) {
             Admin.find({ productName: req.body.productName })
                 .then((result) => {
