@@ -2,11 +2,14 @@
 <div class="container-fluid d-flex justify-content-center">
     <form class="col-md-4" action="/login" method="post">
         <div class="my-3">
-            <input type="email" class="form-control text-center" id="exampleInputEmail" placeholder="Username"
-                aria-describedby="emailHelp">
+            <input type="email" name="username" class="form-control text-center" id="exampleInputEmail"
+                placeholder="Username" aria-describedby="emailHelp">
+            <p class="text-center">{{usernameMessage}}</p>
         </div>
         <div class="mb-3">
-            <input type="password" class="form-control text-center" id="exampleInputPassword" placeholder="Password">
+            <input type="password" name="password" class="form-control text-center" id="exampleInputPassword"
+                placeholder="Password">
+            <p class="text-center">{{passwordMessage}}</p>
         </div>
         <div class='mb-3 d-flex justify-content-center'>
             <button type="submit" class="btn btn-primary">Login</button>
