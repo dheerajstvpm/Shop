@@ -2,6 +2,8 @@ const express = require('express')
 
 const session = require('express-session')
 
+const path = require('path');
+
 const nocache = require("nocache");
 
 const mongoose = require("mongoose")
@@ -59,7 +61,8 @@ app.use(session({
 app.use(nocache());
 
 // middleware & static files
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static('public'));
 app.use(logger('dev'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
