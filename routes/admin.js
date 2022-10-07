@@ -185,7 +185,7 @@ router.get('/adminProductManagement', function (req, res) {
         })
 });
 
-router.post('/adminSearch', function (req, res) {
+router.post('/adminProductSearch', function (req, res) {
     adminSession = req.session
     if (adminSession.adminId) {
         Product.find({ $or: [{ productName: req.body.input }, { category: req.body.input }] })
@@ -193,7 +193,7 @@ router.post('/adminSearch', function (req, res) {
                 if (adminSession.adminId && req.body.input) {
                     res.render('admin/adminProductManagement', { result })
                 } else {
-                    res.redirect('/admin');
+                    res.redirect('/admin/adminProductManagement');
                 }
             })
             .catch((err) => {
@@ -243,7 +243,7 @@ router.post('/addNewProduct',
         if (!errors.isEmpty()) {
             res.render('admin/addNewProduct', { productNameMsg: error1.msg, descriptionMsg: error2.msg, priceMsg: error3.msg, stockMsg: error4.msg, imageMsg: error5.msg, categoryMsg: error6.msg });
         } else if (adminSession.adminId) {
-            Admin.find({ productName: req.body.productName })
+            Product.find({ productName: req.body.productName })
                 .then((result) => {
                     let temp = result.find(item => item.productName)
                     if (temp) {
@@ -280,79 +280,128 @@ router.post('/addNewProduct',
         }
     });
 
-router.get('/edit/:id', function (req, res) {
+router.get('/editProduct/:id', function (req, res) {
     console.log(req.params);
-    let userId = req.params.id;
-    console.log(userId);
+    let productId = req.params.id;
+    console.log(productId);
     adminSession = req.session;
     if (adminSession.adminId) {
-        User.find({ _id: userId })
+        Product.find({ _id: productId })
             .then((result) => {
 
-                let current = result.find(item => item.username)
-
-                res.render('editUser', current)
+                let current = result.find(item => item.productName)
+                console.log(current)
+                res.render('admin/adminEditProduct', current)
             })
             .catch((err) => {
                 console.log(err)
             })
     }
     else {
-        res.redirect('/admin')
+        res.redirect('/admin/adminProductManagement')
     }
 });
 
-router.post('/editUser/:id', function (req, res) {
+router.post('/editProduct/:id', function (req, res) {
     console.log(req.params);
     console.log(req.body);
-    console.log(req.body.oldData);
-    console.log(req.body.oldName);
-    let newUserId = req.params.id;
-    console.log(newUserId);
-    let newData;
+    let newProductId = req.params.id;
+    console.log(newProductId);
+    
     adminSession = req.session;
     if (adminSession.adminId) {
-        if (req.body.newData) {
-            User.updateOne({ _id: newUserId }, { $set: { data: req.body.newData } })
+        if (req.body.newDescription) {
+            Product.updateOne({ _id: newProductId }, { $set: { description: req.body.newDescription } })
                 .then((result) => {
 
-                    res.redirect('/admin')
+                    res.redirect('/admin/adminProductManagement')
                 })
                 .catch((err) => {
                     console.log(err)
                 })
-        } else {
-            res.redirect('/admin')
+        // } else {
+        //     res.redirect('/admin/adminProductManagement')
         }
-        if (req.body.newName) {
-            User.updateOne({ _id: newUserId }, { $set: { name: req.body.newName } })
+        if (req.body.newPrice) {
+            Product.updateOne({ _id: newProductId }, { $set: { price: req.body.newPrice } })
                 .then((result) => {
                     console.log(result);
-                    res.redirect('/admin')
+                    res.redirect('/admin/adminProductManagement')
                 })
                 .catch((err) => {
                     console.log(err)
                 })
-        } else {
-            res.redirect('/admin')
+        // } else {
+        //     console.log('hello')
+        //     res.redirect('/admin/adminProductManagement')
+        }
+        if (req.body.newStock) {
+            Product.updateOne({ _id: newProductId }, { $set: { stock: req.body.newStock } })
+                .then((result) => {
+                    // console.log("hi");
+                    console.log(result);
+                    res.redirect('/admin/adminProductManagement')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        // } else {
+        //     res.redirect('/admin/adminProductManagement')
+        }
+        if (req.body.newImage) {
+            Product.updateOne({ _id: newProductId }, { $set: { image: req.body.newImage } })
+                .then((result) => {
+                    console.log(result);
+                    res.redirect('/admin/adminProductManagement')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        // } else {
+        //     res.redirect('/admin/adminProductManagement')
+        }
+        if (req.body.newCategory) {
+            Product.updateOne({ _id: newProductId }, { $set: { category: req.body.newCategory } })
+                .then((result) => {
+                    console.log(result);
+                    res.redirect('/admin/adminProductManagement')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        // } else {
+        //     res.redirect('/admin/adminProductManagement')
+        }
+        if (req.body.newOffer) {
+            Product.updateOne({ _id: newProductId }, { $set: { offer: req.body.newOffer } })
+                .then((result) => {
+                    console.log(result);
+                    res.redirect('/admin/adminProductManagement')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        // } else {
+        //     res.redirect('/admin/adminProductManagement')
         }
     } else {
-        res.redirect('/admin')
+        console.log('Hi')
+        res.redirect('/admin/adminProductManagement')
     }
 })
 
-router.get('/delete/:id', function (req, res) {
+router.get('/deleteProduct/:id', function (req, res) {
     console.log(req.params);
-    let userId = req.params.id;
-    console.log(userId);
+    let productId = req.params.id;
+    console.log(productId);
     adminSession = req.session
     if (adminSession.adminId) {
-        User.deleteOne({ _id: userId })
+        Product.deleteOne({ _id: productId })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('adminHome', { result })
+                    res.render('admin/adminProductManagement', { result })
                 } else {
-                    res.redirect('/admin');
+                    res.redirect('/admin/adminProductManagement');
                 }
             })
             .catch((err) => {
@@ -360,7 +409,7 @@ router.get('/delete/:id', function (req, res) {
                 // res.redirect('/admin');
             })
     } else {
-        res.redirect('/admin');
+        res.redirect('/admin/adminProductManagement');
     }
 });
 
