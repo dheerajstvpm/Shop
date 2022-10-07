@@ -13,25 +13,44 @@ const Order = require('../models/orderModel')
 const { check, validationResult } = require('express-validator');
 
 let session;
+
 router.get('/', (req, res) => {
     session = req.session;
-    if (session.loginId) {
-        res.render('users/homepage', { title: 'Shop', id: 'session.loginId' })
+    if (session.userId) {
+        res.render('users/homepage', { title: 'Shop.', id: 'session.userId' })
     } else {
-        res.render('users/homepage', { title: 'Shop' })
+        res.render('users/homepage', { title: 'Shop.' })
+    }
+})
+
+router.get('/product', (req, res) => {
+    session = req.session;
+    if (session.userId) {
+        res.render('users/product', { title: 'Shop.', id: 'session.userId' })
+    } else {
+        res.render('users/product', { title: 'Shop.' })
     }
 })
 
 router.get('/login', (req, res) => {
     session = req.session;
-    if (session.loginId) {
-        res.redirect('/homepage', { title: 'Shop' })
+    if (session.userId) {
+        console.log(session)
+        res.redirect('/')
     } else if (session.incorrectId) {
-        res.render('users/login', { title: 'Shop.', message: 'Username does not exist' })
+        console.log(session)
+        console.log('3')
+        req.session.destroy();
+        res.render('users/login', { title: 'Login', usernameMessage: 'Username does not exist' })
+        
     } else if (session.incorrectPwd) {
-        res.render('users/login', { title: 'Shop.', message: 'Incorrect password' })
+        console.log(session)
+        console.log('4')
+        req.session.destroy();
+        res.render('users/login', { title: 'Login', passwordMessage: 'Incorrect password' })
     } else {
-        res.render('users/login', { title: 'Shop' })
+        console.log(session)
+        res.render('users/login', { title: 'Login' })
     }
 })
 
@@ -61,27 +80,35 @@ router.post('/signup',
     function (req, res) {
         const errors = validationResult(req);
         console.log(errors)
-        var error1 = errors.errors.find(item => item.param === 'name') || '';
-        var error2 = errors.errors.find(item => item.param === 'username') || '';
-        var error3 = errors.errors.find(item => item.param === 'password') || '';
-        console.log(error3.msg);
+        const error1 = errors.errors.find(item => item.param === 'name')||'';
+        const error2 = errors.errors.find(item => item.param === 'mobile')||'';
+        const error3 = errors.errors.find(item => item.param === 'username')||'';
+        const error4 = errors.errors.find(item => item.param === 'password')||'';
+        
+        let error5='';
+        if (req.body.password != req.body.confirmPassword) {
+            error5 = 'Passwords do not match';
+        }
+        console.log(error5);
         if (!errors.isEmpty()) {
-            res.render('users/signup', { nameMsg: error1.msg, usernameMsg: error2.msg, pwdMsg: error3.msg });
+            res.render('users/signup', { title: 'Signup', nameMsg: error1.msg, mobileMsg: error2.msg, usernameMsg: error3.msg, pwdMsg: error4.msg, confirmPwdMsg: error5 });
+           
         } else {
             User.find({ username: req.body.username })
                 .then((result) => {
-                    let b = result.find(item => item.username)
+                    let user = result.find(item => item.username)
                     let hashPassword;
                     bcrypt.hash(req.body.password, 10)
                         .then(function (hash) {
                             hashPassword = hash
-                            if (b) {
+                            if (user) {
                                 session = req.session;
-                                session.useralreadyexist = true;
+                                session.userAlreadyExist = true;
                                 res.redirect('/signup');
                             } else {
                                 const user = new User({
                                     name: req.body.name,
+                                    mobile: req.body.mobile,
                                     username: req.body.username,
                                     password: hashPassword
                                 })
@@ -92,7 +119,7 @@ router.post('/signup',
                                     .catch((err) => {
                                         console.log(err)
                                     })
-                                res.redirect('/');
+                                res.redirect('/login');
                             }
                         })
                         .catch((err) => {
@@ -105,7 +132,41 @@ router.post('/signup',
         }
     });
 
+router.post('/login', function (req, res) {
+    let temp;
+    User.find({ username: req.body.username })
+        .then((result) => {
+            temp = result.find(item => item.username)
+            bcrypt.compare(req.body.password, temp.password)
+                .then(function (bcryptResult) {
 
+                    if (bcryptResult) {
+                        session = req.session;
+                        session.userid = temp.username;
+                        res.redirect('/');
+                    } else {
+                        session = req.session
+                        session.incorrectPwd = true;
+                        console.log(session)
+                        console.log('1')
+                        res.redirect('/login/');
+                        // res.render('users/login', { title: 'Login', passwordMessage: 'Incorrect password' })
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                });
+        })
+        .catch((err) => {
+            // console.log(err)
+            session = req.session
+            session.incorrectId = true;
+            console.log(session)
+            console.log('2')
+            res.redirect('/login');
+            // res.render('users/login', { title: 'Login', usernameMessage: 'Username does not exist' })
+        })
+});
 
 
 module.exports = router;
