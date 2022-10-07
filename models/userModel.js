@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     name: { type: String },
     username: { type: String },
-    mobileNumber: { type: String },
+    mobile: { type: String },
     address: { type: String },
     status: { type: String },
     wishlist: { type: String },
