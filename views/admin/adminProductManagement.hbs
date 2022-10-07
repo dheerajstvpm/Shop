@@ -1,0 +1,56 @@
+<div class="container">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h1 class="">Product Management</h1>
+        <form action="/admin/adminLogout" method="post" class="">
+            <button type="submit" class="btn btn-primary">Logout</button>
+        </form>
+    </div>
+
+    <form action="/admin/adminSearch" method="post" class="d-flex mb-3">
+        <div>
+            <button type="submit" class="btn btn-primary me-1">Search</button>
+        </div>
+        <div class="flex-grow-1 mb-3">
+            <div>
+                <input type="text" name="input" class="form-control" placeholder="Search with name or user name"
+                    id="searchInput">
+            </div>
+        </div>
+    </form>
+    <div class="d-flex justify-content-end">
+        <a href="/admin/addNewProduct" class="btn btn-dark mb-3">Add new product</a>
+    </div>
+    <div class="d-flex mb-3">
+        <table class=" table">
+            <thead>
+                <tr>
+                    <th scope="col">Sl.</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Product description</th>
+                    <th scope="col">Price</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each result}}
+                <tr>
+                    <th scope="row">{{addOne @index}}</td>
+                    <td>{{this.productName}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.price}}</td>
+                    <td>
+                        <a href="/admin/edit/{{this._id}}" class="btn btn-danger"
+                            onclick="return confirm('Are you sure, you want to edit details of user :{{this.username}}?')">edit</a>
+                    </td>
+                    <td>
+                        <a href="/admin/delete/{{this._id}}" class="btn btn-danger"
+                            onclick="return confirm('Are you sure, you want to delete user :{{this.username}}?')">delete</a>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
