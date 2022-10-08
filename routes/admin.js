@@ -216,10 +216,35 @@ router.get('/addNewProduct', function (req, res) {
             req.session.destroy();
             adminSession = req.session
             adminSession.adminId = true;
+
+
+
             const item = [{ message: 'Product already exist' }]
             res.render('admin/addNewProduct', { item });
         } else {
-            res.render('admin/addNewProduct');
+            let offerResult;
+            Offer.find({})
+                .then((result) => {
+
+                    console.log(result);
+                    offerResult=result;
+
+                    // res.render('admin/addNewProduct', { offerResult });
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            Category.find({})
+                .then((result) => {
+
+                    console.log(result);
+
+                    res.render('admin/addNewProduct', { result, offerResult });
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            // res.render('admin/addNewProduct');
         }
     } else {
         res.redirect('/admin');
@@ -273,7 +298,7 @@ router.post('/addNewProduct',
                             })
                         adminSession = req.session;
                         console.log(adminSession)
-                        res.redirect('/admin');
+                        res.redirect('/admin/adminProductManagement');
                     }
                 })
                 .catch((err) => {
