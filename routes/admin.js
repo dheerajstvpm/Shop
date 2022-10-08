@@ -415,6 +415,90 @@ router.get('/deleteProduct/:id', function (req, res) {
 
 
 
+router.get('/adminUserManagement', function (req, res) {
+    adminSession = req.session;
+    console.log(adminSession)
+    User.find({}).sort({ _id: -1 })
+        .then((result) => {
+            if (adminSession.adminId) {
+                res.render('admin/adminUserManagement', { result })
+            } else {
+                res.redirect('/admin');
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.redirect('/admin');
+        })
+});
+
+router.post('/adminUserSearch', function (req, res) {
+    adminSession = req.session
+    if (adminSession.adminId) {
+        Product.find({ $or: [{ name: req.body.input }, { username: req.body.input }] })
+            .then((result) => {
+                if (adminSession.adminId && req.body.input) {
+                    res.render('admin/adminUserManagement', { result })
+                } else {
+                    res.redirect('/admin/adminUserManagement');
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                // res.redirect('/admin');
+            })
+    } else {
+        res.redirect('/admin');
+    }
+});
+
+router.get('/block/:id', function (req, res) {
+    console.log(req.params);
+    let userId = req.params.id;
+    console.log(userId);
+    adminSession = req.session
+    if (adminSession.adminId) {
+        Product.updateOne({ _id: userId }, { $set: { status: 'blocked' } })
+            .then((result) => {
+                if (adminSession.adminId && req.body.input) {
+                    res.render('admin/adminUserManagement', { result })
+                } else {
+                    res.redirect('/admin/adminUserManagement');
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                // res.redirect('/admin');
+            })
+    } else {
+        res.redirect('/admin/adminUserManagement');
+    }
+});
+
+router.get('/unblock/:id', function (req, res) {
+    console.log(req.params);
+    let userId = req.params.id;
+    console.log(userId);
+    adminSession = req.session
+    if (adminSession.adminId) {
+        Product.updateOne({ _id: userId },{$set:{status:'unblocked'}})
+            .then((result) => {
+                if (adminSession.adminId && req.body.input) {
+                    res.render('admin/adminUserManagement', { result })
+                } else {
+                    res.redirect('/admin/adminUserManagement');
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                // res.redirect('/admin');
+            })
+    } else {
+        res.redirect('/admin/adminUserManagement');
+    }
+});
+
+
 router.post('/adminLogout', function (req, res) {
     adminSession = req.session
     adminSession.adminId = false
