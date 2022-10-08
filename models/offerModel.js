@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const offerSchema=new Schema({
     offer:{type:String},
-    minimum:{type:String},
+    minOrder:{type:String},
     discount:{type:String},
     maxDiscount:{type:String}
 })
