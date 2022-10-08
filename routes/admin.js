@@ -122,7 +122,7 @@ router.post('/addNewAdmin',
 
 router.post('/adminLogin', function (req, res) {
     let temp;
-    User.find({ username: req.body.username })
+    Admin.find({ username: req.body.username })
         .then((result) => {
             temp = result.find(item => item.username)
             bcrypt.compare(req.body.password, temp.password)
@@ -307,7 +307,7 @@ router.post('/editProduct/:id', function (req, res) {
     console.log(req.body);
     let newProductId = req.params.id;
     console.log(newProductId);
-    
+
     adminSession = req.session;
     if (adminSession.adminId) {
         if (req.body.newDescription) {
@@ -319,8 +319,8 @@ router.post('/editProduct/:id', function (req, res) {
                 .catch((err) => {
                     console.log(err)
                 })
-        // } else {
-        //     res.redirect('/admin/adminProductManagement')
+            // } else {
+            //     res.redirect('/admin/adminProductManagement')
         }
         if (req.body.newPrice) {
             Product.updateOne({ _id: newProductId }, { $set: { price: req.body.newPrice } })
@@ -331,9 +331,9 @@ router.post('/editProduct/:id', function (req, res) {
                 .catch((err) => {
                     console.log(err)
                 })
-        // } else {
-        //     console.log('hello')
-        //     res.redirect('/admin/adminProductManagement')
+            // } else {
+            //     console.log('hello')
+            //     res.redirect('/admin/adminProductManagement')
         }
         if (req.body.newStock) {
             Product.updateOne({ _id: newProductId }, { $set: { stock: req.body.newStock } })
@@ -345,8 +345,8 @@ router.post('/editProduct/:id', function (req, res) {
                 .catch((err) => {
                     console.log(err)
                 })
-        // } else {
-        //     res.redirect('/admin/adminProductManagement')
+            // } else {
+            //     res.redirect('/admin/adminProductManagement')
         }
         if (req.body.newImage) {
             Product.updateOne({ _id: newProductId }, { $set: { image: req.body.newImage } })
@@ -357,8 +357,8 @@ router.post('/editProduct/:id', function (req, res) {
                 .catch((err) => {
                     console.log(err)
                 })
-        // } else {
-        //     res.redirect('/admin/adminProductManagement')
+            // } else {
+            //     res.redirect('/admin/adminProductManagement')
         }
         if (req.body.newCategory) {
             Product.updateOne({ _id: newProductId }, { $set: { category: req.body.newCategory } })
@@ -369,8 +369,8 @@ router.post('/editProduct/:id', function (req, res) {
                 .catch((err) => {
                     console.log(err)
                 })
-        // } else {
-        //     res.redirect('/admin/adminProductManagement')
+            // } else {
+            //     res.redirect('/admin/adminProductManagement')
         }
         if (req.body.newOffer) {
             Product.updateOne({ _id: newProductId }, { $set: { offer: req.body.newOffer } })
@@ -381,8 +381,8 @@ router.post('/editProduct/:id', function (req, res) {
                 .catch((err) => {
                     console.log(err)
                 })
-        // } else {
-        //     res.redirect('/admin/adminProductManagement')
+            // } else {
+            //     res.redirect('/admin/adminProductManagement')
         }
     } else {
         console.log('Hi')
@@ -458,7 +458,7 @@ router.get('/block/:id', function (req, res) {
     console.log(userId);
     adminSession = req.session
     if (adminSession.adminId) {
-        Product.updateOne({ _id: userId }, { $set: { status: 'blocked' } })
+        User.updateOne({ _id: userId }, { $set: { status: 'blocked' } })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
                     res.render('admin/adminUserManagement', { result })
@@ -481,7 +481,7 @@ router.get('/unblock/:id', function (req, res) {
     console.log(userId);
     adminSession = req.session
     if (adminSession.adminId) {
-        Product.updateOne({ _id: userId },{$set:{status:'unblocked'}})
+        User.updateOne({ _id: userId }, { $set: { status: 'unblocked' } })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
                     res.render('admin/adminUserManagement', { result })
@@ -498,6 +498,182 @@ router.get('/unblock/:id', function (req, res) {
     }
 });
 
+
+
+
+//Category Management
+
+router.get('/adminCategoryManagement', function (req, res) {
+    adminSession = req.session;
+    console.log(adminSession)
+    Category.find({}).sort({ _id: -1 })
+        .then((result) => {
+            if (adminSession.adminId) {
+                res.render('admin/adminCategoryManagement', { result })
+            } else {
+                res.redirect('/admin');
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.redirect('/admin');
+        })
+});
+
+router.post('/adminCategorySearch', function (req, res) {
+    adminSession = req.session
+    if (adminSession.adminId) {
+        Category.find({ category: req.body.input })
+            .then((result) => {
+                if (adminSession.adminId && req.body.input) {
+                    res.render('admin/adminCategoryManagement', { result })
+                } else {
+                    res.redirect('/admin/adminCategoryManagement');
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                // res.redirect('/admin');
+            })
+    } else {
+        res.redirect('/admin');
+    }
+});
+
+router.get('/addNewCategory', function (req, res) {
+    adminSession = req.session
+    if (adminSession.adminId) {
+        if (adminSession.categoryExist) {
+            req.session.destroy();
+            adminSession = req.session
+            adminSession.adminId = true;
+            const item = [{ message: 'Category already exist' }]
+            res.render('admin/addNewCategory', { item });
+        } else {
+            res.render('admin/addNewCategory');
+        }
+    } else {
+        res.redirect('/admin');
+    }
+});
+
+router.post('/addNewCategory',
+    check('category').notEmpty().withMessage('Please enter a category'),
+    function (req, res) {
+        const errors = validationResult(req);
+        console.log(errors)
+        var error1 = errors.errors.find(item => item.param === 'category') || '';
+        console.log(error1.msg);
+        adminSession = req.session;
+        if (!errors.isEmpty()) {
+            res.render('admin/addNewCategory', { categoryMsg: error1.msg});
+        } else if (adminSession.adminId) {
+            Category.find({ category: req.body.category })
+                .then((result) => {
+                    let temp = result.find(item => item.category)
+                    if (temp) {
+                        adminSession = req.session;
+                        adminSession.categoryExist = true;
+                        res.redirect('/admin/addNewCategory');
+                    } else {
+                        const category = new Category({
+                            category: req.body.category
+                        })
+                        category.save()
+                            .then((result) => {
+                                console.log(result)
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            })
+                        adminSession = req.session;
+                        console.log(adminSession)
+                        res.redirect('/admin/adminCategoryManagement');
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            res.redirect('/admin');
+        }
+    });
+
+// router.get('/editCategory/:id', function (req, res) {
+//     console.log(req.params);
+//     let categoryId = req.params.id;
+//     console.log(categoryId);
+//     adminSession = req.session;
+//     if (adminSession.adminId) {
+//         Category.find({ _id: categoryId })
+//             .then((result) => {
+
+//                 let current = result.find(item => item.category)
+//                 console.log(current)
+//                 res.render('admin/adminEditCategory', current)
+//             })
+//             .catch((err) => {
+//                 console.log(err)
+//             })
+//     }
+//     else {
+//         res.redirect('/admin/adminCategoryManagement')
+//     }
+// });
+
+// router.post('/editCategory/:id', function (req, res) {
+//     console.log(req.params);
+//     console.log(req.body);
+//     let newCategoryId = req.params.id;
+//     console.log(newCategoryId);
+
+//     adminSession = req.session;
+//     if (adminSession.adminId) {
+//         if (req.body.newCategory) {
+//             Category.updateOne({ _id: newCategoryId }, { $set: { category: req.body.newCategory } })
+//                 .then((result) => {
+
+//                     res.redirect('/admin/adminCategoryManagement')
+//                 })
+//                 .catch((err) => {
+//                     console.log(err)
+//                 })
+//             // } else {
+//             //     res.redirect('/admin/adminProductManagement')
+//         }
+//     } else {
+//         console.log('Hi')
+//         res.redirect('/admin/adminProductManagement')
+//     }
+// })
+
+router.get('/deleteCategory/:id', function (req, res) {
+    console.log(req.params);
+    let categoryId = req.params.id;
+    console.log(categoryId);
+    adminSession = req.session
+    if (adminSession.adminId) {
+        Category.deleteOne({ _id: categoryId })
+            .then((result) => {
+                if (adminSession.adminId && req.body.input) {
+                    res.render('admin/adminCategoryManagement', { result })
+                } else {
+                    res.redirect('/admin/adminCategoryManagement');
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                // res.redirect('/admin');
+            })
+    } else {
+        res.redirect('/admin/adminCategoryManagement');
+    }
+});
+
+
+
+
+//Admin logout
 
 router.post('/adminLogout', function (req, res) {
     adminSession = req.session
