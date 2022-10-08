@@ -1,0 +1,15 @@
+<h1>Add New Category</h1>
+
+<form action="/admin/addNewCategory" method="post">
+    <div class="row my-3">
+        <label for="category" class="col-md-1 col-form-label">Category</label>
+        <div class="col-md-3">
+            <input type="text" name="category" class="form-control" id="category">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{categoryMsg}}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add category</button>
+</form>
