@@ -34,7 +34,7 @@ router.get('/product', (req, res) => {
 
 router.get('/login', (req, res) => {
     session = req.session;
-    if (session.userstatus==='blocked') {
+    if (session.userStatus==='blocked') {
         console.log(session)
         console.log('5')
         req.session.destroy();
@@ -147,7 +147,7 @@ router.post('/login', function (req, res) {
 
                     if (bcryptResult) {
                         session = req.session;
-                        session.userid = temp.username;
+                        session.userId = temp.username;
                         session.userStatus=temp.status;
                         res.redirect('/login');
                     } else {
