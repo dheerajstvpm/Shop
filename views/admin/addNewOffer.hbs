@@ -1,0 +1,45 @@
+<h1>Add New Offer</h1>
+
+<form action="/admin/addNewOffer" method="post">
+    <div class="row my-3">
+        <label for="offer" class="col-md-1 col-form-label">Offer</label>
+        <div class="col-md-3">
+            <input type="text" name="offer" class="form-control" id="offer">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{offerMsg}}
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <label for="minOrder" class="col-md-1 col-form-label">Minimum order to avail offer</label>
+        <div class="col-md-3">
+            <input type="text" name="minOrder" class="form-control" id="minOrder">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{minOrderMsg}}
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <label for="discount" class="col-md-1 col-form-label">Discount</label>
+        <div class="col-md-3">
+            <input type="text" name="discount" class="form-control" id="discount">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{discountMsg}}
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <label for="maxDiscount" class="col-md-1 col-form-label">Maximum Discount</label>
+        <div class="col-md-3">
+            <input type="text" name="maxDiscount" class="form-control" id="maxDiscount">
+        </div>
+        <div class="col-md-4" role="alert">
+            {{maxDiscountMsg}}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add offer</button>
+</form>
