@@ -18,17 +18,15 @@
             </div>
         </div>
     </form>
-    <div class="d-flex justify-content-end">
-        <a href="/admin/addNewProduct" class="btn btn-dark mb-3">Add new product</a>
-    </div>
+
     <div class="d-flex mb-3">
         <table class=" table">
             <thead>
                 <tr>
                     <th scope="col">Sl.</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Price</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Status</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -37,16 +35,16 @@
                 {{#each result}}
                 <tr>
                     <th scope="row">{{addOne @index}}</td>
-                    <td>{{this.productName}}</td>
-                    <td>{{this.category}}</td>  
-                    <td>{{this.price}}</td>
+                    <td>{{this.name}}</td>
+                    <td>{{this.username}}</td>  
+                    <td>{{this.status}}</td>
                     <td>
-                        <a href="/admin/editProduct/{{this._id}}" class="btn btn-danger"
-                            onclick="return confirm('Are you sure, you want to edit details of product :{{this.productName}}?')">edit</a>
+                        <a href="/admin/block/{{this._id}}" class="btn btn-danger"
+                            onclick="return confirm('Are you sure, you want to block user:{{this.name}}?')">block</a>
                     </td>
                     <td>
-                        <a href="/admin/deleteProduct/{{this._id}}" class="btn btn-danger"
-                            onclick="return confirm('Are you sure, you want to delete product :{{this.productName}}?')">delete</a>
+                        <a href="/admin/unblock/{{this._id}}" class="btn btn-danger"
+                            onclick="return confirm('Are you sure, you want to unblock user :{{this.name}}?')">unblock</a>
                     </td>
                 </tr>
                 {{/each}}
