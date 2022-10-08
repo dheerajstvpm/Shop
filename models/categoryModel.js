@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema;
 
 const categorySchema=new Schema({
-    categoryName:{type:String}
+    category:{type:String}
 })
 
 
