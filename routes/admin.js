@@ -168,6 +168,10 @@ router.post('/adminLogin', function (req, res) {
 //     }
 // });
 
+
+
+//Product  Management
+
 router.get('/adminProductManagement', function (req, res) {
     adminSession = req.session;
     console.log(adminSession)
@@ -566,7 +570,7 @@ router.post('/addNewCategory',
         console.log(error1.msg);
         adminSession = req.session;
         if (!errors.isEmpty()) {
-            res.render('admin/addNewCategory', { categoryMsg: error1.msg});
+            res.render('admin/addNewCategory', { categoryMsg: error1.msg });
         } else if (adminSession.adminId) {
             Category.find({ category: req.body.category })
                 .then((result) => {
@@ -672,6 +676,211 @@ router.get('/deleteCategory/:id', function (req, res) {
 
 
 
+//Offer Management
+
+router.get('/adminOfferManagement', function (req, res) {
+    adminSession = req.session;
+    console.log(adminSession)
+    Offer.find({}).sort({ _id: -1 })
+        .then((result) => {
+            if (adminSession.adminId) {
+                res.render('admin/adminOfferManagement', { result })
+            } else {
+                res.redirect('/admin');
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.redirect('/admin');
+        })
+});
+
+router.post('/adminOfferSearch', function (req, res) {
+    adminSession = req.session
+    if (adminSession.adminId) {
+        Offer.find({ offer: req.body.input })
+            .then((result) => {
+                if (adminSession.adminId && req.body.input) {
+                    res.render('admin/adminOfferManagement', { result })
+                } else {
+                    res.redirect('/admin/adminOfferManagement');
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                // res.redirect('/admin');
+            })
+    } else {
+        res.redirect('/admin');
+    }
+});
+
+router.get('/addNewOffer', function (req, res) {
+    adminSession = req.session
+    if (adminSession.adminId) {
+        if (adminSession.offerExist) {
+            req.session.destroy();
+            adminSession = req.session
+            adminSession.adminId = true;
+            const item = [{ message: 'Offer already exist' }]
+            res.render('admin/addNewOffer', { item });
+        } else {
+            res.render('admin/addNewOffer');
+        }
+    } else {
+        res.redirect('/admin');
+    }
+});
+
+router.post('/addNewOffer',
+    check('offer').notEmpty().withMessage('Please enter an offer'),
+    check('minOrder').notEmpty().withMessage('Please enter a minimum order'),
+    check('discount').notEmpty().withMessage('Please enter a discount'),
+    check('maxDiscount').notEmpty().withMessage('Please enter a maximum discount'),
+    function (req, res) {
+        const errors = validationResult(req);
+        console.log(errors)
+        var error1 = errors.errors.find(item => item.param === 'minOrder') || '';
+        var error2 = errors.errors.find(item => item.param === 'discount') || '';
+        var error3 = errors.errors.find(item => item.param === 'maxDiscount') || '';
+        var error4 = errors.errors.find(item => item.param === 'offer') || '';
+        console.log(error1.msg);
+        adminSession = req.session;
+        if (!errors.isEmpty()) {
+            res.render('admin/addNewOffer', { minOrderMsg: error1.msg, discountMsg: error2.msg, maxDiscountMsg: error3.msg, offerMsg: error4.msg });
+        } else if (adminSession.adminId) {
+            Offer.find({ offer: req.body.offer })
+                .then((result) => {
+                    let temp = result.find(item => item.offer)
+                    if (temp) {
+                        adminSession = req.session;
+                        adminSession.offerExist = true;
+                        res.redirect('/admin/addNewOffer');
+                    } else {
+                        const offer = new Offer({
+                            offer: req.body.offer,
+                            minOrder: req.body.minOrder,
+                            discount: req.body.discount,
+                            maxDiscount: req.body.maxDiscount
+                        })
+                        offer.save()
+                            .then((result) => {
+                                console.log(result)
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            })
+                        adminSession = req.session;
+                        console.log(adminSession)
+                        res.redirect('/admin/adminOfferManagement');
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            res.redirect('/admin');
+        }
+    });
+
+router.get('/editOffer/:id', function (req, res) {
+    console.log(req.params);
+    let offerId = req.params.id;
+    console.log(offerId);
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        Offer.find({ _id: offerId })
+            .then((result) => {
+
+                let current = result.find(item => item.offer)
+                console.log(current)
+                res.render('admin/adminEditOffer', current)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+    else {
+        res.redirect('/admin/adminOfferManagement')
+    }
+});
+
+router.post('/editOffer/:id', function (req, res) {
+    console.log(req.params);
+    console.log(req.body);
+    let newOfferId = req.params.id;
+    console.log(newOfferId);
+
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        if (req.body.newMinOrder) {
+            Offer.updateOne({ _id: newOfferId }, { $set: { minOrder: req.body.newMinOrder } })
+                .then((result) => {
+
+                    res.redirect('/admin/adminOfferManagement')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            // } else {
+            //     res.redirect('/admin/adminProductManagement')
+        }
+        if (req.body.newDiscount) {
+            Offer.updateOne({ _id: newOfferId }, { $set: { discount: req.body.newDiscount } })
+                .then((result) => {
+
+                    res.redirect('/admin/adminOfferManagement')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            // } else {
+            //     res.redirect('/admin/adminProductManagement')
+        }
+        if (req.body.newMaxDiscount) {
+            Offer.updateOne({ _id: newOfferId }, { $set: { maxDiscount: req.body.newMaxDiscount } })
+                .then((result) => {
+
+                    res.redirect('/admin/adminOfferManagement')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            // } else {
+            //     res.redirect('/admin/adminProductManagement')
+        }
+        res.redirect('/admin/adminOfferManagement')
+    } else {
+        console.log('Hi')
+        res.redirect('/admin/adminOfferManagement')
+    }
+})
+
+router.get('/deleteOffer/:id', function (req, res) {
+    console.log(req.params);
+    let offerId = req.params.id;
+    console.log(offerId);
+    adminSession = req.session
+    if (adminSession.adminId) {
+        Offer.deleteOne({ _id: offerId })
+            .then((result) => {
+                if (adminSession.adminId && req.body.input) {
+                    res.render('admin/adminOfferManagement', { result })
+                } else {
+                    res.redirect('/admin/adminOfferManagement');
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                // res.redirect('/admin');
+            })
+    } else {
+        res.redirect('/admin/adminOfferManagement');
+    }
+});
+
+
+
 
 //Admin logout
 
@@ -682,7 +891,6 @@ router.post('/adminLogout', function (req, res) {
     adminSession.alreadyexist = false
     res.redirect('/admin');
 });
-
 
 
 module.exports = router;
