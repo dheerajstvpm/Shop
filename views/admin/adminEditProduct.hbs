@@ -1,78 +1,80 @@
-<h1>Edit User</h1>
+<div class="container">
+    <h1>Edit Product</h1>
 
-<form action="/admin/editProduct/{{_id}}" method="post">
+    <form action="/admin/editProduct/{{_id}}" method="post">
 
-    <div class="row mb-3">
-        <label for="data" class="col-md-2 col-form-label">Current description : </label>
-        <div class="col-md-3">
-            <p class="pt-2">{{description}}</p>
-        </div>
-        <label for="newDescription" class="col-md-2 col-form-label">New description</label>
-        <div class="col-md-3">
-            <textarea type="text" id="newDescription" class="form-control" name="newDescription"></textarea>
-        </div>
-    </div>
-
-    <div class="row my-3">
-        <label for="price" class="col-md-2 col-form-label">Current Price : </label>
-        <div class="col-md-3">
-            <p class="pt-2">{{price}}</p>
+        <div class="row mb-3">
+            <label for="data" class="col-md-2 col-form-label">Current description : </label>
+            <div class="col-md-3">
+                <p class="pt-2">{{description}}</p>
+            </div>
+            <label for="newDescription" class="col-md-2 col-form-label">New description</label>
+            <div class="col-md-3">
+                <textarea type="text" id="newDescription" class="form-control" name="newDescription"></textarea>
+            </div>
         </div>
 
-        <label for="newPrice" class="col-md-2 col-form-label">New Price:</label>
-        <div class="col-md-3">
-            <input type="text" name="newPrice" class="form-control" id="newPrice">
-        </div>
-    </div>
+        <div class="row my-3">
+            <label for="price" class="col-md-2 col-form-label">Current Price : </label>
+            <div class="col-md-3">
+                <p class="pt-2">{{price}}</p>
+            </div>
 
-    <div class="row my-3">
-        <label for="stock" class="col-md-2 col-form-label">Current Stock : </label>
-        <div class="col-md-3">
-            <p class="pt-2">{{stock}}</p>
-        </div>
-
-        <label for="newStock" class="col-md-2 col-form-label">New Stock:</label>
-        <div class="col-md-3">
-            <input type="text" name="newStock" class="form-control" id="newStock">
-        </div>
-    </div>
-
-    <div class="row my-3">
-        <label for="image" class="col-md-2 col-form-label">Current Image : </label>
-        <div class="col-md-3">
-            <p class="pt-2">{{image}}</p>
+            <label for="newPrice" class="col-md-2 col-form-label">New Price:</label>
+            <div class="col-md-3">
+                <input type="text" name="newPrice" class="form-control" id="newPrice">
+            </div>
         </div>
 
-        <label for="newImage" class="col-md-2 col-form-label">New Image:</label>
-        <div class="col-md-3">
-            <input type="text" name="newImage" class="form-control" id="newImage">
-        </div>
-    </div>
+        <div class="row my-3">
+            <label for="stock" class="col-md-2 col-form-label">Current Stock : </label>
+            <div class="col-md-3">
+                <p class="pt-2">{{stock}}</p>
+            </div>
 
-    <div class="row my-3">
-        <label for="category" class="col-md-2 col-form-label">Current Category : </label>
-        <div class="col-md-3">
-            <p class="pt-2">{{category}}</p>
-        </div>
-
-        <label for="newCategory" class="col-md-2 col-form-label">New Category:</label>
-        <div class="col-md-3">
-            <input type="text" name="newCategory" class="form-control" id="newCategory">
-        </div>
-    </div>
-
-    <div class="row my-3">
-        <label for="offer" class="col-md-2 col-form-label">Current Offer : </label>
-        <div class="col-md-3">
-            <p class="pt-2">{{offer}}</p>
+            <label for="newStock" class="col-md-2 col-form-label">New Stock:</label>
+            <div class="col-md-3">
+                <input type="text" name="newStock" class="form-control" id="newStock">
+            </div>
         </div>
 
-        <label for="newOffer" class="col-md-2 col-form-label">New Offer:</label>
-        <div class="col-md-3">
-            <input type="text" name="newOffer" class="form-control" id="newOffer">
+        <div class="row my-3">
+            <label for="image" class="col-md-2 col-form-label">Current Image : </label>
+            <div class="col-md-3">
+                <p class="pt-2">{{image}}</p>
+            </div>
+
+            <label for="newImage" class="col-md-2 col-form-label">New Image:</label>
+            <div class="col-md-3">
+                <input type="text" name="newImage" class="form-control" id="newImage">
+            </div>
         </div>
-    </div>
 
-    <button type="submit" class="btn btn-primary">Update</button>
+        <div class="row my-3">
+            <label for="category" class="col-md-2 col-form-label">Current Category : </label>
+            <div class="col-md-3">
+                <p class="pt-2">{{category}}</p>
+            </div>
 
-</form>
+            <label for="newCategory" class="col-md-2 col-form-label">New Category:</label>
+            <div class="col-md-3">
+                <input type="text" name="newCategory" class="form-control" id="newCategory">
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <label for="offer" class="col-md-2 col-form-label">Current Offer : </label>
+            <div class="col-md-3">
+                <p class="pt-2">{{offer}}</p>
+            </div>
+
+            <label for="newOffer" class="col-md-2 col-form-label">New Offer:</label>
+            <div class="col-md-3">
+                <input type="text" name="newOffer" class="form-control" id="newOffer">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-dark">Update</button>
+
+    </form>
+</div>
