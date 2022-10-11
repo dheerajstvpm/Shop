@@ -1,0 +1,200 @@
+<div class="container">
+    <h1 class="mt-5">Homepage Layout</h1>
+
+    <form action="/admin/userHomepageLayout" method="post" class="my-5">
+
+        <div class="row my-3">
+            <label for="firstRow1" class="col-md-1 col-form-label w-25">Choose first product in first row: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="firstRow1" id="firstRow1" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{firstRow1Msg}}
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <label for="firstRow2" class="col-md-1 col-form-label w-25">Choose second product in first row: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="firstRow2" id="firstRow2" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{firstRow2Msg}}
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <label for="firstRow3" class="col-md-1 col-form-label w-25">Choose third product in first row: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="firstRow3" id="firstRow3" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{firstRow3Msg}}
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <label for="firstRow4" class="col-md-1 col-form-label w-25">Choose fourth product in first row: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="firstRow4" id="firstRow4" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{firstRow4Msg}}
+            </div>
+        </div>
+
+
+
+
+        <div class="row my-3">
+            <label for="banner1" class="col-md-1 col-form-label w-25">Choose first product in banner: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="banner1" id="banner1" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{banner1Msg}}
+            </div>
+        </div>
+        <div class="row my-3">
+            <label for="banner2" class="col-md-1 col-form-label w-25">Choose second product in banner: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="banner2" id="banner2" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{banner2Msg}}
+            </div>
+        </div>
+        <div class="row my-3">
+            <label for="banner3" class="col-md-1 col-form-label w-25">Choose third product in banner: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="banner3" id="banner3" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{banner3Msg}}
+            </div>
+        </div>
+
+
+
+        <div class="row my-3">
+            <label for="lastRow1" class="col-md-1 col-form-label w-25">Choose first product in last row: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="lastRow1" id="lastRow1" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{lastRow1Msg}}
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <label for="lastRow2" class="col-md-1 col-form-label w-25">Choose second product in last row: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="lastRow2" id="lastRow2" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{lastRow2Msg}}
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <label for="lastRow3" class="col-md-1 col-form-label w-25">Choose third product in last row: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="lastRow3" id="lastRow3" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{lastRow3Msg}}
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <label for="lastRow4" class="col-md-1 col-form-label w-25">Choose fourth product in last row: </label>
+            <div class="col-md-3">
+                {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
+
+                <select name="lastRow4" id="lastRow4" style="width: 250px;">
+                    {{#each result}}
+                    <option value="{{productName}}">{{productName}}</option>
+                    {{/each}}
+                </select>
+
+            </div>
+            <div class="col-md-4" role="alert">
+                {{lastRow4Msg}}
+            </div>
+        </div>
+
+
+
+        <button type="submit" class="btn btn-dark">Update layout</button>
+    </form>
+</div>
