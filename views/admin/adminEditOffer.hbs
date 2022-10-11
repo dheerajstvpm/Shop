@@ -1,43 +1,45 @@
-<h1>Edit Offer</h1>
+<div class="container">
+    <h1>Edit Offer</h1>
 
-<form action="/admin/editOffer/{{_id}}" method="post">
+    <form action="/admin/editOffer/{{_id}}" method="post">
 
-    <div class="row mb-3">
-        <label for="minOrder" class="col-md-2 col-form-label">Current minimum order to avail offer: </label>
-        <div class="col-md-3">
-            <p class="pt-2">{{minOrder}}</p>
-        </div>
-        <label for="newMinOrder" class="col-md-2 col-form-label">New minimum order to avail offer</label>
-        <div class="col-md-3">
-            <input type="text" id="newMinOrder" class="form-control" name="newMinOrder">
-        </div>
-    </div>
-
-    <div class="row my-3">
-        <label for="discount" class="col-md-2 col-form-label">Current Discount : </label>
-        <div class="col-md-3">
-            <p class="pt-2">{{discount}}</p>
+        <div class="row mb-3">
+            <label for="minOrder" class="col-md-2 col-form-label">Current minimum order to avail offer: </label>
+            <div class="col-md-3">
+                <p class="pt-2">{{minOrder}}</p>
+            </div>
+            <label for="newMinOrder" class="col-md-2 col-form-label">New minimum order to avail offer</label>
+            <div class="col-md-3">
+                <input type="text" id="newMinOrder" class="form-control" name="newMinOrder">
+            </div>
         </div>
 
-        <label for="newDiscount" class="col-md-2 col-form-label">New Discount:</label>
-        <div class="col-md-3">
-            <input type="text" name="newDiscount" class="form-control" id="newDiscount">
+        <div class="row my-3">
+            <label for="discount" class="col-md-2 col-form-label">Current Discount : </label>
+            <div class="col-md-3">
+                <p class="pt-2">{{discount}}</p>
+            </div>
+
+            <label for="newDiscount" class="col-md-2 col-form-label">New Discount:</label>
+            <div class="col-md-3">
+                <input type="text" name="newDiscount" class="form-control" id="newDiscount">
+            </div>
         </div>
-    </div>
 
-    <div class="row my-3">
-        <label for="maxDiscount" class="col-md-2 col-form-label">Current Maximum Discount : </label>
-        <div class="col-md-3">
-            <p class="pt-2">{{maxDiscount}}</p>
+        <div class="row my-3">
+            <label for="maxDiscount" class="col-md-2 col-form-label">Current Maximum Discount : </label>
+            <div class="col-md-3">
+                <p class="pt-2">{{maxDiscount}}</p>
+            </div>
+
+            <label for="newMaxDiscount" class="col-md-2 col-form-label">New Maximum Discount:</label>
+            <div class="col-md-3">
+                <input type="text" name="newMaxDiscount" class="form-control" id="newMaxDiscount">
+            </div>
         </div>
 
-        <label for="newMaxDiscount" class="col-md-2 col-form-label">New Maximum Discount:</label>
-        <div class="col-md-3">
-            <input type="text" name="newMaxDiscount" class="form-control" id="newMaxDiscount">
-        </div>
-    </div>
 
+        <button type="submit" class="btn btn-dark">Update</button>
 
-    <button type="submit" class="btn btn-primary">Update</button>
-
-</form>
+    </form>
+</div>
