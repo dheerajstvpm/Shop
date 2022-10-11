@@ -90,11 +90,6 @@ const otpLoginVerifyPost=(req, res) => {
                             console.log(err)
                         })
                     res.redirect('/login');
-                    // res.redirect('/')
-                    // res.status(200).send({
-                    //     message: "User is Verified!!",
-                    //     data
-                    // })
                 }
             })
     } else {
@@ -226,23 +221,6 @@ const userSignupPost=function (req, res) {
                                     res.redirect('/otpLoginVerify')
                                 })
                         }
-                        // else {   
-                        //     const user = new User({
-                        //         name: req.body.name,
-                        //         mobile: req.body.mobile,
-                        //         username: req.body.username,
-                        //         password: hashPassword,
-                        //         address: req.body.address
-                        //     })
-                        //     user.save()
-                        //         .then((result) => {
-                        //             console.log('success')
-                        //         })
-                        //         .catch((err) => {
-                        //             console.log(err)
-                        //         })
-                        //     res.redirect('/login');
-                        // }
                     })
                     .catch((err) => {
                         console.log(err)
