@@ -9,7 +9,7 @@
 }
 
 .zoom-img img {
-    transition: all 1.3s ease;
+    transition: all 1.0s ease;
 }
 
 .zoom-img:hover img {
