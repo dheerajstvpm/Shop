@@ -1,0 +1,44 @@
+<div class="container">
+    <header
+        class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <div class="dropdown" style="width: 30%;">
+            <button class="btn btn-white d-flex flex-wrap align-items-start" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" class="bi bi-list"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                </svg>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="/category" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Category</button></a></li>
+                <li><a href="/products" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Products</button></a></li>
+                <li><a href="/moreProducts" class="text-decoration-none"><button class="dropdown-item" type="button">More Products</button></a></li>
+            </ul>
+        </div>
+
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0" style="width: 40%;">
+            <li><a href="/" class="nav-link px-2 link-dark"><span style="font-size: 48px;">Shop</span><span
+                        style="font-size: 72px;">.</span></a></li>
+        </ul>
+        {{#if loginId}}
+        <div class="col-md-3 text-end" style="width: 30%;">
+            <a href="/login"></a><button class="btn btn-dark me-2" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">User
+            </button></a>
+            <ul class="dropdown-menu">
+                <li><a href="/cart" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Cart</button></a></li>
+                <li><a href="/wishlist" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Wishlist</button></a></li>
+                <li><a href="/orders" class="text-decoration-none"><button   class="dropdown-item border-bottom" type="button">Orders</button></a></li>
+                <li><a href="/profile" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Profile</button></a></li>
+                <li><a href="/logout" class="text-decoration-none"><button class="dropdown-item" type="button">Logout</button></a></li>
+            </ul>
+        </div>
+        {{else}}
+        <div class="col-md-3 text-end" style="width: 30%;">
+            <a href="/login"><button type="button" class="btn btn-outline-dark me-2">Login</button></a>
+            <a href="/signup"><button type="button" class="btn btn-dark">Sign up</button></a>
+        </div>
+        {{/if}}
+    </header>
+</div>
