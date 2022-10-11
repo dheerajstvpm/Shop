@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
     adminSession = req.session;
     console.log(adminSession)
     if (adminSession.adminId) {
-        res.render('admin/adminHomepage', { title: 'Shop.admin', id: 'adminSession.adminId' })
+        res.render('admin/adminHomepage', { title: 'Shop.admin', id: 'adminSession.adminId', admin:true })
     } else {
         res.redirect('/admin/adminLogin')
     }
@@ -28,9 +28,9 @@ router.get('/', (req, res) => {
 router.get('/product', (req, res) => {
     adminSession = req.session;
     if (adminSession.adminId) {
-        res.render('admin/adminProduct', { title: 'Shop.admin', id: 'adminSession.adminId' })
+        res.render('admin/adminProduct', { title: 'Shop.admin', id: 'adminSession.adminId', admin: true })
     } else {
-        res.render('admin/adminProduct', { title: 'Shop.admin' })
+        res.render('admin/adminProduct', { title: 'Shop.admin', admin: true })
     }
 })
 
@@ -43,20 +43,24 @@ router.get('/adminLogin', (req, res) => {
         console.log(adminSession)
         console.log('3')
         req.session.destroy();
-        res.render('admin/adminLogin', { title: 'Login', usernameMessage: 'Username does not exist' })
+        res.render('admin/adminLogin', { title: 'Login', usernameMessage: 'Username does not exist', admin: true })
     } else if (adminSession.incAdminPwd) {
         console.log(adminSession)
         console.log('4')
         req.session.destroy();
-        res.render('admin/adminLogin', { title: 'Login', passwordMessage: 'Incorrect password' })
+        res.render('admin/adminLogin', { title: 'Login', passwordMessage: 'Incorrect password', admin: true })
     } else {
         console.log(adminSession)
-        res.render('admin/adminLogin', { title: 'Login' })
+        res.render('admin/adminLogin', { title: 'Login', admin: true })
     }
 })
 
 router.get('/addNewAdmin', (req, res) => {
-    res.render('admin/addNewAdmin', { title: 'Signup' })
+    if (adminSession.adminId) {
+        res.render('admin/addNewAdmin', { title: 'Add new admin', admin: true })
+    } else {
+        res.redirect('/admin');
+    }
 })
 
 router.post('/addNewAdmin',
@@ -81,7 +85,7 @@ router.post('/addNewAdmin',
         const error4 = errors.errors.find(item => item.param === 'password') || '';
 
         if (!errors.isEmpty()) {
-            res.render('admin/addNewAdmin', { title: 'Add new admin', usernameMsg: error3.msg, pwdMsg: error4.msg });
+            res.render('admin/addNewAdmin', { title: 'Add new admin', usernameMsg: error3.msg, pwdMsg: error4.msg, admin: true });
 
         } else {
             Admin.find({ username: req.body.username })
@@ -135,7 +139,7 @@ router.post('/adminLogin', function (req, res) {
                     } else {
                         adminSession = req.session
                         adminSession.incAdminPwd = true;
-                        console.log(session)
+                        console.log(adminSession)
                         console.log('1')
                         res.redirect('/admin/adminLogin');
                         // res.render('users/login', { title: 'Login', passwordMessage: 'Incorrect password' })
@@ -149,7 +153,7 @@ router.post('/adminLogin', function (req, res) {
             // console.log(err)
             adminSession = req.session
             adminSession.incorrectAdmin = true;
-            console.log(session)
+            console.log(adminSession)
             console.log('2')
             res.redirect('/adminLogin');
             // res.render('users/login', { title: 'Login', usernameMessage: 'Username does not exist' })
@@ -178,7 +182,7 @@ router.get('/adminProductManagement', function (req, res) {
     Product.find({}).sort({ _id: -1 })
         .then((result) => {
             if (adminSession.adminId) {
-                res.render('admin/adminProductManagement', { result })
+                res.render('admin/adminProductManagement', { result, admin: true })
             } else {
                 res.redirect('/admin');
             }
@@ -195,7 +199,7 @@ router.post('/adminProductSearch', function (req, res) {
         Product.find({ $or: [{ productName: req.body.input }, { category: req.body.input }] })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminProductManagement', { result })
+                    res.render('admin/adminProductManagement', { result, admin: true })
                 } else {
                     res.redirect('/admin/adminProductManagement');
                 }
@@ -220,14 +224,14 @@ router.get('/addNewProduct', function (req, res) {
 
 
             const item = [{ message: 'Product already exist' }]
-            res.render('admin/addNewProduct', { item });
+            res.render('admin/addNewProduct', { item, admin: true });
         } else {
             let offerResult;
             Offer.find({})
                 .then((result) => {
 
                     console.log(result);
-                    offerResult=result;
+                    offerResult = result;
 
                     // res.render('admin/addNewProduct', { offerResult });
                 })
@@ -239,7 +243,7 @@ router.get('/addNewProduct', function (req, res) {
 
                     console.log(result);
 
-                    res.render('admin/addNewProduct', { result, offerResult });
+                    res.render('admin/addNewProduct', { result, offerResult, admin: true });
                 })
                 .catch((err) => {
                     console.log(err)
@@ -270,7 +274,7 @@ router.post('/addNewProduct',
         console.log(error5.msg);
         adminSession = req.session;
         if (!errors.isEmpty()) {
-            res.render('admin/addNewProduct', { productNameMsg: error1.msg, descriptionMsg: error2.msg, priceMsg: error3.msg, stockMsg: error4.msg, imageMsg: error5.msg, categoryMsg: error6.msg });
+            res.render('admin/addNewProduct', { productNameMsg: error1.msg, descriptionMsg: error2.msg, priceMsg: error3.msg, stockMsg: error4.msg, imageMsg: error5.msg, categoryMsg: error6.msg, admin: true });
         } else if (adminSession.adminId) {
             Product.find({ productName: req.body.productName })
                 .then((result) => {
@@ -319,6 +323,7 @@ router.get('/editProduct/:id', function (req, res) {
             .then((result) => {
 
                 let current = result.find(item => item.productName)
+                current.admin=true;
                 console.log(current)
                 res.render('admin/adminEditProduct', current)
             })
@@ -413,6 +418,7 @@ router.post('/editProduct/:id', function (req, res) {
             // } else {
             //     res.redirect('/admin/adminProductManagement')
         }
+        res.redirect('/admin/adminProductManagement')
     } else {
         console.log('Hi')
         res.redirect('/admin/adminProductManagement')
@@ -428,7 +434,7 @@ router.get('/deleteProduct/:id', function (req, res) {
         Product.deleteOne({ _id: productId })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminProductManagement', { result })
+                    res.render('admin/adminProductManagement', { result, admin: true })
                 } else {
                     res.redirect('/admin/adminProductManagement');
                 }
@@ -450,7 +456,7 @@ router.get('/adminUserManagement', function (req, res) {
     User.find({}).sort({ _id: -1 })
         .then((result) => {
             if (adminSession.adminId) {
-                res.render('admin/adminUserManagement', { result })
+                res.render('admin/adminUserManagement', { result, admin: true })
             } else {
                 res.redirect('/admin');
             }
@@ -467,7 +473,7 @@ router.post('/adminUserSearch', function (req, res) {
         Product.find({ $or: [{ name: req.body.input }, { username: req.body.input }] })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminUserManagement', { result })
+                    res.render('admin/adminUserManagement', { result, admin: true })
                 } else {
                     res.redirect('/admin/adminUserManagement');
                 }
@@ -490,7 +496,7 @@ router.get('/block/:id', function (req, res) {
         User.updateOne({ _id: userId }, { $set: { status: 'blocked' } })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminUserManagement', { result })
+                    res.render('admin/adminUserManagement', { result, admin: true })
                 } else {
                     res.redirect('/admin/adminUserManagement');
                 }
@@ -513,7 +519,7 @@ router.get('/unblock/:id', function (req, res) {
         User.updateOne({ _id: userId }, { $set: { status: 'unblocked' } })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminUserManagement', { result })
+                    res.render('admin/adminUserManagement', { result, admin: true })
                 } else {
                     res.redirect('/admin/adminUserManagement');
                 }
@@ -538,7 +544,7 @@ router.get('/adminCategoryManagement', function (req, res) {
     Category.find({}).sort({ _id: -1 })
         .then((result) => {
             if (adminSession.adminId) {
-                res.render('admin/adminCategoryManagement', { result })
+                res.render('admin/adminCategoryManagement', { result, admin: true })
             } else {
                 res.redirect('/admin');
             }
@@ -555,7 +561,7 @@ router.post('/adminCategorySearch', function (req, res) {
         Category.find({ category: req.body.input })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminCategoryManagement', { result })
+                    res.render('admin/adminCategoryManagement', { result, admin: true })
                 } else {
                     res.redirect('/admin/adminCategoryManagement');
                 }
@@ -577,9 +583,9 @@ router.get('/addNewCategory', function (req, res) {
             adminSession = req.session
             adminSession.adminId = true;
             const item = [{ message: 'Category already exist' }]
-            res.render('admin/addNewCategory', { item });
+            res.render('admin/addNewCategory', { item, admin: true });
         } else {
-            res.render('admin/addNewCategory');
+            res.render('admin/addNewCategory', { admin: true });
         }
     } else {
         res.redirect('/admin');
@@ -595,7 +601,7 @@ router.post('/addNewCategory',
         console.log(error1.msg);
         adminSession = req.session;
         if (!errors.isEmpty()) {
-            res.render('admin/addNewCategory', { categoryMsg: error1.msg });
+            res.render('admin/addNewCategory', { categoryMsg: error1.msg, admin: true });
         } else if (adminSession.adminId) {
             Category.find({ category: req.body.category })
                 .then((result) => {
@@ -685,7 +691,7 @@ router.get('/deleteCategory/:id', function (req, res) {
         Category.deleteOne({ _id: categoryId })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminCategoryManagement', { result })
+                    res.render('admin/adminCategoryManagement', { result, admin: true })
                 } else {
                     res.redirect('/admin/adminCategoryManagement');
                 }
@@ -709,7 +715,7 @@ router.get('/adminOfferManagement', function (req, res) {
     Offer.find({}).sort({ _id: -1 })
         .then((result) => {
             if (adminSession.adminId) {
-                res.render('admin/adminOfferManagement', { result })
+                res.render('admin/adminOfferManagement', { result, admin: true })
             } else {
                 res.redirect('/admin');
             }
@@ -726,7 +732,7 @@ router.post('/adminOfferSearch', function (req, res) {
         Offer.find({ offer: req.body.input })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminOfferManagement', { result })
+                    res.render('admin/adminOfferManagement', { result, admin: true })
                 } else {
                     res.redirect('/admin/adminOfferManagement');
                 }
@@ -748,9 +754,9 @@ router.get('/addNewOffer', function (req, res) {
             adminSession = req.session
             adminSession.adminId = true;
             const item = [{ message: 'Offer already exist' }]
-            res.render('admin/addNewOffer', { item });
+            res.render('admin/addNewOffer', { item, admin: true });
         } else {
-            res.render('admin/addNewOffer');
+            res.render('admin/addNewOffer', { admin: true });
         }
     } else {
         res.redirect('/admin');
@@ -772,7 +778,7 @@ router.post('/addNewOffer',
         console.log(error1.msg);
         adminSession = req.session;
         if (!errors.isEmpty()) {
-            res.render('admin/addNewOffer', { minOrderMsg: error1.msg, discountMsg: error2.msg, maxDiscountMsg: error3.msg, offerMsg: error4.msg });
+            res.render('admin/addNewOffer', { minOrderMsg: error1.msg, discountMsg: error2.msg, maxDiscountMsg: error3.msg, offerMsg: error4.msg, admin: true });
         } else if (adminSession.adminId) {
             Offer.find({ offer: req.body.offer })
                 .then((result) => {
@@ -818,6 +824,7 @@ router.get('/editOffer/:id', function (req, res) {
             .then((result) => {
 
                 let current = result.find(item => item.offer)
+                current.admin=true;
                 console.log(current)
                 res.render('admin/adminEditOffer', current)
             })
@@ -890,7 +897,7 @@ router.get('/deleteOffer/:id', function (req, res) {
         Offer.deleteOne({ _id: offerId })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminOfferManagement', { result })
+                    res.render('admin/adminOfferManagement', { result, admin: true })
                 } else {
                     res.redirect('/admin/adminOfferManagement');
                 }
@@ -905,6 +912,224 @@ router.get('/deleteOffer/:id', function (req, res) {
 });
 
 
+//Homepage layout
+
+
+
+router.get('/userHomepageLayout', function (req, res) {
+    adminSession = req.session
+    if (adminSession.adminId) {
+        Product.find({})
+            .then((result) => {
+
+                console.log(result);
+
+                res.render('admin/userHomepageLayout', { result, admin: true });
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+
+    } else {
+        res.redirect('/admin');
+    }
+});
+
+router.post('/userHomepageLayout', function (req, res) {
+    if (adminSession.adminId) {
+        if (req.body.firstRow1) {
+            Product.findOne({ productName: req.body.firstRow1 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { firstRow1: result.image, firstRow1Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+        if (req.body.firstRow2) {
+            Product.findOne({ productName: req.body.firstRow2 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { firstRow2: result.image, firstRow2Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+        if (req.body.firstRow3) {
+            Product.findOne({ productName: req.body.firstRow3 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { firstRow3: result.image, firstRow3Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+        if (req.body.firstRow4) {
+            Product.findOne({ productName: req.body.firstRow4 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { firstRow4: result.image, firstRow4Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+        if (req.body.banner1) {
+            Product.findOne({ productName: req.body.banner1 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { banner1: result.image, banner1Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+        if (req.body.banner2) {
+            Product.findOne({ productName: req.body.banner2 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { banner2: result.image, banner2Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+        if (req.body.banner3) {
+            Product.findOne({ productName: req.body.banner3 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { banner3: result.image, banner3Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+        if (req.body.lastRow1) {
+            Product.findOne({ productName: req.body.lastRow1 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { lastRow1: result.image, lastRow1Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+        if (req.body.lastRow2) {
+            Product.findOne({ productName: req.body.lastRow2 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { lastRow2: result.image, lastRow2Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+        if (req.body.lastRow3) {
+            Product.findOne({ productName: req.body.lastRow3 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { lastRow3: result.image, lastRow3Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+        if (req.body.lastRow4) {
+            Product.findOne({ productName: req.body.lastRow4 })
+                .then((result) => {
+                    console.log(result)
+                    Homepage.updateOne({}, { $set: { lastRow4: result.image, lastRow4Id: result._id } })
+                        .then((result) => {
+                            res.redirect('/admin')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
+    } else {
+        res.redirect('/admin');
+    }
+});
+
+
 
 
 //Admin logout
@@ -912,8 +1137,12 @@ router.get('/deleteOffer/:id', function (req, res) {
 router.post('/adminLogout', function (req, res) {
     adminSession = req.session
     adminSession.adminId = false
-    adminSession.incorrect = false
-    adminSession.alreadyexist = false
+    adminSession.incorrectAdmin = false
+    adminSession.incAdminPwd = false
+    adminSession.adminAlreadyExist = false
+    adminSession.productExist = false
+    adminSession.categoryExist = false
+    adminSession.offerExist = false
     res.redirect('/admin');
 });
 
