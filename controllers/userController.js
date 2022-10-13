@@ -25,7 +25,7 @@ const userHome=(req, res) => {
     Homepage.find({})
         .then((result) => {
             if (session.userId) {
-                res.render('users/homepage', { title: 'Shop.', loginId: true, result })
+                res.render('users/homepage', { title: 'Shop.', loginId: session.userId, result, })
             } else {
                 res.render('users/homepage', { title: 'Shop.', result })
             }
@@ -43,7 +43,7 @@ const product=(req, res) => {
         .then((result) => {
             console.log(result);
             if (session.userId) {
-                res.render('users/product', { title: 'Shop.', loginId: true, result })
+                res.render('users/product', { title: 'Shop.', loginId: session.userId, result })
             } else {
                 res.render('users/product', { title: 'Shop.', result })
             }
@@ -136,7 +136,7 @@ const userLoginPost=function (req, res) {
 
                     if (bcryptResult) {
                         session = req.session;
-                        session.userId = temp.username;
+                        session.userId = temp.name;
                         session.userStatus = temp.status;
                         res.redirect('/login');
                     } else {
