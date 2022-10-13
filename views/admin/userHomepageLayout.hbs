@@ -1,6 +1,11 @@
 <div class="container">
-    <h1 class="mt-5">Homepage Layout</h1>
-
+    {{!-- <h1 class="mt-5">Homepage Layout</h1> --}}
+    <div class="d-flex justify-content-between my-3 border-bottom">
+        <h1>Homepage Layout</h1>
+        <form action="/admin/adminLogout" method="post">
+            <button type="submit" class="btn btn-dark">Logout</button>
+        </form>
+    </div>
     <form action="/admin/userHomepageLayout" method="post" class="my-5">
         <h3>First row :</h2>
             <div class="d-flex justify-content-between my-5">
