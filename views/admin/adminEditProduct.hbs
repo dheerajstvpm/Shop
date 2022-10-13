@@ -1,12 +1,12 @@
 <div class="container">
     <h1>Edit Product</h1>
 
-    <form action="/admin/editProduct/{{_id}}" method="post">
+    <form action="/admin/editProduct/{{productResult._id}}" method="post">
 
         <div class="row mb-3">
             <label for="data" class="col-md-2 col-form-label">Current description : </label>
             <div class="col-md-3">
-                <p class="pt-2">{{description}}</p>
+                <p class="pt-2">{{productResult.description}}</p>
             </div>
             <label for="newDescription" class="col-md-2 col-form-label">New description</label>
             <div class="col-md-3">
@@ -17,7 +17,7 @@
         <div class="row my-3">
             <label for="price" class="col-md-2 col-form-label">Current Price : </label>
             <div class="col-md-3">
-                <p class="pt-2">{{price}}</p>
+                <p class="pt-2">{{productResult.price}}</p>
             </div>
 
             <label for="newPrice" class="col-md-2 col-form-label">New Price:</label>
@@ -29,7 +29,7 @@
         <div class="row my-3">
             <label for="stock" class="col-md-2 col-form-label">Current Stock : </label>
             <div class="col-md-3">
-                <p class="pt-2">{{stock}}</p>
+                <p class="pt-2">{{productResult.stock}}</p>
             </div>
 
             <label for="newStock" class="col-md-2 col-form-label">New Stock:</label>
@@ -41,7 +41,7 @@
         <div class="row my-3">
             <label for="image" class="col-md-2 col-form-label">Current Image : </label>
             <div class="col-md-3">
-                <p class="pt-2">{{image}}</p>
+                <p class="pt-2">{{productResult.image}}</p>
             </div>
 
             <label for="newImage" class="col-md-2 col-form-label">New Image:</label>
@@ -53,24 +53,34 @@
         <div class="row my-3">
             <label for="category" class="col-md-2 col-form-label">Current Category : </label>
             <div class="col-md-3">
-                <p class="pt-2">{{category}}</p>
+                <p class="pt-2">{{productResult.category}}</p>
             </div>
 
             <label for="newCategory" class="col-md-2 col-form-label">New Category:</label>
             <div class="col-md-3">
-                <input type="text" name="newCategory" class="form-control" id="newCategory">
+                {{!-- <input type="text" name="newCategory" class="form-control" id="newCategory"> --}}
+                <select name="newCategory" id="newCategory" style="width: 250px;">
+                    {{#each categoryResult}}
+                    <option value="{{categoryName}}">{{categoryName}}</option>
+                    {{/each}}
+                </select>
             </div>
         </div>
 
         <div class="row my-3">
             <label for="offer" class="col-md-2 col-form-label">Current Offer : </label>
             <div class="col-md-3">
-                <p class="pt-2">{{offer}}</p>
+                <p class="pt-2">{{productResult.offer}}</p>
             </div>
 
             <label for="newOffer" class="col-md-2 col-form-label">New Offer:</label>
             <div class="col-md-3">
-                <input type="text" name="newOffer" class="form-control" id="newOffer">
+                {{!-- <input type="text" name="newOffer" class="form-control" id="newOffer"> --}}
+                <select name="newOffer" id="newOffer" style="width: 250px;">
+                    {{#each offerResult}}
+                    <option value="{{offerName}}">{{offerName}}</option>
+                    {{/each}}
+                </select>
             </div>
         </div>
 
