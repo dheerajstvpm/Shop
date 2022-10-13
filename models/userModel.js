@@ -10,6 +10,7 @@ const userSchema = new Schema({
     status: { type: String },
     wishlist: { type: String },
     cart: { type: String },
+    order: { type: String },
     password: { type: String }
 }, { timestamps: true })
 
