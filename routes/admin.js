@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-var bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
 const adminController = require('../controllers/adminController');
 
