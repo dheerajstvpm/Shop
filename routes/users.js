@@ -15,7 +15,7 @@ const client = require('twilio')(config.accountSid, config.authToken)
 
 const { check, validationResult } = require('express-validator');
 
-const userController=require('../controllers/userController')
+const userController = require('../controllers/userController')
 
 let session;
 
@@ -44,6 +44,8 @@ router.post('/signup',
         .withMessage('Please enter a Name'),
     check('mobileNumber').matches(/[\d]{10}/)
         .withMessage("Mobile number must contain exactly 10 numbers"),
+    check('mobileNumber').matches(/^[6-9][\d]{9}/)
+        .withMessage("Please enter a valid mobile number"),
     check('address').notEmpty()
         .withMessage('Please enter a Address'),
     check('username').notEmpty()
