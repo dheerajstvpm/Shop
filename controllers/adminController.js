@@ -81,7 +81,7 @@ const adminLoginPost = function (req, res) {
 
 const addNewAdminGet = (req, res) => {
     if (adminSession.adminId) {
-        res.render('admin/addNewAdmin', { title: 'Add new admin', admin: true })
+        res.render('admin/addNewAdmin', { title: 'Shop.admin', admin: true })
     } else {
         res.redirect('/admin');
     }
@@ -94,7 +94,7 @@ const addNewAdminPost = function (req, res) {
     const error4 = errors.errors.find(item => item.param === 'password') || '';
 
     if (!errors.isEmpty()) {
-        res.render('admin/addNewAdmin', { title: 'Add new admin', usernameMsg: error3.msg, pwdMsg: error4.msg, admin: true });
+        res.render('admin/addNewAdmin', { title: 'Shop.admin', usernameMsg: error3.msg, pwdMsg: error4.msg, admin: true });
     } else {
         Admin.find({ username: req.body.username })
             .then((result) => {
@@ -138,7 +138,7 @@ const adminProductManagement = function (req, res) {
     Product.find({}).sort({ _id: -1 })
         .then((result) => {
             if (adminSession.adminId) {
-                res.render('admin/adminProductManagement', { result, admin: true })
+                res.render('admin/adminProductManagement', { title: 'Shop.admin', result, admin: true })
             } else {
                 res.redirect('/admin');
             }
@@ -155,7 +155,7 @@ const adminProductSearch = function (req, res) {
         Product.find({ $or: [{ productName: req.body.input }, { category: req.body.input }] })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminProductManagement', { result, admin: true })
+                    res.render('admin/adminProductManagement', { title: 'Shop.admin', result, admin: true })
                 } else {
                     res.redirect('/admin/adminProductManagement');
                 }
@@ -177,24 +177,33 @@ const addNewProductGet = function (req, res) {
             adminSession = req.session
             adminSession.adminId = true;
             const item = [{ message: 'Product already exist' }]
-            res.render('admin/addNewProduct', { item, admin: true });
+            res.render('admin/addNewProduct', { title: 'Shop.admin', item, admin: true });
         } else {
-            let offerResult;
-            Offer.find({})
-                .then((result) => {
+            // let offerResult;
+            // Offer.find({})
+            //     .then((result) => {
 
-                    console.log(result);
-                    offerResult = result;
+            //         console.log(result);
+            //         offerResult = result;
 
-                    // res.render('admin/addNewProduct', { offerResult });
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-            Category.find({})
+            //         // res.render('admin/addNewProduct', { offerResult });
+            //     })
+            //     .catch((err) => {
+            //         console.log(err)
+            //     })
+            // Category.find({})
+            //     .then((result) => {
+            //         console.log(result);
+            //         // res.render('admin/addNewProduct', { result, offerResult, admin: true });
+            //     })
+            //     .catch((err) => {
+            //         console.log(err)
+            //     })
+            Promise.all([Offer.find({}), Category.find({})])
                 .then((result) => {
-                    console.log(result);
-                    res.render('admin/addNewProduct', { result, offerResult, admin: true });
+                    let offerResult, categoryResult;
+                    [offerResult, categoryResult] = result;
+                    res.render('admin/addNewProduct', { title: 'Shop.admin', offerResult, categoryResult, admin: true });
                 })
                 .catch((err) => {
                     console.log(err)
@@ -233,7 +242,7 @@ const addNewProductPost = function (req, res) {
         Category.find({})
             .then((result) => {
                 console.log(result);
-                res.render('admin/addNewProduct', { result, offerResult, productNameMsg: error1.msg, descriptionMsg: error2.msg, priceMsg: error3.msg, stockMsg: error4.msg, imageMsg: error5.msg, categoryMsg: error6.msg, admin: true });
+                res.render('admin/addNewProduct', { title: 'Shop.admin', result, offerResult, productNameMsg: error1.msg, descriptionMsg: error2.msg, priceMsg: error3.msg, stockMsg: error4.msg, imageMsg: error5.msg, categoryMsg: error6.msg, admin: true });
             })
             .catch((err) => {
                 console.log(err)
@@ -282,28 +291,38 @@ const editProductGet = function (req, res) {
     console.log(productId);
     adminSession = req.session;
     if (adminSession.adminId) {
-        let categoryResult;
-        Category.find({})
+        // let categoryResult;
+        // Category.find({})
+        //     .then((result) => {
+        //         categoryResult = result
+        //     })
+        //     .catch((err) => {
+        //         console.log(err)
+        //     })
+        // let offerResult;
+        // Offer.find({})
+        //     .then((result) => {
+        //         offerResult = result
+        //     })
+        //     .catch((err) => {
+        //         console.log(err)
+        //     })
+        // let productResult;
+        // Product.findOne({ _id: productId })
+        //     .then((result) => {
+        //         console.log(result)
+        //         productResult = result
+        //         // res.render('admin/adminEditProduct', { productResult, offerResult, categoryResult, admin: true })
+        //     })
+        //     .catch((err) => {
+        //         console.log(err)
+        //     })
+        Promise.all([Category.find({}), Offer.find({}), Product.findOne({ _id: productId })])
             .then((result) => {
-                categoryResult = result
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        let offerResult;
-        Offer.find({})
-            .then((result) => {
-                offerResult = result
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-            let productResult
-        Product.findOne({ _id: productId })
-            .then((result) => {
-                console.log(result)
-                productResult=result
-                res.render('admin/adminEditProduct', { productResult, offerResult, categoryResult, admin: true })
+                console.log(result);
+                let categoryResult, offerResult, productResult;
+                [categoryResult, offerResult, productResult] = result;
+                res.render('admin/adminEditProduct', { title: 'Shop.admin', productResult, offerResult, categoryResult, admin: true })
             })
             .catch((err) => {
                 console.log(err)
@@ -325,8 +344,8 @@ const editProductPost = function (req, res) {
         if (req.body.newDescription) {
             Product.updateOne({ _id: newProductId }, { $set: { description: req.body.newDescription } })
                 .then((result) => {
-
-                    res.redirect('/admin/adminProductManagement')
+                    console.log(result);
+                    // res.redirect('/admin/adminProductManagement')
                 })
                 .catch((err) => {
                     console.log(err)
@@ -338,7 +357,7 @@ const editProductPost = function (req, res) {
             Product.updateOne({ _id: newProductId }, { $set: { price: req.body.newPrice } })
                 .then((result) => {
                     console.log(result);
-                    res.redirect('/admin/adminProductManagement')
+                    // res.redirect('/admin/adminProductManagement')
                 })
                 .catch((err) => {
                     console.log(err)
@@ -352,7 +371,7 @@ const editProductPost = function (req, res) {
                 .then((result) => {
                     // console.log("hi");
                     console.log(result);
-                    res.redirect('/admin/adminProductManagement')
+                    // res.redirect('/admin/adminProductManagement')
                 })
                 .catch((err) => {
                     console.log(err)
@@ -364,7 +383,7 @@ const editProductPost = function (req, res) {
             Product.updateOne({ _id: newProductId }, { $set: { image: req.body.newImage } })
                 .then((result) => {
                     console.log(result);
-                    res.redirect('/admin/adminProductManagement')
+                    // res.redirect('/admin/adminProductManagement')
                 })
                 .catch((err) => {
                     console.log(err)
@@ -376,7 +395,7 @@ const editProductPost = function (req, res) {
             Product.updateOne({ _id: newProductId }, { $set: { category: req.body.newCategory } })
                 .then((result) => {
                     console.log(result);
-                    res.redirect('/admin/adminProductManagement')
+                    // res.redirect('/admin/adminProductManagement')
                 })
                 .catch((err) => {
                     console.log(err)
@@ -388,7 +407,7 @@ const editProductPost = function (req, res) {
             Product.updateOne({ _id: newProductId }, { $set: { offer: req.body.newOffer } })
                 .then((result) => {
                     console.log(result);
-                    res.redirect('/admin/adminProductManagement')
+                    // res.redirect('/admin/adminProductManagement')
                 })
                 .catch((err) => {
                     console.log(err)
@@ -412,7 +431,7 @@ const deleteProduct = function (req, res) {
         Product.deleteOne({ _id: productId })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminProductManagement', { result, admin: true })
+                    res.render('admin/adminProductManagement', { title: 'Shop.admin', result, admin: true })
                 } else {
                     res.redirect('/admin/adminProductManagement');
                 }
@@ -432,7 +451,7 @@ const adminUserManagement = function (req, res) {
     User.find({}).sort({ _id: -1 })
         .then((result) => {
             if (adminSession.adminId) {
-                res.render('admin/adminUserManagement', { result, admin: true })
+                res.render('admin/adminUserManagement', { title: 'Shop.admin', result, admin: true })
             } else {
                 res.redirect('/admin');
             }
@@ -449,7 +468,7 @@ const adminUserSearch = function (req, res) {
         Product.find({ $or: [{ name: req.body.input }, { username: req.body.input }] })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminUserManagement', { result, admin: true })
+                    res.render('admin/adminUserManagement', { title: 'Shop.admin', result, admin: true })
                 } else {
                     res.redirect('/admin/adminUserManagement');
                 }
@@ -472,7 +491,7 @@ const blockUser = function (req, res) {
         User.updateOne({ _id: userId }, { $set: { status: 'blocked' } })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminUserManagement', { result, admin: true })
+                    res.render('admin/adminUserManagement', { title: 'Shop.admin', result, admin: true })
                 } else {
                     res.redirect('/admin/adminUserManagement');
                 }
@@ -495,7 +514,7 @@ const unblockUser = function (req, res) {
         User.updateOne({ _id: userId }, { $set: { status: 'unblocked' } })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminUserManagement', { result, admin: true })
+                    res.render('admin/adminUserManagement', { title: 'Shop.admin', result, admin: true })
                 } else {
                     res.redirect('/admin/adminUserManagement');
                 }
@@ -515,7 +534,7 @@ const adminCategoryManagement = function (req, res) {
     Category.find({}).sort({ _id: -1 })
         .then((result) => {
             if (adminSession.adminId) {
-                res.render('admin/adminCategoryManagement', { result, admin: true })
+                res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, admin: true })
             } else {
                 res.redirect('/admin');
             }
@@ -532,7 +551,7 @@ const adminCategorySearch = function (req, res) {
         Category.find({ category: req.body.input })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminCategoryManagement', { result, admin: true })
+                    res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, admin: true })
                 } else {
                     res.redirect('/admin/adminCategoryManagement');
                 }
@@ -554,9 +573,9 @@ const addNewCategoryGet = function (req, res) {
             adminSession = req.session
             adminSession.adminId = true;
             const item = [{ message: 'Category already exist' }]
-            res.render('admin/addNewCategory', { item, admin: true });
+            res.render('admin/addNewCategory', { title: 'Shop.admin', item, admin: true });
         } else {
-            res.render('admin/addNewCategory', { admin: true });
+            res.render('admin/addNewCategory', { title: 'Shop.admin', admin: true });
         }
     } else {
         res.redirect('/admin');
@@ -570,7 +589,7 @@ const addNewCategoryPost = function (req, res) {
     console.log(error1.msg);
     adminSession = req.session;
     if (!errors.isEmpty()) {
-        res.render('admin/addNewCategory', { categoryMsg: error1.msg, admin: true });
+        res.render('admin/addNewCategory', { title: 'Shop.admin', categoryMsg: error1.msg, admin: true });
     } else if (adminSession.adminId) {
         Category.find({ categoryName: req.body.category })
             .then((result) => {
@@ -612,7 +631,7 @@ const deleteCategory = function (req, res) {
         Category.deleteOne({ _id: categoryId })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminCategoryManagement', { result, admin: true })
+                    res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, admin: true })
                 } else {
                     res.redirect('/admin/adminCategoryManagement');
                 }
@@ -632,7 +651,7 @@ const adminOfferManagement = function (req, res) {
     Offer.find({}).sort({ _id: -1 })
         .then((result) => {
             if (adminSession.adminId) {
-                res.render('admin/adminOfferManagement', { result, admin: true })
+                res.render('admin/adminOfferManagement', { title: 'Shop.admin', result, admin: true })
             } else {
                 res.redirect('/admin');
             }
@@ -649,7 +668,7 @@ const adminOfferSearch = function (req, res) {
         Offer.find({ offer: req.body.input })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminOfferManagement', { result, admin: true })
+                    res.render('admin/adminOfferManagement', { title: 'Shop.admin', result, admin: true })
                 } else {
                     res.redirect('/admin/adminOfferManagement');
                 }
@@ -671,9 +690,9 @@ const addNewOfferGet = function (req, res) {
             adminSession = req.session
             adminSession.adminId = true;
             const item = [{ message: 'Offer already exist' }]
-            res.render('admin/addNewOffer', { item, admin: true });
+            res.render('admin/addNewOffer', { title: 'Shop.admin', item, admin: true });
         } else {
-            res.render('admin/addNewOffer', { admin: true });
+            res.render('admin/addNewOffer', { title: 'Shop.admin', admin: true });
         }
     } else {
         res.redirect('/admin');
@@ -690,7 +709,7 @@ const addNewOfferPost = function (req, res) {
     console.log(error1.msg);
     adminSession = req.session;
     if (!errors.isEmpty()) {
-        res.render('admin/addNewOffer', { minOrderMsg: error1.msg, discountMsg: error2.msg, maxDiscountMsg: error3.msg, offerMsg: error4.msg, admin: true });
+        res.render('admin/addNewOffer', { title: 'Shop.admin', minOrderMsg: error1.msg, discountMsg: error2.msg, maxDiscountMsg: error3.msg, offerMsg: error4.msg, admin: true });
     } else if (adminSession.adminId) {
         Offer.find({ offer: req.body.offer })
             .then((result) => {
@@ -732,13 +751,13 @@ const editOfferGet = function (req, res) {
     console.log(offerId);
     adminSession = req.session;
     if (adminSession.adminId) {
-        Offer.find({ _id: offerId })
+        Offer.findOne({ _id: offerId })
             .then((result) => {
 
-                let current = result.find(item => item.offer)
-                current.admin = true;
-                console.log(current)
-                res.render('admin/adminEditOffer', current)
+                // let current = result.find(item => item.offer)
+                // current.admin = true;
+                console.log(result)
+                res.render('admin/adminEditOffer', { title: 'Shop.admin', result, admin: true })
             })
             .catch((err) => {
                 console.log(err)
@@ -809,7 +828,7 @@ const deleteOffer = function (req, res) {
         Offer.deleteOne({ _id: offerId })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminOfferManagement', { result, admin: true })
+                    res.render('admin/adminOfferManagement', { title: 'Shop.admin', result, admin: true })
                 } else {
                     res.redirect('/admin/adminOfferManagement');
                 }
@@ -831,7 +850,7 @@ const userHomepageLayoutGet = function (req, res) {
 
                 console.log(result);
 
-                res.render('admin/userHomepageLayout', { result, admin: true });
+                res.render('admin/userHomepageLayout', { title: 'Shop.admin', result, admin: true });
             })
             .catch((err) => {
                 console.log(err)
@@ -847,9 +866,9 @@ const userHomepageLayoutPost = function (req, res) {
             Product.findOne({ productName: req.body.firstRow1 })
                 .then((result) => {
                     console.log(result)
-                    Homepage.updateOne({}, { $set: { firstRow1: result.image, firstRow1Id: result._id } })
+                    Homepage.updateOne({}, { $set: { firstRow1: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -862,10 +881,10 @@ const userHomepageLayoutPost = function (req, res) {
         if (req.body.firstRow2) {
             Product.findOne({ productName: req.body.firstRow2 })
                 .then((result) => {
-                    console.log(result)
-                    Homepage.updateOne({}, { $set: { firstRow2: result.image, firstRow2Id: result._id } })
+                    // console.log(result)
+                    Homepage.updateOne({}, { $set: { firstRow2: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -878,10 +897,10 @@ const userHomepageLayoutPost = function (req, res) {
         if (req.body.firstRow3) {
             Product.findOne({ productName: req.body.firstRow3 })
                 .then((result) => {
-                    console.log(result)
-                    Homepage.updateOne({}, { $set: { firstRow3: result.image, firstRow3Id: result._id } })
+                    // console.log(result)
+                    Homepage.updateOne({}, { $set: { firstRow3: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -895,10 +914,10 @@ const userHomepageLayoutPost = function (req, res) {
         if (req.body.firstRow4) {
             Product.findOne({ productName: req.body.firstRow4 })
                 .then((result) => {
-                    console.log(result)
-                    Homepage.updateOne({}, { $set: { firstRow4: result.image, firstRow4Id: result._id } })
+                    // console.log(result)
+                    Homepage.updateOne({}, { $set: { firstRow4: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -912,10 +931,10 @@ const userHomepageLayoutPost = function (req, res) {
         if (req.body.banner1) {
             Product.findOne({ productName: req.body.banner1 })
                 .then((result) => {
-                    console.log(result)
-                    Homepage.updateOne({}, { $set: { banner1: result.image, banner1Id: result._id } })
+                    // console.log(result)
+                    Homepage.updateOne({}, { $set: { banner1: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -929,10 +948,10 @@ const userHomepageLayoutPost = function (req, res) {
         if (req.body.banner2) {
             Product.findOne({ productName: req.body.banner2 })
                 .then((result) => {
-                    console.log(result)
-                    Homepage.updateOne({}, { $set: { banner2: result.image, banner2Id: result._id } })
+                    // console.log(result)
+                    Homepage.updateOne({}, { $set: { banner2: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -946,10 +965,10 @@ const userHomepageLayoutPost = function (req, res) {
         if (req.body.banner3) {
             Product.findOne({ productName: req.body.banner3 })
                 .then((result) => {
-                    console.log(result)
-                    Homepage.updateOne({}, { $set: { banner3: result.image, banner3Id: result._id } })
+                    // console.log(result)
+                    Homepage.updateOne({}, { $set: { banner3: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -963,10 +982,10 @@ const userHomepageLayoutPost = function (req, res) {
         if (req.body.lastRow1) {
             Product.findOne({ productName: req.body.lastRow1 })
                 .then((result) => {
-                    console.log(result)
-                    Homepage.updateOne({}, { $set: { lastRow1: result.image, lastRow1Id: result._id } })
+                    // console.log(result)
+                    Homepage.updateOne({}, { $set: { lastRow1: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -980,10 +999,10 @@ const userHomepageLayoutPost = function (req, res) {
         if (req.body.lastRow2) {
             Product.findOne({ productName: req.body.lastRow2 })
                 .then((result) => {
-                    console.log(result)
-                    Homepage.updateOne({}, { $set: { lastRow2: result.image, lastRow2Id: result._id } })
+                    // console.log(result)
+                    Homepage.updateOne({}, { $set: { lastRow2: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -997,10 +1016,10 @@ const userHomepageLayoutPost = function (req, res) {
         if (req.body.lastRow3) {
             Product.findOne({ productName: req.body.lastRow3 })
                 .then((result) => {
-                    console.log(result)
-                    Homepage.updateOne({}, { $set: { lastRow3: result.image, lastRow3Id: result._id } })
+                    // console.log(result)
+                    Homepage.updateOne({}, { $set: { lastRow3: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -1014,10 +1033,10 @@ const userHomepageLayoutPost = function (req, res) {
         if (req.body.lastRow4) {
             Product.findOne({ productName: req.body.lastRow4 })
                 .then((result) => {
-                    console.log(result)
-                    Homepage.updateOne({}, { $set: { lastRow4: result.image, lastRow4Id: result._id } })
+                    // console.log(result)
+                    Homepage.updateOne({}, { $set: { lastRow4: result } })
                         .then((result) => {
-                            res.redirect('/admin')
+                            // res.redirect('/admin')
                         })
                         .catch((err) => {
                             console.log(err)
@@ -1027,7 +1046,7 @@ const userHomepageLayoutPost = function (req, res) {
                     console.log(err)
                 })
         }
-
+        res.redirect('/admin')
     } else {
         res.redirect('/admin');
     }
