@@ -1,38 +1,46 @@
-<h1 class="mt-5 d-flex justify-content-center">Signup</h1>
-<div class="container-fluid d-flex justify-content-center">
-    <form class="col-md-4" action="/signup" method="post">
-        <div class="my-3">
-            <input type="text" name="name" class="form-control text-center" id="exampleInputName" placeholder="Name"
-                aria-describedby="nameHelp">
-            <p class="text-center">{{nameMsg}}</p>
-        </div>
-        <div class="my-3">
-            <input type="text" name="address" class="form-control text-center" id="exampleInputAddress" placeholder="Address"
-                aria-describedby="addressHelp">
-            <p class="text-center">{{addressMsg}}</p>
-        </div>
-        <div class="my-3">
-            <input type="text" name="mobileNumber" class="form-control text-center" id="exampleInputMobile"
-                placeholder="Mobile Number" aria-describedby="mobileHelp">
-            <p class="text-center">{{mobileMsg}}</p>
-        </div>
-        <div class="my-3">
-            <input type="text" name='username' class="form-control text-center" id="exampleInputEmail"
-                placeholder="Username" aria-describedby="emailHelp">
-            <p class="text-center">{{usernameMsg}}</p>
-        </div>
-        <div class="mb-3">
-            <input type="password" name="password" class="form-control text-center" id="exampleInputPassword"
-                placeholder="Password">
-            <p class="text-center">{{pwdMsg}}</p>
-        </div>
-        <div class="mb-3">
-            <input type="password" name="confirmPassword" class="form-control text-center"
-                id="exampleInputConfirmPassword" placeholder="Confirm Password">
-            <p class="text-center">{{confirmPwdMsg}}</p>
-        </div>
-        <div class='mb-3 d-flex justify-content-center'>
-            <button type="submit" class="btn btn-dark">Signup</button>
-        </div>
-    </form>
+<div class="container minHeight">
+    <h1 class="mt-5 d-flex justify-content-center">Signup</h1>
+    <div class="container-fluid d-flex justify-content-center">
+        <form class="col-md-12" action="/signup" method="post">
+            <div class="my-3 d-flex justify-content-center">
+                <div class="col-md-4"></div>    
+                <input type="text" name="name" class="form-control text-center" id="exampleInputName" placeholder="Name"
+                    aria-describedby="nameHelp">
+                <div class="col-md-4 text-start ps-2 pt-2">{{nameMsg}}</div>
+            </div>
+            <div class="my-3 d-flex justify-content-center">
+                <div class="col-md-4"></div>
+                <input type="text" name="address" class="form-control text-center" id="exampleInputAddress"
+                    placeholder="Address" aria-describedby="addressHelp">
+                <div class="col-md-4 text-start ps-2 pt-2">{{addressMsg}}</div>
+            </div>
+            <div class="my-3 d-flex justify-content-center">
+                <div class="col-md-4"></div>
+                <input type="text" name="mobileNumber" class="form-control text-center" id="exampleInputMobile"
+                    placeholder="Mobile Number" aria-describedby="mobileHelp">
+                <div class="col-md-4 text-start ps-2 pt-2">{{mobileMsg}}</div>
+            </div>
+            <div class="my-3 d-flex justify-content-center">
+                <div class="col-md-4"></div>
+                <input type="text" name='username' class="form-control text-center" id="exampleInputEmail"
+                    placeholder="Username" aria-describedby="emailHelp">
+                <div class="col-md-4 text-start ps-2 pt-2">{{usernameMsg}}</div>
+            </div>
+            <div class="mb-3 d-flex justify-content-center">
+                <div class="col-md-4"></div>
+                <input type="password" name="password" class="form-control text-center" id="exampleInputPassword"
+                    placeholder="Password">
+                <div class="col-md-4 text-start ps-2 pt-2">{{pwdMsg}}</div>
+            </div>
+            <div class="mb-3 d-flex justify-content-center">
+                <div class="col-md-4"></div>
+                <input type="password" name="confirmPassword" class="form-control text-center"
+                    id="exampleInputConfirmPassword" placeholder="Confirm Password">
+                <div class="col-md-4 text-start ps-2 pt-2">{{confirmPwdMsg}}</div>
+            </div>
+            <div class='mb-3 d-flex justify-content-center'>
+                <button type="submit" class="btn btn-dark">Signup</button>
+            </div>
+        </form>
+    </div>
 </div>
