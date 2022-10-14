@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container minHeight">
     <h1>Add New Product</h1>
 
     <form action="/admin/addNewProduct" method="post">
@@ -53,7 +53,7 @@
                 {{!-- <input type="text" name="category" class="form-control" id="category"> --}}
 
                 <select name="category" id="category" style="width: 250px;">
-                    {{#each result}}
+                    {{#each categoryResult}}
                     <option value="{{categoryName}}">{{categoryName}}</option>
                     {{/each}}
                 </select>
