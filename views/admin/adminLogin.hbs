@@ -1,18 +1,20 @@
-<h1 class="mt-5 d-flex justify-content-center">Login</h1>
-<div class="container-fluid d-flex justify-content-center">
-    <form class="col-md-4" action="/admin/adminLogin" method="post">
-        <div class="my-3">
-            <input type="text" name="username" class="form-control text-center" id="exampleInputUsername"
-                placeholder="Username" aria-describedby="usernameHelp">
-            <p class="text-center">{{usernameMessage}}</p>
-        </div>
-        <div class="mb-3">
-            <input type="password" name="password" class="form-control text-center" id="exampleInputPassword"
-                placeholder="Password">
-            <p class="text-center">{{passwordMessage}}</p>
-        </div>
-        <div class='mb-3 d-flex justify-content-center'>
-            <button type="submit" class="btn btn-dark">Login</button>
-        </div>
-    </form>
+<div class="container minHeight">
+    <h1 class="mt-5 d-flex justify-content-center">Login</h1>
+    <div class="container-fluid d-flex justify-content-center">
+        <form class="col-md-4" action="/admin/adminLogin" method="post">
+            <div class="my-3">
+                <input type="text" name="username" class="form-control text-center" id="exampleInputUsername"
+                    placeholder="Username" aria-describedby="usernameHelp">
+                <p class="text-center">{{usernameMessage}}</p>
+            </div>
+            <div class="mb-3">
+                <input type="password" name="password" class="form-control text-center" id="exampleInputPassword"
+                    placeholder="Password">
+                <p class="text-center">{{passwordMessage}}</p>
+            </div>
+            <div class='mb-3 d-flex justify-content-center'>
+                <button type="submit" class="btn btn-dark">Login</button>
+            </div>
+        </form>
+    </div>
 </div>
