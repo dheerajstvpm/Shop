@@ -20,12 +20,12 @@ let username1;
 let password1;
 let address1;
 
-const userHome=(req, res) => {
+const userHome = (req, res) => {
     session = req.session;
     Homepage.find({})
         .then((result) => {
             if (session.userId) {
-                res.render('users/homepage', { title: 'Shop.', loginId: session.userId, result, })
+                res.render('users/homepage', { title: 'Shop.', loginId: session.userId, result })
             } else {
                 res.render('users/homepage', { title: 'Shop.', result })
             }
@@ -35,10 +35,10 @@ const userHome=(req, res) => {
         })
 }
 
-const product=(req, res) => {
+const product = (req, res) => {
     session = req.session;
     const productId = req.params.id;
-
+    console.log(productId)
     Product.find({ _id: productId })
         .then((result) => {
             console.log(result);
@@ -54,7 +54,7 @@ const product=(req, res) => {
         })
 }
 
-const otpLoginVerifyGet=(req, res) => {
+const otpLoginVerifyGet = (req, res) => {
     session = req.session;
     if (session.userId) {
         res.redirect('/');
@@ -63,7 +63,7 @@ const otpLoginVerifyGet=(req, res) => {
     }
 }
 
-const otpLoginVerifyPost=(req, res) => {
+const otpLoginVerifyPost = (req, res) => {
     if ((req.body.otp).length === 6) {
         client
             .verify
@@ -100,13 +100,13 @@ const otpLoginVerifyPost=(req, res) => {
     }
 }
 
-const userLoginGet=(req, res) => {
+const userLoginGet = (req, res) => {
     session = req.session;
     if (session.userStatus === 'blocked') {
         console.log(session)
         console.log('5')
         req.session.destroy();
-        res.render('users/login', { title: 'Login', passwordMessage: 'Username has been blocked' })
+        res.render('users/login', { title: 'Shop.', passwordMessage: 'Username has been blocked' })
     } else if (session.userId) {
         console.log(session)
         res.redirect('/')
@@ -114,19 +114,19 @@ const userLoginGet=(req, res) => {
         console.log(session)
         console.log('3')
         req.session.destroy();
-        res.render('users/login', { title: 'Login', usernameMessage: 'Username does not exist' })
+        res.render('users/login', { title: 'Shop.', usernameMessage: 'Username does not exist'})
     } else if (session.incorrectPwd) {
         console.log(session)
         console.log('4')
         req.session.destroy();
-        res.render('users/login', { title: 'Login', passwordMessage: 'Incorrect password' })
+        res.render('users/login', { title: 'Shop.', passwordMessage: 'Incorrect password' })
     } else {
         console.log(session)
-        res.render('users/login', { title: 'Login' })
+        res.render('users/login', { title: 'Shop.' })
     }
 }
 
-const userLoginPost=function (req, res) {
+const userLoginPost = function (req, res) {
     let temp;
     User.find({ username: req.body.username })
         .then((result) => {
@@ -163,17 +163,17 @@ const userLoginPost=function (req, res) {
         })
 }
 
-const userSignupGet=(req, res) => {
+const userSignupGet = (req, res) => {
     if (session.userId) {
         res.redirect('/')
     } else if (session.userAlreadyExist) {
-        res.render('users/signup', { title: 'Signup', usernameMsg: 'User Already Exists' })
+        res.render('users/signup', { title: 'Shop.', usernameMsg: 'User Already Exists' })
     } else {
-        res.render('users/signup', { title: 'Signup' })
+        res.render('users/signup', { title: 'Shop.' })
     }
 }
 
-const userSignupPost=function (req, res) {
+const userSignupPost = function (req, res) {
     const errors = validationResult(req);
     console.log(errors)
     const error1 = errors.errors.find(item => item.param === 'name') || '';
@@ -188,7 +188,7 @@ const userSignupPost=function (req, res) {
     }
     console.log(error5);
     if (!errors.isEmpty()) {
-        res.render('users/signup', { title: 'Signup', nameMsg: error1.msg, mobileMsg: error2.msg, usernameMsg: error3.msg, pwdMsg: error4.msg, confirmPwdMsg: error5, addressMsg: error6.msg });
+        res.render('users/signup', { title: 'Shop.', nameMsg: error1.msg, mobileMsg: error2.msg, usernameMsg: error3.msg, pwdMsg: error4.msg, confirmPwdMsg: error5, addressMsg: error6.msg });
     } else {
         User.find({ username: req.body.username })
             .then((result) => {
@@ -232,7 +232,7 @@ const userSignupPost=function (req, res) {
     }
 }
 
-const userlogout=function (req, res) {
+const userlogout = function (req, res) {
     session = req.session
     session.userId = false
     session.incorrectId = false
@@ -244,7 +244,7 @@ const userlogout=function (req, res) {
 
 
 
-module.exports={
+module.exports = {
     userHome,
     product,
     otpLoginVerifyGet,
