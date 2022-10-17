@@ -79,6 +79,14 @@ router.get('/addToCart/:productId', userController.addToCartGet)
 
 router.get('/removeFromCart/:productId', userController.removeFromCart)
 
+router.get('/wishlist', userController.userWishlistGet)
+
+router.post('/wishlist/:id', userController.userWishlistPost);
+
+router.get('/addToWishlist/:productId', userController.addToWishlistGet)
+
+router.get('/removeFromWishlist/:productId', userController.removeFromWishlist)
+
 router.get('/logout', userController.userlogout);
 
 module.exports = router;
