@@ -62,7 +62,22 @@ router.post('/signup',
         .withMessage("Password must contain at least one number"),
     check('password').matches(/[!@#$%^&*?]/)
         .withMessage("Password must contain at least one special character"),
+    check('confirmPassword')
+        .custom((value, { req }) => {
+            if (value !== req.body.password) {
+                throw new Error('Passwords do not match');
+            }
+            return true;
+        }),
     userController.userSignupPost);
+
+router.get('/cart', userController.userCartGet)
+
+router.post('/cart/:id', userController.userCartPost);
+
+router.get('/addToCart/:productId', userController.addToCartGet)
+
+router.get('/removeFromCart/:productId', userController.removeFromCart)
 
 router.get('/logout', userController.userlogout);
 
