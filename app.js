@@ -38,7 +38,7 @@ app.set('view engine', 'hbs');
 app.engine('hbs', hbs.engine({
   extname: 'hbs',
   defaultLayout: 'layout',
-  partialsDir:__dirname+'/views/partials/',
+  partialsDir: __dirname + '/views/partials/',
   runtimeOptions: {
     allowProtoPropertiesByDefault: true,
     allowProtoMethodsByDefault: true
@@ -46,6 +46,9 @@ app.engine('hbs', hbs.engine({
   helpers: {
     addOne: function (value, options) {
       return parseInt(value) + 1;
+    },
+    multiply: function (value1, value2, options) {
+      return parseInt(value1 * value2);
     }
   }
 }));
