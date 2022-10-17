@@ -16,54 +16,26 @@
         </div>
     </form>
     <div class="d-flex mb-3">
-        <table class=" table">
+        <table class=" table table-borderless">
             <thead>
-                <tr>
-                    <th scope="col" class="text-center">Sl.</th>
-                    <th scope="col" class="text-center">Product Name</th>
-                    <th scope="col" class="text-center">Price</th>
-                    <th scope="col" class="text-center">No.of items</th>
-                    <th scope="col" class="text-center">Total</th>
+                <tr class="d-flex justify-content-between align-items-center mt-5">
+                    <th class="text-center">Sl.</th>
+                    <th class="text-center">Image</th>
+                    <th class="text-center">Product Name</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center"> </th>
                 </tr>
             </thead>
             <tbody>
                 {{#each result.wishlist}}
-                <tr>
+                <tr class="d-flex justify-content-between align-items-center mt-5">
                     <th scope="row" class="text-center">{{addOne @index}}</th>
+                    <td class="text-center"><img src="{{this.image}}" alt="image" style="width: 5rem; height: 5rem"></td>
                     <td class="text-center">{{this.productName}}</td>
                     <td class="text-center">{{this.price}}</td>
-                    <td class="text-center"><a href="/addToWishlist/{{this._id}}"
-                            class="ms-1 me-4 text-decoration-none text-dark"><svg xmlns="http://www.w3.org/2000/svg"
-                                width="16" height="16" fill="currentColor" class="bi bi-plus-circle"
-                                viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path
-                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                            </svg></a>{{this.count}}<a href="/removeFromWishlist/{{this._id}}"
-                            class="ms-4 text-decoration-none text-dark"
-                            onclick="return confirm('Are you sure, you want to remove product :{{this.productName}} from the wishlist?')"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-dash-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
-                            </svg></a></td>
-                    <td class="text-center">{{multiply this.price this.count}}</td>
+                    <td class="text-center"><a href="/removeFromWishlist/{{this._id}}" class="btn btn-outline-danger">Remove from wishlist</a></td>
                 </tr>
                 {{/each}}
-                <tr>
-                    <th scope="row" class="text-center"></th>
-                    <td class="text-center"></td>
-                    <td class="text-center"></td>
-                    <td class="fw-bold text-center">Total</td>
-                    <td class="text-center">{{total}}</td>
-                </tr>
-                <tr>
-                    <th scope="row"></th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-center"><a href="/buyNow/{{result.wishlist}}" class="btn btn-dark">Buy now</a></td>
-                </tr>
             </tbody>
         </table>
     </div>
