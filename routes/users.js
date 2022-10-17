@@ -73,15 +73,11 @@ router.post('/signup',
 
 router.get('/cart', userController.userCartGet)
 
-router.post('/cart/:id', userController.userCartPost);
-
 router.get('/addToCart/:productId', userController.addToCartGet)
 
 router.get('/removeFromCart/:productId', userController.removeFromCart)
 
 router.get('/wishlist', userController.userWishlistGet)
-
-router.post('/wishlist/:id', userController.userWishlistPost);
 
 router.get('/addToWishlist/:productId', userController.addToWishlistGet)
 
