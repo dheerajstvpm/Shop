@@ -5,15 +5,30 @@ const Schema = mongoose.Schema;
 
 const Product = require('../models/productModel')
 
+// const productSchema = new Schema({
+//     result: {
+//         productName: { type: String },
+//         description: { type: String },
+//         price: { type: String },
+//         stock: { type: String },
+//         image: { type: String },
+//         croppedImage: { type: String },
+//         category: { type: String },
+//         offer: { type: String }
+//     },
+//     count:{ type: String }
+// }, { timestamps: true })
+
 const productSchema = new Schema({
     productName: { type: String },
     description: { type: String },
-    price: { type: String },
-    stock: { type: String },
+    price: { type: Number },
+    stock: { type: Number },
     image: { type: String },
     croppedImage: { type: String },
     category: { type: String },
-    offer: { type: String }
+    offer: { type: String },
+    count: { type: Number}
 }, { timestamps: true })
 
 const userSchema = new Schema({
@@ -26,16 +41,16 @@ const userSchema = new Schema({
     },
     status: { type: String },
     wishlist: {
-        type: productSchema,
-        default: {}
+        type: [productSchema],
+        default: []
     },
     cart: {
-        type: productSchema,
-        default: {}
+        type: [productSchema],
+        default: []
     },
     order: {
-        type: productSchema,
-        default: {}
+        type: [productSchema],
+        default: []
     },
     password: { type: String }
 }, { timestamps: true })
