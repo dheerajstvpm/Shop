@@ -28,7 +28,7 @@ let address1;
 const userHome = (req, res) => {
     session = req.session;
     // To be deleted
-    // session.userId = 'Amal';
+    session.userId = 'Amal';
     //
     Homepage.find({})
         .then((result) => {
@@ -277,43 +277,12 @@ const userCartPost = (req, res) => {
     }
 }
 
-// const addToCartGet = (req, res) => {
-//     session = req.session;
-//     // To be deleted
-//     session.userId = 'Amal';
-//     //
-//     if (session.userId) {
-//         console.log(req.params);
-//         let productId = req.params.productId;
-//         console.log(session.userId);
-//         console.log(productId);
-//         Product.findOne({ _Id: productId })
-//             .then((result) => {
-//                 console.log(result)
-//                 let product={result}
-//                 console.log(product)
-//                 User.findOneAndUpdate({ name: session.userId }, { $push: { cart: product } })
-//                     .then((result) => {
-//                         // console.log(result)
-//                         res.redirect('/')
-//                     })
-//                     .catch((err) => {
-//                         console.log(err)
-//                     })
-//             })
-//             .catch((err) => {
-//                 console.log(err)
-//             })
-//     } else {
-//         res.redirect('/login')
-//     }
-// }
 
 
 const addToCartGet = (req, res) => {
     session = req.session;
     // To be deleted
-    // session.userId = 'Amal';
+    session.userId = 'Amal';
     //
     if (session.userId) {
         console.log(req.params);
@@ -324,12 +293,7 @@ const addToCartGet = (req, res) => {
             .then((result) => {
                 console.log(result)
                 result = result.toJSON()
-                // const obj=result;
-                // obj.unique='111'
                 result.count = 1;
-                // Object.defineProperty(result, "unique", { writable: false, value: 11 })
-                // let product = { result }
-                // console.log(obj)
                 console.log(result)
                 User.findOne({ name: session.userId })
                     .then((out) => {
@@ -341,17 +305,19 @@ const addToCartGet = (req, res) => {
                                 console.log(check)
                                 console.log(check.productName)
                                 check.count = check.count + 1;
-                                // User.findOneAndUpdate({ name: session.userId }, { $push: { cart: result } })
                                 User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": 1 } })
                                     .then((result) => {
                                         console.log(result)
-                                        Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
-                                            .then((result) => {
-                                                console.log(result)
-                                            })
-                                            .catch((err) => {
-                                                console.log(err)
-                                            })
+
+                                        //Update stock
+
+                                        // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
+                                        //     .then((result) => {
+                                        //         console.log(result)
+                                        //     })
+                                        //     .catch((err) => {
+                                        //         console.log(err)
+                                        //     })
                                     })
                                     .catch((err) => {
                                         console.log(err)
@@ -366,14 +332,18 @@ const addToCartGet = (req, res) => {
                             User.findOneAndUpdate({ name: session.userId }, { $push: { cart: result } })
                                 .then((result) => {
                                     // console.log(result)
-                                    Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
-                                        .then((result) => {
-                                            console.log(result)
-                                            res.redirect('back')
-                                        })
-                                        .catch((err) => {
-                                            console.log(err)
-                                        })
+
+                                    //Update stock
+
+                                    // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
+                                    //     .then((result) => {
+                                    //         console.log(result)
+                                    //         res.redirect('back')
+                                    //     })
+                                    //     .catch((err) => {
+                                    //         console.log(err)
+                                    //     })
+                                    res.redirect('back')
                                 })
                                 .catch((err) => {
                                     console.log(err)
@@ -392,25 +362,6 @@ const addToCartGet = (req, res) => {
     }
 }
 
-// const removeFromCart = (req, res) => {
-//     session = req.session;
-//     if (session.userId) {
-//         console.log(req.params);
-//         let productId = req.params.productId;
-//         console.log(session.userId);
-//         console.log(productId);
-//         User.findOneAndUpdate({ name: session.userId }, { $pull: { cart: { '_id': productId } } })
-//             .then((result) => {
-//                 console.log(result)
-//                 res.redirect('/cart/')
-//             })
-//             .catch((err) => {
-//                 console.log(err)
-//             })
-//     } else {
-//         res.redirect('/login')
-//     }
-// }
 
 const removeFromCart = (req, res) => {
     session = req.session;
@@ -434,13 +385,16 @@ const removeFromCart = (req, res) => {
                         User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": -1 } })
                             .then((result) => {
                                 console.log(result)
-                                Product.updateOne({ "_id": productId }, { $inc: { "stock": 1 } })
-                                    .then((result) => {
-                                        console.log(result)
-                                    })
-                                    .catch((err) => {
-                                        console.log(err)
-                                    })
+
+                                //Update stock
+
+                                // Product.updateOne({ "_id": productId }, { $inc: { "stock": 1 } })
+                                //     .then((result) => {
+                                //         console.log(result)
+                                //     })
+                                //     .catch((err) => {
+                                //         console.log(err)
+                                //     })
                             })
                             .catch((err) => {
                                 console.log(err)
@@ -455,14 +409,16 @@ const removeFromCart = (req, res) => {
                     User.findOneAndUpdate({ name: session.userId }, { $pull: { cart: { _id: productId } } })
                         .then((result) => {
                             // console.log(result)
-                            Product.updateOne({ "_id": productId }, { $inc: { "stock": 1 } })
-                                .then((result) => {
-                                    console.log(result)
-                                    res.redirect('/cart')
-                                })
-                                .catch((err) => {
-                                    console.log(err)
-                                })
+
+                            //Update stock
+                            // Product.updateOne({ "_id": productId }, { $inc: { "stock": 1 } })
+                            //     .then((result) => {
+                            //         console.log(result)
+                            //         res.redirect('/cart')
+                            //     })
+                            //     .catch((err) => {
+                            //         console.log(err)
+                            //     })
                         })
                         .catch((err) => {
                             console.log(err)
@@ -506,6 +462,228 @@ const removeFromCart = (req, res) => {
     }
 }
 
+
+const userWishlistGet = (req, res) => {
+    // console.log(req.params);
+    // let userId = req.params.id;
+    // console.log(userId);
+    session = req.session;
+    if (session.userId) {
+        User.findOne({ name: session.userId })
+            .then((result) => {
+                const sum = function (items, prop1, prop2) {
+                    return items.reduce(function (a, b) {
+                        return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
+                    }, 0);
+                };
+                const total = sum(result.wishlist, 'price', 'count');
+                // console.log(result)
+                res.render('users/wishlist', { title: 'Shop.', loginName: session.userId, result, total: total })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+
+    } else {
+        res.redirect('/login')
+    }
+}
+
+const userWishlistPost = (req, res) => {
+    if (session.userId) {
+        res.redirect('/wishlist')
+    } else {
+        res.redirect('/login')
+    }
+}
+
+
+
+const addToWishlistGet = (req, res) => {
+    session = req.session;
+    // To be deleted
+    session.userId = 'Amal';
+    //
+    if (session.userId) {
+        console.log(req.params);
+        let productId = req.params.productId;
+        console.log(session.userId);
+        console.log(productId);
+        Product.findOne({ _id: productId })
+            .then((result) => {
+                console.log(result)
+                result = result.toJSON()
+                result.count = 1;
+                console.log(result)
+                User.findOne({ name: session.userId })
+                    .then((out) => {
+                        const checks = out.wishlist
+                        console.log(checks);
+                        let n = 0;
+                        for (const check of checks) {
+                            if (check._id == productId) {
+                                console.log(check)
+                                console.log(check.productName)
+                                check.count = check.count + 1;
+                                User.updateOne({ "name": session.userId, "wishlist._id": productId }, { $inc: { "wishlist.$.count": 1 } })
+                                    .then((result) => {
+                                        console.log(result)
+
+                                        //Update stock
+
+                                        // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
+                                        //     .then((result) => {
+                                        //         console.log(result)
+                                        //     })
+                                        //     .catch((err) => {
+                                        //         console.log(err)
+                                        //     })
+                                    })
+                                    .catch((err) => {
+                                        console.log(err)
+                                    })
+                                n++;
+                            }
+                        }
+                        console.log(n)
+                        if (n > 0) {
+                            res.redirect('back')
+                        } else {
+                            User.findOneAndUpdate({ name: session.userId }, { $push: { wishlist: result } })
+                                .then((result) => {
+                                    // console.log(result)
+
+                                    //Update stock
+
+                                    // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
+                                    //     .then((result) => {
+                                    //         console.log(result)
+                                    //         res.redirect('back')
+                                    //     })
+                                    //     .catch((err) => {
+                                    //         console.log(err)
+                                    //     })
+                                    res.redirect('back')
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                })
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        res.redirect('/login')
+    }
+}
+
+
+const removeFromWishlist = (req, res) => {
+    session = req.session;
+    if (session.userId) {
+        console.log(req.params);
+        let productId = req.params.productId;
+        console.log(session.userId);
+        console.log(productId);
+
+        User.findOne({ name: session.userId })
+            .then((out) => {
+                const checks = out.wishlist
+                console.log(checks);
+                let n = 0;
+                for (const check of checks) {
+                    if (check._id == productId && check.count > 1) {
+                        console.log(check)
+                        console.log(check.productName)
+                        check.count = check.count + 1;
+                        // User.findOneAndUpdate({ name: session.userId }, { $push: { wishlist: result } })
+                        User.updateOne({ "name": session.userId, "wishlist._id": productId }, { $inc: { "wishlist.$.count": -1 } })
+                            .then((result) => {
+                                console.log(result)
+
+                                //Update stock
+
+                                // Product.updateOne({ "_id": productId }, { $inc: { "stock": 1 } })
+                                //     .then((result) => {
+                                //         console.log(result)
+                                //     })
+                                //     .catch((err) => {
+                                //         console.log(err)
+                                //     })
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            })
+                        n++;
+                    }
+                }
+                console.log(n)
+                if (n > 0) {
+                    res.redirect('/wishlist')
+                } else {
+                    User.findOneAndUpdate({ name: session.userId }, { $pull: { wishlist: { _id: productId } } })
+                        .then((result) => {
+                            // console.log(result)
+
+                            //Update stock
+                            // Product.updateOne({ "_id": productId }, { $inc: { "stock": 1 } })
+                            //     .then((result) => {
+                            //         console.log(result)
+                            //         res.redirect('/wishlist')
+                            //     })
+                            //     .catch((err) => {
+                            //         console.log(err)
+                            //     })
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        // User.findOneAndUpdate({ name: session.userId }, { $pull: { wishlist: { unique: productId } } })
+        //     .then((out) => {
+        // const checks = out.wishlist
+        // console.log(checks);
+        // let removeCount = 0;
+        // let removeId = 0;
+        // for (const check of checks) {
+        //     if (check.unique == productId) {
+        //         console.log(check)
+        //         console.log(check.count)
+        //         removeId = check._id
+        //         removeCount = check.count
+        //     }
+        // }
+        // console.log(removeCount)
+        // console.log(removeId)
+        // Product.updateOne({ "_id": removeId }, { $inc: { "stock": removeCount } })
+        //     .then((result) => {
+        //         console.log(result)
+        //         res.redirect('/wishlist/')
+        //     })
+        //     .catch((err) => {
+        //         console.log(err)
+        //     })
+        //         res.redirect('/wishlist/')
+        // })
+        // .catch((err) => {
+        //     console.log(err)
+        // })
+    } else {
+        res.redirect('/login')
+    }
+}
+
+
+
 const userlogout = function (req, res) {
     session = req.session
     session.userId = false
@@ -531,5 +709,9 @@ module.exports = {
     userCartGet,
     userCartPost,
     addToCartGet,
-    removeFromCart
+    removeFromCart,
+    userWishlistGet,
+    userWishlistPost,
+    addToWishlistGet,
+    removeFromWishlist
 }
