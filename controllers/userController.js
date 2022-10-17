@@ -464,21 +464,21 @@ const removeFromCart = (req, res) => {
 
 
 const userWishlistGet = (req, res) => {
-    // console.log(req.params);
-    // let userId = req.params.id;
-    // console.log(userId);
+    console.log(req.params);
+    let userId = req.params.id;
+    console.log(userId);
     session = req.session;
     if (session.userId) {
         User.findOne({ name: session.userId })
             .then((result) => {
-                const sum = function (items, prop1, prop2) {
-                    return items.reduce(function (a, b) {
-                        return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
-                    }, 0);
-                };
-                const total = sum(result.wishlist, 'price', 'count');
+                // const sum = function (items, prop1, prop2) {
+                //     return items.reduce(function (a, b) {
+                //         return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
+                //     }, 0);
+                // };
+                // const total = sum(result.wishlist, 'price', 'count');
                 // console.log(result)
-                res.render('users/wishlist', { title: 'Shop.', loginName: session.userId, result, total: total })
+                res.render('users/wishlist', { title: 'Shop.', loginName: session.userId, result })
             })
             .catch((err) => {
                 console.log(err)
@@ -639,6 +639,7 @@ const removeFromWishlist = (req, res) => {
                             //     .catch((err) => {
                             //         console.log(err)
                             //     })
+                            res.redirect('/wishlist')
                         })
                         .catch((err) => {
                             console.log(err)
