@@ -1,5 +1,5 @@
 <div class="container minHeight">
-    <h1>Edit Product</h1>
+    <h1 class="mt-5">Edit Product</h1>
 
     <form action="/admin/editProduct/{{productResult._id}}" method="post">
 
@@ -78,13 +78,13 @@
                 {{!-- <input type="text" name="newOffer" class="form-control" id="newOffer"> --}}
                 <select name="newOffer" id="newOffer" style="width: 250px;">
                     {{#each offerResult}}
-                    <option value="{{offerName}}">{{offerName}}</option>
+                    <option>{{offerName}}</option>
                     {{/each}}
                 </select>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-dark">Update</button>
+        <button type="submit" class="btn btn-dark mb-3">Update</button>
 
     </form>
 </div>
