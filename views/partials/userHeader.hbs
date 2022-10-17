@@ -21,13 +21,13 @@
             <li><a href="/" class="nav-link link-dark"><span style="font-size: 48px;">Shop</span><span
                         style="font-size: 72px;">.</span></a></li>
         </ul>
-        {{#if loginId}}
+        {{#if loginName}}
         <div class="col-md-3 text-end" style="width: 30%;">
             <a href="/login"></a><button class="btn btn-outline-dark me-2 dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">{{loginId}}
+                aria-expanded="false">{{loginName}}
             </button></a>
             <ul class="dropdown-menu">
-                <li><a href="#" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Cart</button></a></li>
+                <li><a href="/cart/" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Cart</button></a></li>
                 <li><a href="#" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Wishlist</button></a></li>
                 <li><a href="#" class="text-decoration-none"><button   class="dropdown-item border-bottom" type="button">Orders</button></a></li>
                 <li><a href="#" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Profile</button></a></li>
