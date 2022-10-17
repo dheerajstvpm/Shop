@@ -4,7 +4,7 @@
         <h1>Wishlist</h1>
     </div>
 
-    <form action="/search" method="post" class="d-flex mb-3">
+    {{!-- <form action="/search" method="post" class="d-flex mb-3">
         <div>
             <button type="submit" class="btn btn-dark me-1">Search</button>
         </div>
@@ -14,7 +14,7 @@
                     id="searchInput">
             </div>
         </div>
-    </form>
+    </form> --}}
     <div class="d-flex mb-3">
         <table class=" table table-borderless">
             <thead>
@@ -23,7 +23,7 @@
                     <th class="text-center">Image</th>
                     <th class="text-center">Product Name</th>
                     <th class="text-center">Price</th>
-                    <th class="text-center"> </th>
+                    <td class="text-center"><a href="/removeFromWishlist/{{this._id}}" class="btn btn-outline-danger">Remove from wishlist</a></td>
                 </tr>
             </thead>
             <tbody>
