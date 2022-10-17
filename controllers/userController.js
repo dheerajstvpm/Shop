@@ -269,16 +269,6 @@ const userCartGet = (req, res) => {
     }
 }
 
-const userCartPost = (req, res) => {
-    if (session.userId) {
-        res.redirect('/cart')
-    } else {
-        res.redirect('/login')
-    }
-}
-
-
-
 const addToCartGet = (req, res) => {
     session = req.session;
     // To be deleted
@@ -484,14 +474,6 @@ const userWishlistGet = (req, res) => {
                 console.log(err)
             })
 
-    } else {
-        res.redirect('/login')
-    }
-}
-
-const userWishlistPost = (req, res) => {
-    if (session.userId) {
-        res.redirect('/wishlist')
     } else {
         res.redirect('/login')
     }
@@ -708,11 +690,9 @@ module.exports = {
     userSignupPost,
     userlogout,
     userCartGet,
-    userCartPost,
     addToCartGet,
     removeFromCart,
     userWishlistGet,
-    userWishlistPost,
     addToWishlistGet,
     removeFromWishlist
 }
