@@ -29,9 +29,9 @@ router.get('/', userController.userHome)
 
 router.get('/product/:id', userController.product)
 
-router.get('/otpLoginVerify', userController.otpLoginVerifyGet)
+router.get('/otpSignupVerify', userController.otpSignupVerifyGet)
 
-router.post('/otpLoginVerify', userController.otpLoginVerifyPost)
+router.post('/otpSignupVerify', userController.otpSignupVerifyPost)
 
 router.get('/login', userController.userLoginGet)
 
@@ -82,6 +82,25 @@ router.get('/wishlist', userController.userWishlistGet)
 router.get('/addToWishlist/:productId', userController.addToWishlistGet)
 
 router.get('/removeFromWishlist/:productId', userController.removeFromWishlist)
+
+router.get('/buyNow', userController.buyNowGet)
+
+router.post('/buyNow', userController.buyNowPost)
+
+router.get('/order', userController.orderGet)
+
+router.get('/cancelOrder/:id', userController.cancelOrderGet)
+
+router.get('/mobileLogin',
+    check('mobileNumber').matches(/[\d]{10}/)
+        .withMessage("Mobile number must contain exactly 10 numbers"),
+    check('mobileNumber').matches(/^[6-9][\d]{9}/)
+        .withMessage("Please enter a valid mobile number"),
+    userController.userMobileLoginGet)
+
+router.get('/otpLoginVerify', userController.otpLoginVerifyGet)
+
+router.post('/otpLoginVerify', userController.otpLoginVerifyPost)
 
 router.get('/logout', userController.userlogout);
 
