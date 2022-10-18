@@ -35,7 +35,7 @@
                 {{#each result}}
                 <tr>
                     <th scope="row">{{addOne @index}}</td>
-                    <td>{{this.name}}</td>
+                    <td><a href="/admin/orderManagement/{{this._id}}" class="text-decoration-none">{{this.name}}</a></td>
                     <td>{{this.username}}</td>  
                     <td>{{this.status}}</td>
                     <td>
