@@ -18,8 +18,9 @@ const usersRouter = require('./routes/users')
 //express app
 const app = express();
 
-
-
+ //moment js app
+var moment = require('moment'); // require
+// moment().format(); 
 
 //connect to MongoDB
 const dbURI = "mongodb://0.0.0.0:27017/Shop"
@@ -49,6 +50,9 @@ app.engine('hbs', hbs.engine({
     },
     multiply: function (value1, value2, options) {
       return parseInt(value1 * value2);
+    },
+    dateFormat: function (timestamp) {
+      return moment(new Date(timestamp)).format("MMM DD, YYYY")
     }
   }
 }));
