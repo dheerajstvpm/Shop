@@ -19,7 +19,7 @@ const Product = require('../models/productModel')
 //     count:{ type: String }
 // }, { timestamps: true })
 
-const productSchema = new Schema({
+const cartSchema = new Schema({
     productName: { type: String },
     description: { type: String },
     price: { type: Number },
@@ -28,7 +28,34 @@ const productSchema = new Schema({
     croppedImage: { type: String },
     category: { type: String },
     offer: { type: String },
-    count: { type: Number}
+    count: { type: Number }
+}, { timestamps: true })
+
+const wishlistSchema = new Schema({
+    productName: { type: String },
+    description: { type: String },
+    price: { type: Number },
+    stock: { type: Number },
+    image: { type: String },
+    croppedImage: { type: String },
+    category: { type: String },
+    offer: { type: String }
+}, { timestamps: true })
+
+const orderSchema = new Schema({
+    productName: { type: String },
+    description: { type: String },
+    price: { type: Number },
+    stock: { type: Number },
+    image: { type: String },
+    croppedImage: { type: String },
+    category: { type: String },
+    offer: { type: String },
+    count: { type: Number },
+    paymentOption: { type: String },
+    address: { type: String },
+    unique: { type: String },
+    orderStatus: { type: String, default: 'Under process' }
 }, { timestamps: true })
 
 const userSchema = new Schema({
@@ -41,15 +68,15 @@ const userSchema = new Schema({
     },
     status: { type: String },
     wishlist: {
-        type: [productSchema],
+        type: [wishlistSchema],
         default: []
     },
     cart: {
-        type: [productSchema],
+        type: [cartSchema],
         default: []
     },
     order: {
-        type: [productSchema],
+        type: [orderSchema],
         default: []
     },
     password: { type: String }
