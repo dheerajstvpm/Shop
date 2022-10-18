@@ -25,7 +25,7 @@ const adminHome = (req, res) => {
 const adminLoginGet = (req, res) => {
     adminSession = req.session;
     // To be deleted
-    adminSession.adminId = 'admin';
+    // adminSession.adminId = 'admin';
     //
     if (adminSession.adminId) {
         console.log(adminSession)
@@ -1055,6 +1055,44 @@ const userHomepageLayoutPost = function (req, res) {
     }
 }
 
+let customerId;
+const adminOrderManagementGet = function (req, res) {
+    adminSession = req.session;
+    customerId = req.params.id
+    console.log(customerId)
+    if (adminSession.adminId) {
+        User.findOne({ _id: customerId })
+            .then((result) => {
+                console.log(result)
+                result = result.order.reverse()
+                res.render('admin/adminOrderManagement', { title: 'Shop.admin', admin: true, result })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        res.redirect('/admin')
+    }
+}
+
+
+const adminOrderCancel = (req, res) => {
+    adminSession = req.session;
+    productId = req.params.id;
+    console.log(productId)
+    if (adminSession.adminId) {
+        User.updateOne({ "_id": customerId, "order.unique": productId }, { $set: { "order.$.orderStatus": "Order cancelled" } })
+            .then((result) => {
+                res.redirect('back')
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        res.redirect('/admin')
+    }
+}
+
 const adminLogout = function (req, res) {
     adminSession = req.session
     adminSession.adminId = false
@@ -1099,5 +1137,7 @@ module.exports = {
     deleteOffer,
     userHomepageLayoutGet,
     userHomepageLayoutPost,
+    adminOrderManagementGet,
+    adminOrderCancel,
     adminLogout
 }
