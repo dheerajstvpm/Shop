@@ -16,24 +16,24 @@
         </div>
     </form> --}}
     <div class="d-flex mb-3">
-        <table class=" table table-borderless">
+        <table class=" table">
             <thead>
-                <tr class="d-flex justify-content-between align-items-center mt-5">
+                <tr class="mt-5">
                     <th class="text-center">Sl.</th>
                     <th class="text-center">Image</th>
                     <th class="text-center">Product Name</th>
                     <th class="text-center">Price</th>
-                    <td class="text-center"><a href="/removeFromWishlist/{{this._id}}" class="btn btn-outline-danger"></a></td>
+                    <th class="text-center"></th>
                 </tr>
             </thead>
             <tbody>
                 {{#each result.wishlist}}
-                <tr class="d-flex justify-content-between align-items-center mt-5">
-                    <th scope="row" class="text-center">{{addOne @index}}</th>
+                <tr class="mt-5">
+                    <th scope="row" class="text-center"><br>{{addOne @index}}.</th>
                     <td class="text-center"><img src="{{this.image}}" alt="image" style="width: 5rem; height: 5rem"></td>
-                    <td class="text-center">{{this.productName}}</td>
-                    <td class="text-center">{{this.price}}</td>
-                    <td class="text-center"><a href="/removeFromWishlist/{{this._id}}" class="btn btn-outline-danger">Remove from wishlist</a></td>
+                    <td class="text-center"><br>{{this.productName}}</td>
+                    <td class="text-center"><br>&#x20B9;{{this.price}}</td>
+                    <td class="text-center"><br><a href="/removeFromWishlist/{{this._id}}" class="btn btn-outline-danger">Remove</a></td>
                 </tr>
                 {{/each}}
             </tbody>
