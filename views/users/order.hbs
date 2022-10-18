@@ -1,0 +1,57 @@
+<div class="container minHeight">
+
+    <div class="d-flex justify-content-between mt-5">
+        <h1>Orders</h1>
+    </div>
+
+    {{!-- <form action="/search" method="post" class="d-flex mb-3">
+        <div>
+            <button type="submit" class="btn btn-dark me-1">Search</button>
+        </div>
+        <div class="flex-grow-1 mb-3">
+            <div>
+                <input type="text" name="input" class="form-control" placeholder="Search with name or category"
+                    id="searchInput">
+            </div>
+        </div>
+    </form> --}}
+    <div class="d-flex mb-3">
+        <table class=" table">
+            {{!-- <thead>
+                <tr>
+                    <th scope="col" class="text-center">Sl.</th>
+                    <th scope="col" class="text-center">Product Name</th>
+                    <th scope="col" class="text-center">Product Name</th>
+                    <th scope="col" class="text-center">Price</th>
+                    <th scope="col" class="text-center">No.of items</th>
+                    <th scope="col" class="text-center">Total</th>
+                    <th scope="col" class="text-center">Status</th>
+                </tr>
+            </thead> --}}
+            <tbody class="table-group-divider">
+                {{#each result}}
+                <tr>
+                    {{!-- <th scope="row" class="text-center">{{addOne @index}}.</th> --}}
+                    <td class="text-center"><img src="{{this.image}}" alt="image" style="width: 5rem; height: 5rem">
+                    </td>
+                    <td class="text-center"><br>{{this.productName}}</td>
+                    <td class="text-center"><br>&#x20B9;{{this.price}}</td>
+                    {{!-- <td class="text-center">{{this.count}}</td>
+                    <td class="text-center">{{multiply this.price this.count}}</td> --}}
+                    <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
+                    <td class="text-center"><br><a href="/cancelOrder/{{this.unique}}" class="btn btn-dark">Cancel</a>
+                    </td>
+                </tr>
+                {{/each}}
+                {{!-- <tr>
+                    <th scope="row" class="text-center"></th>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                    <td class="fw-bold text-center">Total</td>
+                    <td class="text-center">{{total}}</td>
+                    <td class="text-center"></td>
+                </tr> --}}
+            </tbody>
+        </table>
+    </div>
+</div>
