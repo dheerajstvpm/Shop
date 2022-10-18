@@ -1,0 +1,19 @@
+<div class="container minHeight">
+    <h1 class="mt-5 d-flex justify-content-center">Login using mobile</h1>
+    <div class="container-fluid d-flex justify-content-center">
+        <form class="col-md-12" action="/mobileLogin" method="post">
+            <div class="my-3 d-flex justify-content-center">
+                <div class="col-md-4"></div>
+                <div class="col-md-4"> <input type="text" name="mobile" class="form-control text-center" id="exampleInputMobile"
+                        placeholder="Mobile" aria-describedby="mobileHelp"></div>
+                <div class="text-start col-md-4 ps-2 pt-2">{{mobileMessage}}</div>
+            </div>
+            <div class='mb-3 d-flex justify-content-center'>
+                <button type="submit" class="btn btn-outline-dark">Send OTP</button>
+            </div>
+            <div class="my-3 d-flex justify-content-center">
+                <a href="/signup" class="link-dark">Create an account</a>
+            </div>
+        </form>
+    </div>
+</div>
