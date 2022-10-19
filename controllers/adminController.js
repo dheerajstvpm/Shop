@@ -514,7 +514,7 @@ const unblockUser = function (req, res) {
     console.log(userId);
     adminSession = req.session
     if (adminSession.adminId) {
-        User.updateOne({ _id: userId }, { $set: { status: 'unblocked' } })
+        User.updateOne({ _id: userId }, { $set: { status: '' } })
             .then((result) => {
                 if (adminSession.adminId && req.body.input) {
                     res.render('admin/adminUserManagement', { title: 'Shop.admin', result, admin: true })
@@ -538,6 +538,9 @@ const adminCategoryManagement = function (req, res) {
         .then((result) => {
             if (adminSession.adminId) {
                 res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, admin: true })
+            } else if (adminSession.categoryProductExist) {
+                adminSession.categoryProductExist = false
+                res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, categoryMsg: "Can not delete. Product in this category exists.", admin: true })
             } else {
                 res.redirect('/admin');
             }
@@ -572,9 +575,8 @@ const addNewCategoryGet = function (req, res) {
     adminSession = req.session
     if (adminSession.adminId) {
         if (adminSession.categoryExist) {
-            req.session.destroy();
             adminSession = req.session
-            adminSession.adminId = true;
+            adminSession.categoryExist = false;
             const item = [{ message: 'Category already exist' }]
             res.render('admin/addNewCategory', { title: 'Shop.admin', item, admin: true });
         } else {
@@ -631,18 +633,27 @@ const deleteCategory = function (req, res) {
     console.log(categoryId);
     adminSession = req.session
     if (adminSession.adminId) {
-        Category.deleteOne({ _id: categoryId })
-            .then((result) => {
-                if (adminSession.adminId && req.body.input) {
-                    res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, admin: true })
-                } else {
+        Product.findOne({ category: categoryId })
+            .then((product) => {
+                console.log(product)
+                if (product === null) {
+                    adminSession.categoryProductExist = true
                     res.redirect('/admin/adminCategoryManagement');
+                } else {
+                    Category.deleteOne({ _id: categoryId })
+                        .then((result) => {
+                            res.redirect('/admin/adminCategoryManagement');
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            // res.redirect('/admin');
+                        })
                 }
             })
             .catch((err) => {
                 console.log(err)
-                // res.redirect('/admin');
             })
+
     } else {
         res.redirect('/admin/adminCategoryManagement');
     }
@@ -1101,6 +1112,7 @@ const adminLogout = function (req, res) {
     adminSession.adminAlreadyExist = false
     adminSession.productExist = false
     adminSession.categoryExist = false
+    adminSession.categoryProductExist = false
     adminSession.offerExist = false
     res.redirect('/admin');
 }
