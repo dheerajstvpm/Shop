@@ -66,7 +66,7 @@ const userSchema = new Schema({
         type: [],
         default: undefined
     },
-    status: { type: String },
+    status: { type: String, default: ''},
     wishlist: {
         type: [wishlistSchema],
         default: []
