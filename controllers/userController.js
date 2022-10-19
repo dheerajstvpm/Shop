@@ -7,8 +7,11 @@ const Offer = require('../models/offerModel')
 const Product = require('../models/productModel')
 const Order = require('../models/orderModel')
 
-const config = require('./config')
-const client = require('twilio')(config.accountSid, config.authToken)
+// const config = require('./config')
+
+require('dotenv').config()
+
+const client = require('twilio')(process.env.accountSid, process.env.authToken);
 
 const { check, validationResult } = require('express-validator');
 
@@ -19,6 +22,7 @@ let session;
 
 let name1;
 let mobileNumber1;
+let mobileNumber2;
 let username1;
 let password1;
 let address1;
@@ -67,6 +71,9 @@ const otpSignupVerifyGet = (req, res) => {
     session = req.session;
     if (session.userId) {
         res.redirect('/');
+    } else if (session.invalidOTP) {
+        session.invalidOTP = false
+        res.render('users/otpLoginVerify', { otpMsg: "Wrong phone number or code" });
     } else {
         res.render('users/otpSignupVerify');
     }
@@ -76,7 +83,7 @@ const otpSignupVerifyPost = (req, res) => {
     if ((req.body.otp).length === 6) {
         client
             .verify
-            .services(config.serviceID)
+            .services(process.env.serviceID)
             .verificationChecks
             .create({
                 to: `+91${mobileNumber1}`,
@@ -99,13 +106,16 @@ const otpSignupVerifyPost = (req, res) => {
                             console.log(err)
                         })
                     res.redirect('/login');
+                } else {
+                    session = req.session;
+                    session.invalidOTP = true
+                    res.redirect('/otpLoginVerify');
                 }
             })
     } else {
-        res.status(400).send({
-            message: "Wrong phone number or code :(",
-            phonenumber: mobileNumber1
-        })
+        session = req.session;
+        session.invalidOTP = true
+        res.redirect('/otpLoginVerify');
     }
 }
 
@@ -177,7 +187,11 @@ const userSignupGet = (req, res) => {
     if (session.userId) {
         res.redirect('/')
     } else if (session.userAlreadyExist) {
+        session.userAlreadyExist = false
         res.render('users/signup', { title: 'Shop.', usernameMsg: 'User Already Exists' })
+    } else if (session.mobileAlreadyExist) {
+        session.mobileAlreadyExist = false
+        res.render('users/signup', { title: 'Shop.', mobileMsg: 'User with this mobile number already exists' })
     } else if (session.signupErrors) {
         session.signupErrors = false
         const error1 = signupErrors.errors.find(item => item.param === 'name') || '';
@@ -200,23 +214,50 @@ const userSignupPost = function (req, res) {
         session.signupErrors = true
         res.redirect('/signup')
     } else {
-        User.find({ username: req.body.username })
+        // User.findOne({ mobile: req.body.mobileNumber })
+        //     .then((result) => {
+        //         console.log(result)
+        //         session = req.session;
+        //         session.mobileAlreadyExist = true;
+        //         console.log('mobile Already Exist')
+        //         res.redirect('/signup');
+        //     })
+        // User.findOne({ username: req.body.username })
+        //     .then((result) => {
+        //         console.log(result)
+        //         session = req.session;
+        //         session.userAlreadyExist = true;
+        //         console.log('User Already Exist')
+        //         res.redirect('/signup');
+        //         // let user = result.find(item => item.username)
+        //         // let mobile = result.find(item => item.mobileNumber)
+
+        //     })
+        Promise.all([User.findOne({ username: req.body.username }), User.findOne({ mobile: req.body.mobileNumber })])
             .then((result) => {
-                let user = result.find(item => item.username)
-                let hashPassword;
-                bcrypt.hash(req.body.password, 10)
-                    .then(function (hash) {
-                        hashPassword = hash
-                        if (user) {
-                            session = req.session;
-                            session.userAlreadyExist = true;
-                            console.log('User Already Exist')
-                            res.redirect('/signup');
-                        }
-                        else {
+                let usernameResult, mobileResult;
+                [usernameResult, mobileResult] = result;
+                if (usernameResult) {
+                    console.log(result)
+                    session = req.session;
+                    session.userAlreadyExist = true;
+                    console.log('User Already Exist')
+                    res.redirect('/signup');
+                } else if (mobileResult) {
+                    console.log(result)
+                    session = req.session;
+                    session.mobileAlreadyExist = true;
+                    console.log('mobile Already Exist')
+                    res.redirect('/signup');
+                } else {
+                    let hashPassword;
+                    bcrypt.hash(req.body.password, 10)
+                        .then(function (hash) {
+                            hashPassword = hash
+
                             client
                                 .verify
-                                .services(config.serviceID)
+                                .services(process.env.serviceID)
                                 .verifications
                                 .create({
                                     to: `+91${req.body.mobileNumber}`,
@@ -230,11 +271,11 @@ const userSignupPost = function (req, res) {
                                         address1 = req.body.address
                                     res.redirect('/otpSignupVerify')
                                 })
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                }
             })
             .catch((err) => {
                 console.log(err)
@@ -835,7 +876,7 @@ const orderGet = (req, res) => {
                 };
                 const total = sum(result.order, 'price', 'count');
                 // console.log(result)
-                result=result.order.reverse()
+                result = result.order.reverse()
                 res.render('users/order', { title: 'Shop.', loginName: session.userId, result, total: total })
             })
             .catch((err) => {
@@ -866,9 +907,49 @@ const cancelOrderGet = (req, res) => {
 const userMobileLoginGet = (req, res) => {
     session = req.session;
     if (session.userId) {
-        res.redirect('/');
+        res.redirect('/')
+    } else if (session.otpLoginErrors) {
+        session.otpLoginErrors = false
+        const error1 = otpLoginErrors.errors.find(item => item.param === 'mobileNumber') || '';
+        res.render('users/mobileLogin', { title: 'Shop.', mobileMsg: error1.msg });
+    } else if (session.mobileNotFound) {
+        session.mobileNotFound = false;
+        res.render('users/mobileLogin', { title: 'Shop.', mobileMsg: "Mobile number not found" });
     } else {
-        res.render('users/mobileLogin');
+        res.render('users/mobileLogin', { title: 'Shop.' })
+    }
+}
+let otpLoginErrors;
+const userMobileLoginPost = (req, res) => {
+    session = req.session;
+    otpLoginErrors = validationResult(req);
+    if (!otpLoginErrors.isEmpty()) {
+        session.otpLoginErrors = true
+        res.redirect('/mobileLogin')
+    } else {
+        User.findOne({ mobile: req.body.mobile })
+            .then((result) => {
+                if (result) {
+                    client
+                        .verify
+                        .services(process.env.serviceID)
+                        .verifications
+                        .create({
+                            to: `+91${req.body.mobile}`,
+                            channel: 'sms'
+                        })
+                        .then((data) => {
+                            mobileNumber2 = req.body.mobile,
+                                res.redirect('/otpLoginVerify')
+                        })
+                } else {
+                    console.log(result)
+                    session = req.session;
+                    session.mobileNotFound = true;
+                    console.log('mobile do not Exist')
+                    res.redirect('/mobileLogin');
+                }
+            })
     }
 }
 
@@ -876,6 +957,9 @@ const otpLoginVerifyGet = (req, res) => {
     session = req.session;
     if (session.userId) {
         res.redirect('/');
+    } else if (session.invalidOTP) {
+        session.invalidOTP = false
+        res.render('users/otpLoginVerify', { otpMsg: "Wrong phone number or code" });
     } else {
         res.render('users/otpLoginVerify');
     }
@@ -885,36 +969,35 @@ const otpLoginVerifyPost = (req, res) => {
     if ((req.body.otp).length === 6) {
         client
             .verify
-            .services(config.serviceID)
+            .services(process.env.serviceID)
             .verificationChecks
             .create({
-                to: `+91${mobileNumber1}`,
+                to: `+91${mobileNumber2}`,
                 code: req.body.otp
             })
             .then((data) => {
                 if (data.status === "approved") {
-                    const user = new User({
-                        name: name1,
-                        mobile: mobileNumber1,
-                        username: username1,
-                        password: password1,
-                        address: address1
-                    })
-                    user.save()
+                    User.findOne({ mobile: mobileNumber2 })
                         .then((result) => {
-                            console.log('success')
+                            console.log(result)
+                            session = req.session;
+                            session.userId = result.name;
+                            session.userStatus = result.status;
+                            res.redirect('/login');
                         })
                         .catch((err) => {
                             console.log(err)
                         })
-                    res.redirect('/');
+                } else {
+                    session = req.session;
+                    session.invalidOTP = true
+                    res.redirect('/otpLoginVerify');
                 }
             })
     } else {
-        res.status(400).send({
-            message: "Wrong phone number or code :(",
-            phonenumber: mobileNumber1
-        })
+        session = req.session;
+        session.invalidOTP = true
+        res.redirect('/otpLoginVerify');
     }
 }
 
@@ -923,9 +1006,12 @@ const otpLoginVerifyPost = (req, res) => {
 const userlogout = function (req, res) {
     session = req.session
     session.userId = false
+    session.invalidOTP = false
     session.incorrectId = false
     session.userAlreadyExist = false
+    session.mobileAlreadyExist = false
     session.incorrectPwd = false
+    session.otpLoginErrors = false
     session.userStatus = ""
     res.redirect('/');
 }
@@ -953,6 +1039,7 @@ module.exports = {
     orderGet,
     cancelOrderGet,
     userMobileLoginGet,
+    userMobileLoginPost,
     otpLoginVerifyGet,
     otpLoginVerifyPost
 }
