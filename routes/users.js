@@ -91,12 +91,14 @@ router.get('/order', userController.orderGet)
 
 router.get('/cancelOrder/:id', userController.cancelOrderGet)
 
-router.get('/mobileLogin',
-    check('mobileNumber').matches(/[\d]{10}/)
+router.get('/mobileLogin', userController.userMobileLoginGet)
+
+router.post('/mobileLogin',
+    check('mobile').matches(/[\d]{10}/)
         .withMessage("Mobile number must contain exactly 10 numbers"),
-    check('mobileNumber').matches(/^[6-9][\d]{9}/)
+    check('mobile').matches(/^[6-9][\d]{9}/)
         .withMessage("Please enter a valid mobile number"),
-    userController.userMobileLoginGet)
+    userController.userMobileLoginPost)
 
 router.get('/otpLoginVerify', userController.otpLoginVerifyGet)
 
