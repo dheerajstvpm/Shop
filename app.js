@@ -15,6 +15,10 @@ const hbs = require('express-handlebars')
 const adminRouter = require('./routes/admin');
 const usersRouter = require('./routes/users')
 
+//env
+require('dotenv').config()
+// console.log(process.env)
+
 //express app
 const app = express();
 
@@ -60,7 +64,7 @@ app.engine('hbs', hbs.engine({
 
 
 app.use(session({
-  secret: "thisismysecretkey",
+  secret: process.env.sessionKey,
   saveUninitialized: true,
   cookie: { maxAge: 600000 },
   resave: false
