@@ -16,7 +16,7 @@ const client = require('twilio')(process.env.accountSid, process.env.authToken);
 const { check, validationResult } = require('express-validator');
 
 const { v4: uuidv4 } = require('uuid');
-const { log } = require('handlebars');
+// const { log } = require('handlebars');
 
 let session;
 
