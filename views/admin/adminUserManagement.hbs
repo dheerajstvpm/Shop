@@ -27,25 +27,26 @@
                     <th scope="col">Name</th>
                     <th scope="col">Username</th>
                     <th scope="col">Status</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 {{#each result}}
                 <tr>
                     <th scope="row">{{addOne @index}}</td>
-                    <td><a href="/admin/orderManagement/{{this._id}}" class="text-decoration-none">{{this.name}}</a></td>
-                    <td>{{this.username}}</td>  
-                    <td>{{this.status}}</td>
-                    <td>
-                        <a href="/admin/block/{{this._id}}" class="btn btn-outline-danger"
-                            onclick="return confirm('Are you sure, you want to block user:{{this.name}}?')">block</a>
+                    <td><a href="/admin/orderManagement/{{this._id}}" class="text-decoration-none">{{this.name}}</a>
                     </td>
+                    <td>{{this.username}}</td>
+                    {{#if this.status}}
                     <td>
                         <a href="/admin/unblock/{{this._id}}" class="btn btn-outline-success"
                             onclick="return confirm('Are you sure, you want to unblock user :{{this.name}}?')">unblock</a>
                     </td>
+                    {{else}}
+                    <td>
+                        <a href="/admin/block/{{this._id}}" class="btn btn-outline-danger"
+                            onclick="return confirm('Are you sure, you want to block user:{{this.name}}?')">block</a>
+                    </td>
+                    {{/if}}
                 </tr>
                 {{/each}}
             </tbody>
