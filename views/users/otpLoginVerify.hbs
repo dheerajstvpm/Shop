@@ -6,9 +6,11 @@
                 <input type="text" name="mobileNumber" class="form-control text-center" id="exampleInputMobile"
                     placeholder="Mobile Number" aria-describedby="mobileHelp">
             </div> --}}
-            <div class="mb-3">
+            <div class="mb-3 d-flex justify-content-center">
+                <div class="col-md-4"></div>
                 <input type="password" name="otp" class="form-control text-center" id="exampleInputOTP"
                     placeholder="OTP">
+                <div class="text-start col-md-4 ps-2 pt-2">{{otpMsg}}</div>
             </div>
             <div class='mb-3 d-flex justify-content-center'>
                 <button type="submit" class="btn btn-dark">Login</button>
