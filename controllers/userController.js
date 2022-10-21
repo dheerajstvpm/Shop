@@ -32,7 +32,7 @@ let address1;
 const userHome = (req, res) => {
     session = req.session;
     // To be deleted
-    // session.userId = 'Amal';
+    session.userId = 'Amal';
     //
     Homepage.find({})
         .then((result) => {
@@ -264,6 +264,7 @@ const userSignupPost = function (req, res) {
                                     channel: 'sms'
                                 })
                                 .then((data) => {
+                                    console.log(data)
                                     name1 = req.body.name,
                                         mobileNumber1 = req.body.mobileNumber,
                                         username1 = req.body.username,
@@ -314,7 +315,7 @@ const userCartGet = (req, res) => {
 const addToCartGet = (req, res) => {
     session = req.session;
     // To be deleted
-    // session.userId = 'Amal';
+    session.userId = 'Amal';
     //
     if (session.userId) {
         console.log(req.params);
@@ -524,7 +525,7 @@ const userWishlistGet = (req, res) => {
 const addToWishlistGet = (req, res) => {
     session = req.session;
     // To be deleted
-    // session.userId = 'Amal';
+    session.userId = 'Amal';
     //
     if (session.userId) {
         console.log(req.params);
@@ -910,7 +911,7 @@ const userMobileLoginGet = (req, res) => {
         res.redirect('/')
     } else if (session.otpLoginErrors) {
         session.otpLoginErrors = false
-        const error1 = otpLoginErrors.errors.find(item => item.param === 'mobileNumber') || '';
+        const error1 = otpLoginErrors.errors.find(item => item.param === 'mobile') || '';
         res.render('users/mobileLogin', { title: 'Shop.', mobileMsg: error1.msg });
     } else if (session.mobileNotFound) {
         session.mobileNotFound = false;
