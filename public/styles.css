@@ -3,26 +3,41 @@
     color: #543A00;
 } */
 
-/* body {
+body {
     padding: 0;
     margin: 0;
-    height: 100%;
-} */
+}
 
 .minHeight {
     /* min-height: 71.8vh; */
     min-height: 64.4vh;
 }
 
+.zoomEffect{
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: center; */
+}
 
-.zoom-img {
+.zoom {
+    height: 400px;
+    width: 600px;
+    background-color: transparent;
     overflow: hidden;
 }
 
-.zoom-img img {
-    transition: all 1.0s ease;
+.zoom > img {
+    object-fit: contain;
+    height: 200%;
+    transform:translate3d(0px,0px,0px);
 }
 
-.zoom-img:hover img {
-    transform: scale(1.5);
+.productImg{
+    object-fit: contain;
+    height: 25vh;
+    margin-right: 20px;
 }
+
+/* .zoom:hover img {
+    transform: scale(1.5);
+} */
