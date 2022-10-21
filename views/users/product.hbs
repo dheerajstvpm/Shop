@@ -1,33 +1,37 @@
-
 <div class="container minHeight">
     {{#each result}}
     <div class="row my-5">
         <h1>{{productName}}</h1>
     </div>
     <div class="row mb-5">
-        <div class="col">
-            <div class="zoom-img">
-                <img src="{{image}}" alt="Cycle" style="width :500px; height: 400px">
+        <div class="col zoomEffect d-flex justify-content between">
+            <img src="{{image}}" alt="Cycle" class="productImg border" style="width :500px; height: 400px">
+            <div class="zoom  border">
+                <img src="{{image}}" alt="Cycle">
             </div>
         </div>
-        <div class="col ms-5">
+        <div class="col ms-5 priceAndCart" style="max-width :500px;">
             <div class="row my-5">
-                <div class="col">Price : &#x20B9;{{price}}</div>
-                <div class="col">Offer : {{offer}}</div>
+                <div class="col text-nowrap">Price : &#x20B9;{{price}}</div>
+                <div class="col text-nowrap">Offer : {{offer}}</div>
+            </div>
+            <div class="row">
+                <div class="col"><a href="/addToCart/{{_id}}" class="btn btn-outline-dark mb-5"
+                        style="width:120px ;">Add to
+                        card</a></div>
+                <div class="col"><a href="/buyNow/" class="btn btn-outline-dark mb-5" style="width:120px ;">Buy now</a>
+                </div>
             </div>
             <div class="row mb-5">
-                <div class="col"><a href="/addToCart/{{_id}}" class="btn btn-outline-dark" style="width:120px ;">Add to card</a></div>
-                <div class="col"><a href="/buyNow/" class="btn btn-outline-dark" style="width:120px ;">Buy now</a></div>
-            </div>
-            <div class="row mb-5">
-                <div class="col"><a href="/addToWishlist/{{_id}}" class="btn btn-outline-dark" style="width:120px ;">Wishlist</a></div>
+                <div class="col"><a href="/addToWishlist/{{_id}}" class="btn btn-outline-dark"
+                        style="width:120px ;">Wishlist</a></div>
             </div>
         </div>
     </div>
     <div class="row mb-5">
         <div>
             <h3>Product description</h3>
-            <div style="width: 100%; height:300px;" class="border">
+            <div style="width: 100%; height:300px;" class="border p-3">
                 <p>{{description}}</p>
             </div>
 
@@ -35,3 +39,24 @@
     </div>
     {{/each}}
 </div>
+
+<script>
+
+    let productImg = document.querySelector(".productImg")
+    let zoomDiv = document.querySelector(".zoom")
+    let zoomedImg = document.querySelector(".zoom>img")
+    let priceAndCart=document.querySelector(".priceAndCart")
+    productImg.addEventListener("mousemove", (e) => {
+        zoomDiv.style.display = "block";
+        priceAndCart.style.display = "none";
+        let x=(e.pageX-49)/500;//49
+        let y=(e.pageY-268)/400;//268
+        console.log(x,y)
+        zoomedImg.style.transform=`translate3d(-${50*x}%,-${50*y}%,0)`
+    })
+    productImg.addEventListener("mouseleave", (e) => {
+        zoomDiv.style.display = "none"
+        priceAndCart.style.display = "block";
+    })
+
+</script>
