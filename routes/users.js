@@ -1,29 +1,22 @@
 const express = require('express');
 const router = express.Router();
 
-var bcrypt = require('bcryptjs');
+// var bcrypt = require('bcryptjs');
 
-const User = require('../models/userModel')
-const Category = require('../models/categoryModel')
-const Homepage = require('../models/homepageModel')
-const Offer = require('../models/offerModel')
-const Product = require('../models/productModel')
-const Order = require('../models/orderModel')
+// const User = require('../models/userModel')
+// const Category = require('../models/categoryModel')
+// const Homepage = require('../models/homepageModel')
+// const Offer = require('../models/offerModel')
+// const Product = require('../models/productModel')
+// const Order = require('../models/orderModel')
 
 const config = require('../controllers/config')
-const client = require('twilio')(config.accountSid, config.authToken)
+// const client = require('twilio')(config.accountSid, config.authToken)
 
 const { check, validationResult } = require('express-validator');
 
 const userController = require('../controllers/userController')
 
-let session;
-
-let name1;
-let mobileNumber1;
-let username1;
-let password1;
-let address1;
 
 router.get('/', userController.userHome)
 
@@ -95,7 +88,7 @@ router.get('/mobileLogin', userController.userMobileLoginGet)
 
 router.post('/mobileLogin',
     check('mobile').matches(/[\d]{10}/)
-        .withMessage("Mobile number must contain exactly 10 numbers"),
+        .withMessage("Please enter a valid mobile number"),
     check('mobile').matches(/^[6-9][\d]{9}/)
         .withMessage("Please enter a valid mobile number"),
     userController.userMobileLoginPost)
