@@ -25,7 +25,7 @@ const adminHome = (req, res) => {
 const adminLoginGet = (req, res) => {
     adminSession = req.session;
     // To be deleted
-    // adminSession.adminId = 'admin';
+    adminSession.adminId = 'admin';
     //
     if (adminSession.adminId) {
         console.log(adminSession)
@@ -536,11 +536,11 @@ const adminCategoryManagement = function (req, res) {
     console.log(adminSession)
     Category.find({}).sort({ _id: -1 })
         .then((result) => {
-            if (adminSession.adminId) {
-                res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, admin: true })
-            } else if (adminSession.categoryProductExist) {
+            if (adminSession.categoryProductExist) {
                 adminSession.categoryProductExist = false
-                res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, categoryMsg: "Can not delete. Product in this category exists.", admin: true })
+                res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, categoryMsg: "Can not delete this category. Product in this category exists.", admin: true })
+            } else if (adminSession.adminId) {
+                res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, admin: true })
             } else {
                 res.redirect('/admin');
             }
@@ -577,8 +577,8 @@ const addNewCategoryGet = function (req, res) {
         if (adminSession.categoryExist) {
             adminSession = req.session
             adminSession.categoryExist = false;
-            const item = [{ message: 'Category already exist' }]
-            res.render('admin/addNewCategory', { title: 'Shop.admin', item, admin: true });
+            // const item = [{ message: 'Category already exist' }]
+            res.render('admin/addNewCategory', { title: 'Shop.admin', categoryMsg: 'Category already exist', admin: true });
         } else {
             res.render('admin/addNewCategory', { title: 'Shop.admin', admin: true });
         }
@@ -596,7 +596,7 @@ const addNewCategoryPost = function (req, res) {
     if (!errors.isEmpty()) {
         res.render('admin/addNewCategory', { title: 'Shop.admin', categoryMsg: error1.msg, admin: true });
     } else if (adminSession.adminId) {
-        Category.find({ categoryName: req.body.category })
+        Category.find({ categoryName: req.body.category.toUpperCase() })
             .then((result) => {
                 let temp = result.find(item => item.categoryName)
                 if (temp) {
@@ -605,7 +605,7 @@ const addNewCategoryPost = function (req, res) {
                     res.redirect('/admin/addNewCategory');
                 } else {
                     const category = new Category({
-                        categoryName: req.body.category
+                        categoryName: req.body.category.toUpperCase()
                     })
                     category.save()
                         .then((result) => {
@@ -637,10 +637,7 @@ const deleteCategory = function (req, res) {
             .then((product) => {
                 console.log(product)
                 if (product === null) {
-                    adminSession.categoryProductExist = true
-                    res.redirect('/admin/adminCategoryManagement');
-                } else {
-                    Category.deleteOne({ _id: categoryId })
+                    Category.deleteOne({ categoryName: categoryId })
                         .then((result) => {
                             res.redirect('/admin/adminCategoryManagement');
                         })
@@ -648,6 +645,9 @@ const deleteCategory = function (req, res) {
                             console.log(err)
                             // res.redirect('/admin');
                         })
+                } else {
+                    adminSession.categoryProductExist = true
+                    res.redirect('/admin/adminCategoryManagement');
                 }
             })
             .catch((err) => {
