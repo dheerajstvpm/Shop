@@ -2,15 +2,19 @@
     background-color: #F0EEE5;
     color: #543A00;
 } */
+/* *{
+    filter: invert(100%);
+} */
 
 body {
     padding: 0;
     margin: 0;
+    /* filter: invert(100%); */
 }
 
 .minHeight {
-    /* min-height: 71.8vh; */
-    min-height: 64.4vh;
+    min-height: 75.2vh;
+    /* min-height: 64.4vh; */
 }
 
 .zoomEffect{
@@ -41,3 +45,4 @@ body {
 /* .zoom:hover img {
     transform: scale(1.5);
 } */
+
