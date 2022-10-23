@@ -1,6 +1,6 @@
 <div class="container minHeight">
 
-    <div class="d-flex justify-content-between mt-5">
+    <div class="d-flex justify-content-end border-bottom my-3">
         <h1>Order summary</h1>
     </div>
 
@@ -45,11 +45,11 @@
 
 
     <form action="/buyNow/" method="post">
-        <div class="d-flex justify-content-between mt-5">
+        <div class="d-flex justify-content-end mt-5">
             <h1>Total payment : &#x20B9;{{total}}</h1>
         </div>
-        <div class="row my-3">
-            <label for="category" class="col-md-1 col-form-label">Select delivery adress</label>
+        <div class="row my-3 d-flex justify-content-end">
+            <label for="category" class="col-md-2 col-form-label">Select delivery adress</label>
             <div class="col-md-3">
                 <select name="address" id="address" style="width: 250px;">
                     {{#each result.address}}
@@ -58,8 +58,8 @@
                 </select>
             </div>
         </div>
-        <div class="row mb-3">
-            <label for="offer" class="col-md-1 col-form-label">Select payment option</label>
+        <div class="row mb-3 d-flex justify-content-end">
+            <label for="offer" class="col-md-2 col-form-label">Select payment option</label>
             <div class="col-md-3">
                 <select name="paymentOption" id="paymentOption" style="width: 250px;">
                     <option value="">COD</option>
@@ -68,7 +68,9 @@
                 </select>
             </div>
         </div>
-        <button type="submit" class="btn btn-dark mb-3">Continue</button>
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-dark mb-3 justify-content-end">Continue</button>
+        </div>
     </form>
 
 </div>
