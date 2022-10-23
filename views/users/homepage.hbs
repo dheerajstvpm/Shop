@@ -4,43 +4,53 @@
     <div class="row row-cols-2 row-cols-md-4 gx-5 my-5">
 
         <div class="col">
-            <div class="card" style="width: 15rem; height: 20rem">
-
-                <a href="/product/{{firstRow1._id}}"><img src={{firstRow1.image}} style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
-
+            <div class="card" style="width: 15rem; height: 22rem">
+                <a href="/product/{{firstRow1._id}}"><img src={{firstRow1.image}}
+                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
                 <div class="card-body">
-                    <a href="/addToCart/{{firstRow1._id}}" class="btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{firstRow1._id}}" class="btn btn-dark">Wishlist</a>
+                    <h5 class="card-title">{{firstRow1.productName}}</h5>
+                    <p class="card-title">{{firstRow1.description}}</p>
+                    {{!-- <a href="/addToCart/{{firstRow1._id}}" class="btn btn-outline-dark">Add to cart</a>
+                    <a href="/addToWishlist/{{firstRow1._id}}" class="btn btn-dark">Wishlist</a> --}}
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card" style="width: 15rem; height: 20rem">
-                <a href="/product/{{firstRow2._id}}"><img src="{{firstRow2.image}}" style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
+            <div class="card" style="width: 15rem; height: 22rem">
+                <a href="/product/{{firstRow2._id}}"><img src="{{firstRow2.image}}"
+                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
                 <div class="card-body">
-                    <a href="/addToCart/{{firstRow2._id}}" class="btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{firstRow2._id}}" class="btn btn-dark">Wishlist</a>
+                    <h5 class="card-title">{{firstRow2.productName}}</h5>
+                    <p class="card-title">{{firstRow2.description}}</p>
+                    {{!-- <a href="/addToCart/{{firstRow2._id}}" class="btn btn-outline-dark">Add to cart</a>
+                    <a href="/addToWishlist/{{firstRow2._id}}" class="btn btn-dark">Wishlist</a> --}}
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card" style="width: 15rem; height: 20rem">
-                <a href="/product/{{firstRow3._id}}"><img src="{{firstRow3.image}}" style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
+            <div class="card" style="width: 15rem; height: 22rem">
+                <a href="/product/{{firstRow3._id}}"><img src="{{firstRow3.image}}"
+                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
                 <div class="card-body">
-                    <a href="/addToCart/{{firstRow3._id}}" class="btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{firstRow3._id}}" class="btn btn-dark">Wishlist</a>
+                    <h5 class="card-title">{{firstRow3.productName}}</h5>
+                    <p class="card-title">{{firstRow3.description}}</p>
+                    {{!-- <a href="/addToCart/{{firstRow3._id}}" class="btn btn-outline-dark">Add to cart</a>
+                    <a href="/addToWishlist/{{firstRow3._id}}" class="btn btn-dark">Wishlist</a> --}}
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card" style="width: 15rem; height: 20rem">
-                <a href="/product/{{firstRow4._id}}"><img src="{{firstRow4.image}}" style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
+            <div class="card" style="width: 15rem; height: 22rem">
+                <a href="/product/{{firstRow4._id}}"><img src="{{firstRow4.image}}"
+                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
                 <div class="card-body">
-                    <a href="/addToCart/{{firstRow4._id}}" class="btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{firstRow4._id}}" class="btn btn-dark">Wishlist</a>
+                    <h5 class="card-title">{{firstRow4.productName}}</h5>
+                    <p class="card-title">{{firstRow4.description}}</p>
+                    {{!-- <a href="/addToCart/{{firstRow4._id}}" class="btn btn-outline-dark">Add to cart</a>
+                    <a href="/addToWishlist/{{firstRow4._id}}" class="btn btn-dark">Wishlist</a> --}}
                 </div>
             </div>
         </div>
@@ -59,27 +69,27 @@
                 aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner">
-            <div class="carousel-item active" data-bs-interval="10000">
+            <div class="carousel-item active" data-bs-interval="2000">
                 <a href="/product/{{banner1._id}}"><img src="{{banner1.image}}" class="d-block w-45 mx-auto"
                         style="height:300px;" alt="..."></a>
-                {{!-- <div class="carousel-caption d-none d-md-block text-danger">
-                    <h5>First slide label</h5>
-                    <p>Some representative placeholder content for the first slide.</p>
-                </div> --}}
+                <div class="carousel-caption d-none d-md-block text-danger">
+                    {{!-- <h5>{{banner1.productName}}</h5>
+                    <p>Some representative placeholder content for the first slide.</p> --}}
+                </div>
             </div>
             <div class="carousel-item" data-bs-interval="2000">
                 <a href="/product/{{banner2._id}}"><img src="{{banner2.image}}" class="d-block w-45 mx-auto"
                         style="height:300px;" alt="..."></a>
                 {{!-- <div class="carousel-caption d-none d-md-block">
-                    <h5>Second slide label</h5>
+                    <h5>{{banner2.productName}}</h5>
                     <p>Some representative placeholder content for the second slide.</p>
                 </div> --}}
             </div>
-            <div class="carousel-item">
+            <div class="carousel-item" data-bs-interval="2000">
                 <a href="/product/{{banner3._id}}"><img src="{{banner3.image}}" class="d-block w-45 mx-auto"
                         style="height:300px;" alt="..."></a>
                 {{!-- <div class="carousel-caption d-none d-md-block">
-                    <h5>Third slide label</h5>
+                    <h5>{{banner3.productName}}</h5>
                     <p>Some representative placeholder content for the third slide.</p>
                 </div> --}}
             </div>
@@ -98,41 +108,53 @@
 
     <div class="row row-cols-2 row-cols-md-4 gx-5 my-5">
         <div class="col">
-            <div class="card" style="width: 15rem; height: 20rem">
-                <a href="/product/{{lastRow1._id}}"><img src="{{lastRow1.image}}" style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
+            <div class="card" style="width: 15rem; height: 22rem">
+                <a href="/product/{{lastRow1._id}}"><img src="{{lastRow1.image}}"
+                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
                 <div class="card-body">
-                    <a href="/addToCart/{{lastRow1._id}}" class="btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{lastRow1._id}}" class="btn btn-dark">Wishlist</a>
+                    <h5 class="card-title">{{lastRow1.productName}}</h5>
+                    <p class="card-title">{{lastRow1.description}}</p>
+                    {{!-- <a href="/addToCart/{{lastRow1._id}}" class="btn btn-outline-dark">Add to cart</a>
+                    <a href="/addToWishlist/{{lastRow1._id}}" class="btn btn-dark">Wishlist</a> --}}
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card" style="width: 15rem; height: 20rem">
-                <a href="/product/{{lastRow2._id}}"><img src="{{lastRow2.image}}" style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
+            <div class="card" style="width: 15rem; height: 22rem">
+                <a href="/product/{{lastRow2._id}}"><img src="{{lastRow2.image}}"
+                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
                 <div class="card-body">
-                    <a href="/addToCart/{{lastRow2._id}}" class="btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{lastRow2._id}}" class="btn btn-dark">Wishlist</a>
+                    <h5 class="card-title">{{lastRow2.productName}}</h5>
+                    <p class="card-title">{{lastRow2.description}}</p>
+                    {{!-- <a href="/addToCart/{{lastRow2._id}}" class="btn btn-outline-dark">Add to cart</a>
+                    <a href="/addToWishlist/{{lastRow2._id}}" class="btn btn-dark">Wishlist</a> --}}
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card" style="width: 15rem; height: 20rem">
-                <a href="/product/{{lastRow3._id}}"><img src="{{lastRow3.image}}" style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
+            <div class="card" style="width: 15rem; height: 22rem">
+                <a href="/product/{{lastRow3._id}}"><img src="{{lastRow3.image}}"
+                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
                 <div class="card-body">
-                    <a href="/addToCart/{{lastRow3._id}}" class="btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{lastRow3._id}}" class="btn btn-dark">Wishlist</a>
+                    <h5 class="card-title">{{lastRow3.productName}}</h5>
+                    <p class="card-title">{{lastRow3.description}}</p>
+                    {{!-- <a href="/addToCart/{{lastRow3._id}}" class="btn btn-outline-dark">Add to cart</a>
+                    <a href="/addToWishlist/{{lastRow3._id}}" class="btn btn-dark">Wishlist</a> --}}
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card" style="width: 15rem; height: 20rem">
-                <a href="/product/{{lastRow4._id}}"><img src="{{lastRow4.image}}" style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
+            <div class="card" style="width: 15rem; height: 22rem">
+                <a href="/product/{{lastRow4._id}}"><img src="{{lastRow4.image}}"
+                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top" alt="..."></a>
                 <div class="card-body">
-                    <a href="/addToCart/{{lastRow4._id}}" class="btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{lastRow4._id}}" class="btn btn-dark">Wishlist</a>
+                    <h5 class="card-title">{{lastRow4.productName}}</h5>
+                    <p class="card-title">{{lastRow4.description}}</p>
+                    {{!-- <a href="/addToCart/{{lastRow4._id}}" class="btn btn-outline-dark">Add to cart</a>
+                    <a href="/addToWishlist/{{lastRow4._id}}" class="btn btn-dark">Wishlist</a> --}}
                 </div>
             </div>
         </div>
@@ -140,3 +162,14 @@
 
     {{/each}}
 </div>
+
+<script>
+
+    const myCarousel = document.getElementById('myCarousel')
+
+    myCarousel.addEventListener('slid.bs.carousel', event => {
+        myCarousel.direction= "right";
+    })
+
+
+</script>
