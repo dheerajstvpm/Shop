@@ -1,12 +1,12 @@
 <div class="container minHeight">
     {{#each result}}
-    <div class="row my-5">
+    <div class="d-flex justify-content-end border-bottom my-3">
         <h1>{{productName}}</h1>
     </div>
     <div class="row mb-5">
         <div class="col zoomEffect d-flex justify-content between">
             <img src="{{image}}" alt="Cycle" class="productImg border" style="width :500px; height: 400px">
-            <div class="zoom  border">
+            <div class="zoom  border" style="display:none;">
                 <img src="{{image}}" alt="Cycle">
             </div>
         </div>
@@ -16,11 +16,15 @@
                 <div class="col text-nowrap">Offer : {{offer}}</div>
             </div>
             <div class="row">
+                {{#if this.stock}}
                 <div class="col"><a href="/addToCart/{{_id}}" class="btn btn-outline-dark mb-5"
-                        style="width:120px ;">Add to
-                        card</a></div>
-                <div class="col"><a href="/buyNow/" class="btn btn-outline-dark mb-5" style="width:120px ;">Buy now</a>
-                </div>
+                        style="width:120px ;">Add to cart</a></div>
+                <div class="col"><a href="/buyNowToCart/{{_id}}" class="btn btn-outline-dark mb-5"
+                        style="width:120px ;">Buy now</a></div>
+                {{else}}
+                <div class="col"><a href="/" class="btn btn-outline-dark mb-5" style="width:120px ;">Out of
+                        stock</a></div>
+                {{/if}}
             </div>
             <div class="row mb-5">
                 <div class="col"><a href="/addToWishlist/{{_id}}" class="btn btn-outline-dark"
@@ -45,14 +49,15 @@
     let productImg = document.querySelector(".productImg")
     let zoomDiv = document.querySelector(".zoom")
     let zoomedImg = document.querySelector(".zoom>img")
-    let priceAndCart=document.querySelector(".priceAndCart")
+    let priceAndCart = document.querySelector(".priceAndCart")
     productImg.addEventListener("mousemove", (e) => {
         zoomDiv.style.display = "block";
         priceAndCart.style.display = "none";
-        let x=(e.pageX-49)/500;//49
-        let y=(e.pageY-268)/400;//268
-        console.log(x,y)
-        zoomedImg.style.transform=`translate3d(-${50*x}%,-${50*y}%,0)`
+        console.log(e.pageX, e.pageY)
+        let x = (e.pageX - 49) / 500;//49
+        let y = (e.pageY - 157) / 400;//157
+        console.log(x, y)
+        zoomedImg.style.transform = `translate3d(-${50 * x}%,-${50 * y}%,0)`
     })
     productImg.addEventListener("mouseleave", (e) => {
         zoomDiv.style.display = "none"
