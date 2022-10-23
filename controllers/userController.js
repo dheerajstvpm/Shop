@@ -25,14 +25,14 @@ let mobileNumber1;
 let mobileNumber2;
 let username1;
 let password1;
-let address1;
+// let address1;
 
 
 
 const userHome = (req, res) => {
     session = req.session;
     // To be deleted
-    session.userId = 'Amal';
+    // session.userId = 'Amal';
     //
     Homepage.find({})
         .then((result) => {
@@ -56,7 +56,7 @@ const product = (req, res) => {
         .then((result) => {
             console.log(result);
             if (session.userId) {
-                res.render('users/product', { title: 'Shop.', loginId: session.userId, result })
+                res.render('users/product', { title: 'Shop.', loginName: session.userId, result })
             } else {
                 res.render('users/product', { title: 'Shop.', result })
             }
@@ -96,7 +96,7 @@ const otpSignupVerifyPost = (req, res) => {
                         mobile: mobileNumber1,
                         username: username1,
                         password: password1,
-                        address: address1
+                        // address: address1
                     })
                     user.save()
                         .then((result) => {
@@ -254,7 +254,6 @@ const userSignupPost = function (req, res) {
                     bcrypt.hash(req.body.password, 10)
                         .then(function (hash) {
                             hashPassword = hash
-
                             client
                                 .verify
                                 .services(process.env.serviceID)
@@ -269,8 +268,8 @@ const userSignupPost = function (req, res) {
                                         mobileNumber1 = req.body.mobileNumber,
                                         username1 = req.body.username,
                                         password1 = hashPassword,
-                                        address1 = req.body.address
-                                    res.redirect('/otpSignupVerify')
+                                        // address1 = req.body.address
+                                        res.redirect('/otpSignupVerify')
                                 })
                         })
                         .catch((err) => {
@@ -312,10 +311,94 @@ const userCartGet = (req, res) => {
     }
 }
 
+const buyNowToCart = (req, res) => {
+    session = req.session;
+    // To be deleted
+    // session.userId = 'Amal';
+    //
+    if (session.userId) {
+        console.log(req.params);
+        let productId = req.params.productId;
+        console.log(session.userId);
+        console.log(productId);
+        Product.findOne({ _id: productId })
+            .then((result) => {
+                console.log(result)
+                result = result.toJSON()
+                result.count = 1;
+                console.log(result)
+                User.findOne({ name: session.userId })
+                    .then((out) => {
+                        const checks = out.cart
+                        console.log(checks);
+                        let n = 0;
+                        for (const check of checks) {
+                            if (check._id == productId) {
+                                console.log(check)
+                                console.log(check.productName)
+                                check.count = check.count + 1;
+                                User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": 1 } })
+                                    .then((result) => {
+                                        console.log(result)
+
+                                        //Update stock
+
+                                        // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
+                                        //     .then((result) => {
+                                        //         console.log(result)
+                                        //     })
+                                        //     .catch((err) => {
+                                        //         console.log(err)
+                                        //     })
+                                    })
+                                    .catch((err) => {
+                                        console.log(err)
+                                    })
+                                n++;
+                            }
+                        }
+                        console.log(n)
+                        if (n > 0) {
+                            res.redirect('/cart/')
+                        } else {
+                            User.findOneAndUpdate({ name: session.userId }, { $push: { cart: result } })
+                                .then((result) => {
+                                    // console.log(result)
+
+                                    //Update stock
+
+                                    // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
+                                    //     .then((result) => {
+                                    //         console.log(result)
+                                    //         res.redirect('back')
+                                    //     })
+                                    //     .catch((err) => {
+                                    //         console.log(err)
+                                    //     })
+                                    res.redirect('/cart/')
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                })
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        res.redirect('/login')
+    }
+
+}
+
 const addToCartGet = (req, res) => {
     session = req.session;
     // To be deleted
-    session.userId = 'Amal';
+    // session.userId = 'Amal';
     //
     if (session.userId) {
         console.log(req.params);
@@ -525,7 +608,7 @@ const userWishlistGet = (req, res) => {
 const addToWishlistGet = (req, res) => {
     session = req.session;
     // To be deleted
-    session.userId = 'Amal';
+    // session.userId = 'Amal';
     //
     if (session.userId) {
         console.log(req.params);
@@ -754,6 +837,7 @@ const buyNowPost = (req, res) => {
                     cartItem.orderStatus = 'Order is under process'
                     stockId = cartItem._id
                     console.log(stockId)
+                    salesCount = cartItem.count
                     removeCount = cartItem.count * -1;
                     console.log(removeCount)
                     // Promise.all([User.findOneAndUpdate({ name: session.userId }, { $push: { order: cartItem } }), Product.updateOne({ "_id": stockId }, { $inc: { "stock": removeCount } })])
@@ -782,7 +866,7 @@ const buyNowPost = (req, res) => {
                         })
 
                     // Update stock
-                    Product.updateOne({ "_id": stockId }, { $inc: { "stock": removeCount } })
+                    Product.updateOne({ "_id": stockId }, { $inc: { "stock": removeCount, "sales": salesCount } })
                         .then((result) => {
                             console.log(result)
                             operation();
@@ -1003,6 +1087,315 @@ const otpLoginVerifyPost = (req, res) => {
 }
 
 
+const profileGet = (req, res) => {
+    session = req.session;
+    if (session.userId) {
+        User.findOne({ name: session.userId })
+            .then((result) => {
+                if (session.mobileAlreadyExist) {
+                    session.mobileAlreadyExist = false
+                    res.render('users/profile', { title: 'Shop.', message: "Mobile number already exists", loginName: session.userId, result })
+                } else if (session.nameChangeError) {
+                    session.nameChangeError = false
+                    const error1 = otpLoginErrors.errors.find(item => item.param === 'newName') || '';
+                    console.log(otpLoginErrors)
+                    res.render('users/profile', { title: 'Shop.', message: error1.msg, loginName: session.userId, result })
+                } else if (session.mobileChangeError) {
+                    session.mobileChangeError = false
+                    const error1 = otpLoginErrors.errors.find(item => item.param === 'newMobile') || '';
+                    console.log(otpLoginErrors)
+                    res.render('users/profile', { title: 'Shop.', message: error1.msg, loginName: session.userId, result })
+                } else if (session.addAddressError) {
+                    session.addAddressError = false
+                    const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
+                    console.log(otpLoginErrors)
+                    res.render('users/profile', { title: 'Shop.', message: error1.msg, loginName: session.userId, result })
+                } else if (session.addressChangeError) {
+                    session.addressChangeError = false
+                    const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
+                    console.log(otpLoginErrors)
+                    res.render('users/profile', { title: 'Shop.', message: error1.msg, loginName: session.userId, result })
+                } else {
+                    res.render('users/profile', { title: 'Shop.', message: "", loginName: session.userId, result })
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        res.redirect('/login')
+    }
+}
+
+
+const addAddress = (req, res) => {
+    session = req.session;
+    console.log(req.body)
+    otpLoginErrors = validationResult(req);
+    if (!otpLoginErrors.isEmpty()) {
+        session.addAddressError = true
+        res.redirect('/profile')
+    } else if (session.userId) {
+        User.updateOne({ name: session.userId }, { $push: { address: req.body.newAddress } })
+            .then(() => {
+                res.redirect('/profile')
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        res.redirect('/login')
+    }
+}
+
+
+const nameEdit = (req, res) => {
+    session = req.session;
+    otpLoginErrors = validationResult(req);
+    if (!otpLoginErrors.isEmpty()) {
+        session.nameChangeError = true
+        res.redirect('/profile')
+    } else if (session.userId) {
+        User.updateOne({ name: session.userId }, { $set: { name: req.body.newName } })
+            .then(() => {
+                session.userId = req.body.newName,
+                    res.redirect('/profile')
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        res.redirect('/login')
+    }
+}
+
+let mobileNumber3;
+const mobileEdit = (req, res) => {
+    session = req.session;
+    console.log(req.body)
+    otpLoginErrors = validationResult(req);
+    if (!otpLoginErrors.isEmpty()) {
+        session.mobileChangeError = true
+        res.redirect('/profile')
+    } else {
+        User.findOne({ mobile: req.body.newMobile })
+            .then((result) => {
+                console.log(result)
+                if (result !== null) {
+                    session = req.session;
+                    session.mobileAlreadyExist = true;
+                    console.log('mobile Already Exist')
+                    res.redirect('/profile');
+                } else {
+                    console.log(result)
+                    client
+                        .verify
+                        .services(process.env.serviceID)
+                        .verifications
+                        .create({
+                            to: `+91${req.body.newMobile}`,
+                            channel: 'sms'
+                        })
+                        .then((data) => {
+                            mobileNumber3 = req.body.newMobile,
+                                res.render('users/mobileChangeOtp', { title: 'Shop.', loginName: session.userId })
+                        })
+                }
+            })
+    }
+}
+
+const mobileChangeOtp = (req, res) => {
+    console.log(req.body)
+    if ((req.body.otp).length === 6) {
+        client
+            .verify
+            .services(process.env.serviceID)
+            .verificationChecks
+            .create({
+                to: `+91${mobileNumber3}`,
+                code: req.body.otp
+            })
+            .then((data) => {
+                if (data.status === "approved") {
+                    User.updateOne({ name: session.userId }, { $set: { mobile: mobileNumber3 } })
+                        .then(() => {
+                            console.log(data)
+                            res.redirect('/profile')
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                } else {
+                    session = req.session;
+                    session.invalidOTP = true
+                    res.redirect('/profile');
+                }
+            })
+    } else {
+        session = req.session;
+        session.invalidOTP = true
+        res.redirect('/profile');
+    }
+}
+
+
+const addressEdit = (req, res) => {
+    session = req.session;
+    otpLoginErrors = validationResult(req);
+    addressId = req.params.id;
+    if (!otpLoginErrors.isEmpty()) {
+        session.addressChangeError = true
+        res.redirect('/profile')
+    } else if (session.userId) {
+        User.findOneAndUpdate({ name: session.userId }, { $pull: { address: addressId } })
+            .then(() => {
+                User.findOneAndUpdate({ name: session.userId }, { $push: { address: req.body.newAddress } })
+                    .then(() => {
+                        res.redirect('/profile')
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        res.redirect('/login')
+    }
+}
+
+
+const addressDelete = (req, res) => {
+    session = req.session;
+    addressId = req.params.id;
+    if (session.userId) {
+        User.updateOne({ name: session.userId }, { $pull: { address: addressId } })
+            .then(() => {
+                res.redirect('/profile')
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        res.redirect('/login')
+    }
+}
+
+
+const changePasswordGet = (req, res) => {
+    session = req.session;
+    if (session.changePwdErrors) {
+        session.changePwdErrors = false
+        const error4 = changePwdErrors.errors.find(item => item.param === 'password') || '';
+        const error5 = changePwdErrors.errors.find(item => item.param === 'confirmPassword') || '';
+        res.render('users/changePassword', { title: 'Shop.', pwdMsg: error4.msg, confirmPwdMsg: error5.msg });
+    } else if (session.userId) {
+        res.render('users/changePassword')
+    } else {
+        res.redirect('/login')
+    }
+
+    // session = req.session;
+    // if (session.userId) {
+    //     res.redirect('/')
+    // } else if (session.userAlreadyExist) {
+    //     session.userAlreadyExist = false
+    //     res.render('users/signup', { title: 'Shop.', usernameMsg: 'User Already Exists' })
+    // } else if (session.mobileAlreadyExist) {
+    //     session.mobileAlreadyExist = false
+    //     res.render('users/signup', { title: 'Shop.', mobileMsg: 'User with this mobile number already exists' })
+    // } else if (session.signupErrors) {
+    //     session.changePwdErrors = false
+    //     const error4 = changePwdErrors.errors.find(item => item.param === 'password') || '';
+    //     const error5 = changePwdErrors.errors.find(item => item.param === 'confirmPassword') || '';
+    //     res.render('users/signup', { title: 'Shop.', pwdMsg: error4.msg, confirmPwdMsg: error5.msg});
+    // } else {
+    //     res.render('users/signup', { title: 'Shop.' })
+    // }
+}
+let changePwdErrors;
+const changePasswordPost = (req, res) => {
+    session = req.session;
+    changePwdErrors = validationResult(req);
+    if (!changePwdErrors.isEmpty()) {
+        session.changePwdErrors = true
+        res.redirect('/changePassword')
+    } else {
+        if (session.userId) {
+            User.findOne({ name: session.userId })
+                .then((result) => {
+                    mobileNumber3 = result.mobile;
+                    client
+                        .verify
+                        .services(process.env.serviceID)
+                        .verifications
+                        .create({
+                            to: `+91${mobileNumber3}`,
+                            channel: 'sms'
+                        })
+                        .then((data) => {
+                            password1=req.body.password;
+                            res.redirect('/passwordChangeOtp')
+                        })
+                })
+        } else {
+            res.redirect('/login')
+        }
+    }
+}
+
+const passwordChangeOtpGet = (req, res) => {
+    session = req.session;
+    if (session.invalidOTP) {
+        session.invalidOTP = false
+        res.render('users/passwordChangeOtp', { title: 'Shop.', otpMsg:"Invalid OTP" });
+    } else if (session.userId) {
+        res.render('users/passwordChangeOtp')
+    } else {
+        res.redirect('/login')
+    }
+}
+
+
+const passwordChangeOtpPost = (req, res) => {
+    console.log(req.body)
+    if ((req.body.otp).length === 6) {
+        client
+            .verify
+            .services(process.env.serviceID)
+            .verificationChecks
+            .create({
+                to: `+91${mobileNumber3}`,
+                code: req.body.otp
+            })
+            .then((data) => {
+                if (data.status === "approved") {
+                    bcrypt.hash(password1, 10)
+                        .then((hash) => {
+                            User.updateOne({ name: session.userId }, { $set: { password: hash } })
+                                .then(() => {
+                                    console.log(data)
+                                    res.redirect('/profile')
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                })
+                        })
+                } else {
+                    session = req.session;
+                    session.invalidOTP = true
+                    res.redirect('/passwordChangeOtp');
+                }
+            })
+    } else {
+        session = req.session;
+        session.invalidOTP = true
+        res.redirect('/passwordChangeOtp');
+    }
+}
+
 
 const userlogout = function (req, res) {
     session = req.session
@@ -1037,10 +1430,22 @@ module.exports = {
     removeFromWishlist,
     buyNowGet,
     buyNowPost,
+    buyNowToCart,
     orderGet,
     cancelOrderGet,
     userMobileLoginGet,
     userMobileLoginPost,
     otpLoginVerifyGet,
-    otpLoginVerifyPost
+    otpLoginVerifyPost,
+    profileGet,
+    addAddress,
+    nameEdit,
+    mobileEdit,
+    addressEdit,
+    addressDelete,
+    mobileChangeOtp,
+    changePasswordGet,
+    changePasswordPost,
+    passwordChangeOtpGet,
+    passwordChangeOtpPost
 }
