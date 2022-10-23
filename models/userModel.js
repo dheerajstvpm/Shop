@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema;
 
 
-const Product = require('../models/productModel')
+// const Product = require('../models/productModel')
 
 // const productSchema = new Schema({
 //     result: {
@@ -61,6 +61,7 @@ const orderSchema = new Schema({
 const userSchema = new Schema({
     name: { type: String },
     username: { type: String },
+    password: { type: String },
     mobile: { type: String },
     address: {
         type: [],
@@ -78,8 +79,7 @@ const userSchema = new Schema({
     order: {
         type: [orderSchema],
         default: []
-    },
-    password: { type: String }
+    }    
 }, { timestamps: true })
 
 
