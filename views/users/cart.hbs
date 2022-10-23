@@ -1,6 +1,6 @@
 <div class="container minHeight">
 
-    <div class="d-flex justify-content-between mt-5">
+    <div class="d-flex justify-content-end border-bottom my-3">
         <h1>Cart</h1>
     </div>
 
@@ -31,7 +31,7 @@
                 {{#each result.cart}}
                 <tr>
                     <th scope="row" class="text-center"><br>{{addOne @index}}.</th>
-                    <td class="text-center"><img src="{{this.image}}" alt="image" style="width: 5rem; height: 5rem"></td>
+                    <td class="text-center"><img src="{{this.image}}" alt="image" style="width: 5rem; height: 5rem; object-fit: contain;"></td>
                     <td class="text-center"><br>{{this.productName}}</td>
                     <td class="text-center"><br>&#x20B9;{{this.price}}</td>
                     <td class="text-center"><br><a href="/addToCart/{{this._id}}" class="ms-1 me-4 text-decoration-none text-dark"><svg
