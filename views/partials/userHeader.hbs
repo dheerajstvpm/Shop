@@ -1,44 +1,76 @@
 <div class="container">
-    <header
-        class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between border-bottom">
-        <div class="dropdown" style="width: 30%;">
-            <button class="btn btn-white d-flex flex-wrap align-items-start" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor" class="bi bi-list"
-                    viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
-                </svg>
+    <nav class="navbar navbar-expand-lg border-bottom">
+        <div class="container-fluid p-0">
+            <a class="navbar-brand fs-1" href="/">Shop.</a>
+            {{#if loginName}}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-            <ul class="dropdown-menu">
-                <li><a href="#" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Category</button></a></li>
-                <li><a href="#" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Products</button></a></li>
-                <li><a href="#" class="text-decoration-none"><button class="dropdown-item" type="button">More Products</button></a></li>
-            </ul>
-        </div>
+            {{/if}}
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    {{#if loginName}}
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/cart/"><button class="dropdown-item"
+                                type="button">Cart</button></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/wishlist/"><button class="dropdown-item"
+                                type="button">Wishlist</button></a>
+                    </li>
+                    <li class="nav-item dropdown">
 
-        <ul class="nav col-12 col-md-auto justify-content-center mb-md-0" style="width: 40%;">
-            <li><a href="/" class="nav-link link-dark"><span style="font-size: 48px;">Shop</span><span
-                        style="font-size: 72px;">.</span></a></li>
-        </ul>
-        {{#if loginName}}
-        <div class="col-md-3 text-end" style="width: 30%;">
-            <a href="/login"></a><button class="btn btn-outline-dark me-2 dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">{{loginName}}
-            </button></a>
-            <ul class="dropdown-menu">
-                <li><a href="/cart/" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Cart</button></a></li>
-                <li><a href="/wishlist/" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Wishlist</button></a></li>
-                <li><a href="/order/" class="text-decoration-none"><button   class="dropdown-item border-bottom" type="button">Orders</button></a></li>
-                <li><a href="#" class="text-decoration-none"><button class="dropdown-item border-bottom" type="button">Profile</button></a></li>
-                <li><a href="/logout" class="text-decoration-none"><button class="dropdown-item" type="button">Logout</button></a></li>
-            </ul>
+                        {{!-- <div class="col-md-3 text-end" style="width: 30%;"> --}}
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                {{loginName}}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-lg-end">
+                                <li><a class="dropdown-item" href="/order/">Orders</a></li>
+                                <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                            {{!--
+                        </div> --}}
+                    </li>
+                    {{else}}
+                    <li class="nav-item">
+                        {{!-- <div class="col-md-3 text-end" style="width: 30%;"> --}}
+                            <a href="/login"><button type="button" class="btn btn-outline-dark me-2">Login</button></a>
+                            <a href="/signup"><button type="button" class="btn btn-dark">Sign up</button></a>
+                            {{!--
+                        </div> --}}
+                    </li>
+                    {{/if}}
+                    {{!-- {{#if loginName}}
+                    <div class="col-md-3 text-end" style="width: 30%;">
+                        <a href="#"></a><button class="btn btn-outline-dark me-2 dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">{{loginName}}
+                        </button></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/order/" class="text-decoration-none"><button
+                                        class="dropdown-item border-bottom" type="button">Orders</button></a></li>
+                            <li><a href="#" class="text-decoration-none"><button class="dropdown-item border-bottom"
+                                        type="button">Profile</button></a></li>
+                            <li><a href="/logout" class="text-decoration-none"><button class="dropdown-item"
+                                        type="button">Logout</button></a></li>
+                        </ul>
+                    </div>
+                    {{else}}
+                    <div class="col-md-3 text-end" style="width: 30%;">
+                        <a href="/login"><button type="button" class="btn btn-outline-dark me-2">Login</button></a>
+                        <a href="/signup"><button type="button" class="btn btn-dark">Sign up</button></a>
+                    </div>
+                    {{/if}} --}}
+
+                </ul>
+            </div>
         </div>
-        {{else}}
-        <div class="col-md-3 text-end" style="width: 30%;">
-            <a href="/login"><button type="button" class="btn btn-outline-dark me-2">Login</button></a>
-            <a href="/signup"><button type="button" class="btn btn-dark">Sign up</button></a>
-        </div>
-        {{/if}}
-    </header>
+    </nav>
+
 </div>
