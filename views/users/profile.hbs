@@ -1,0 +1,49 @@
+<div class="container minHeight">
+
+    <div class="d-flex justify-content-between border-bottom my-3">
+        <div class="text-danger fw-bold">{{message}}</div>
+        <h1>Profile</h1>
+    </div>
+
+    <div class="row my-3">
+        <label for="newName" class="col-md-2 col-form-label">Name:</label>
+        <form action="/nameEdit/" class="col-md-3" method="post">
+            <input type="text" name="newName" class="form-control" id="newName" value="{{result.name}}">
+            <button type="submit" class="btn btn-outline-dark my-3">Update</button>
+        </form>
+        <div class="col-md-1"></div>
+
+        <label for="newMobile" class="col-md-2 col-form-label">Mobile number:</label>
+        <form action="/mobileEdit/" class="col-md-3" method="post">
+            <input type="text" name="newMobile" class="form-control" id="newMobile" value="{{result.mobile}}">
+            <button type="submit" class="btn btn-outline-dark my-3">Update</button>
+        </form>
+        <div class="col-md-1"></div>
+
+    </div>
+    <div class="row my-3">
+        <label for="newAddress" class="col-md-2 col-form-label mb-3">Addresses:</label>
+        {{#each result.address}}
+        <form action="/addressEdit/{{this}}" class="col-md-3" method="post">
+            <input type="text" name="newAddress" class="form-control" id="newAddress" value="{{this}}">
+            <button type="submit" class="btn btn-outline-dark my-3">Update</button>
+            {{!-- <button type="submit" class="btn btn-outline-dark my-3">Delete</button> --}}
+            <a href="/addressDelete/{{this}}" class="btn btn-outline-danger"
+                onclick="return confirm('Are you sure, you want to delete this address?')">Delete</a>
+        </form>
+        {{/each}}
+        <div class="col-md-1"></div>
+        
+    </div>
+
+    <div class="row my-3">
+        <label for="newAddress" class="col-md-2 col-form-label">Add new address:</label>
+        <form action="/addAddress/" class="col-md-3" method="post">
+            <textarea name="newAddress" id="newAddress" cols="30" rows="3"></textarea>
+            <button type="submit" class="btn btn-outline-dark my-3">Add</button>
+        </form>
+        <div class="col-md-2"></div>
+        <a href="/changePassword" class="col-md-3 my-3 link-dark">Change your password</a>
+    </div>
+
+</div>
