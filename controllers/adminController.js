@@ -1089,20 +1089,134 @@ const adminOrderManagementGet = function (req, res) {
 
 const adminOrderCancel = (req, res) => {
     adminSession = req.session;
-    productId = req.params.id;
-    console.log(productId)
+    uniqueId = req.params.id;
+    console.log(uniqueId)
+    console.log(customerId)
     if (adminSession.adminId) {
-        User.updateOne({ "_id": customerId, "order.unique": productId }, { $set: { "order.$.orderStatus": "Order cancelled" } })
+        User.findOne({ _id: customerId })
             .then((result) => {
-                res.redirect('back')
-            })
-            .catch((err) => {
-                console.log(err)
+                // console.log(result)
+
+                const orders = result.order
+
+                console.log(orders)
+
+                for (let order of orders) {
+                    order = order.toJSON();
+                    if (order.unique === uniqueId) {
+                        Promise.all([(User.updateOne({ "_id": customerId, "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled" } })), (Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } }))])
+                            .then((result) => {
+                                res.redirect('back')
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            })
+                    }
+
+                }
             })
     } else {
         res.redirect('/admin')
     }
 }
+
+
+
+const adminDashboard = (req, res) => {
+    if (adminSession.adminId) {
+        const sales = [];
+        const timeOfSale = [];
+        let k = 0;
+        let l = 0;
+        let m = [];
+        let n;
+        // function operation() {
+        //     l++;
+        //     if (l === m*n) {
+        //         res.redirect('/order');
+        //     }
+        // }
+        User.find({})
+            .then((results) => {
+                // console.log(result)
+                let sums;
+                n = results.length;
+                console.log(`n:${n}`);
+                for (result of results) {
+                    k++;
+                    console.log(`k:${k}`);
+                    const orders = result.order
+                    m.push(orders.length);
+                    console.log(`m:${m}`);
+                    
+                    console.log(`sums:${sums}`)
+                    for (let order of orders) {
+                        l++;
+                        console.log(`l:${l}`);
+                        sums = m.reduce((partialSum, a) => partialSum + a, 0);
+                        order = order.toJSON();
+
+                        if (order.orderStatus !== "Order cancelled") {
+                            console.log(order.count);
+                            console.log(order.price);
+                            sales.push(order.count * order.price);
+                            console.log(sales);
+                            timeOfSale.push(order.createdAt.toISOString().substring(0, 10));
+                            console.log(timeOfSale);
+                        }
+
+                        // operation();
+                    }
+                    if (l === sums && k===n) {
+                        console.log(sales);
+                        console.log(typeof (sales[0]));
+                        
+                        console.log(timeOfSale);
+                        console.log(typeof (timeOfSale[0]));
+                        Product.find({})
+                            .then((result) => {
+                                const sum = function (items, prop1, prop2) {
+                                    return items.reduce(function (a, b) {
+                                        return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
+                                    }, 0);
+                                };
+                                const total = sum(result, 'price', 'sales');
+                                res.render('admin/adminDashboard', { title: 'Shop.admin', admin: true, result, total: total, sales, timeOfSale })
+                            }).catch((err) => {
+                                console.log(err)
+                            })
+                    }
+                }
+            })
+
+
+
+
+        // console.log(orders)
+
+        // for (let order of orders) {
+        //     order = order.toJSON();
+        //     if (order.unique === uniqueId) {
+        //         Promise.all([(User.updateOne({ "_id": customerId, "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled" } })), (Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } }))])
+        //             .then((result) => {
+        //                 res.redirect('back')
+        //             })
+        //             .catch((err) => {
+        //                 console.log(err)
+        //             })
+        //     }
+
+        // }
+
+
+
+
+    } else {
+        res.redirect('/admin')
+    }
+}
+
+
 
 const adminLogout = function (req, res) {
     adminSession = req.session
@@ -1151,5 +1265,6 @@ module.exports = {
     userHomepageLayoutPost,
     adminOrderManagementGet,
     adminOrderCancel,
-    adminLogout
+    adminLogout,
+    adminDashboard
 }
