@@ -17,7 +17,7 @@
     </form> --}}
     <div class="d-flex mb-3">
         <table class=" table">
-            {{!-- <thead>
+            <thead>
                 <tr>
                     <th scope="col" class="text-center">Sl.</th>
                     <th scope="col" class="text-center">Product Name</th>
@@ -26,8 +26,9 @@
                     <th scope="col" class="text-center">No.of items</th>
                     <th scope="col" class="text-center">Total</th>
                     <th scope="col" class="text-center">Status</th>
+                    <th scope="col" class="text-center"></th>
                 </tr>
-            </thead> --}}
+            </thead>
             <tbody class="table-group-divider">
                 {{#each result}}
                 <tr>
@@ -36,8 +37,8 @@
                     </td>
                     <td class="text-center"><br>{{this.productName}}</td>
                     <td class="text-center"><br>&#x20B9;{{this.price}}</td>
-                    {{!-- <td class="text-center">{{this.count}}</td>
-                    <td class="text-center">{{multiply this.price this.count}}</td> --}}
+                    <td class="text-center"><br>{{this.count}}</td>
+                    <td class="text-center"><br>&#x20B9;{{multiply this.price this.count}}</td>
                     <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
                     <td class="text-center"><br><a href="/cancelOrder/{{this.unique}}" class="btn btn-dark">Cancel</a>
                     </td>
