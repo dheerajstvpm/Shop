@@ -1,9 +1,11 @@
 <div class="container minHeight">
 
-    <div class="d-flex justify-content-end border-bottom my-3">
-        <h1>Order summary</h1>
+    <div class="d-flex justify-content-between border-bottom my-3">
+        <h3 class="text-danger">{{msg}}</h3><h1>Order summary</h1>
     </div>
-
+    {{#if cartEmpty}}
+    <h3 class="text-danger">Items in your cart are out of stock</h3>
+    {{else}}
     <div class="d-flex mb-3">
         <table class=" table">
             <thead>
@@ -72,5 +74,6 @@
             <button type="submit" class="btn btn-dark mb-3 justify-content-end">Continue</button>
         </div>
     </form>
+    {{/if}}
 
 </div>
