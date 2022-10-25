@@ -108,6 +108,8 @@ router.get('/orderManagement/:id', adminController.adminOrderManagementGet);
 
 router.get('/adminOrderCancel/:id', adminController.adminOrderCancel);
 
+router.get('/adminDashboard/', adminController.adminDashboard);
+
 router.post('/adminLogout', adminController.adminLogout);
 
 
