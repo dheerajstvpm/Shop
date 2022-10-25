@@ -32,8 +32,8 @@ let password1;
 const userHome = (req, res) => {
     session = req.session;
     // To be deleted
-    // session.userId = 'Amal';
-    //
+    session.userId = 'Amal';
+
     Homepage.find({})
         .then((result) => {
             // console.log(result)
@@ -336,7 +336,6 @@ const buyNowToCart = (req, res) => {
                             if (check._id == productId) {
                                 console.log(check)
                                 console.log(check.productName)
-                                check.count = check.count + 1;
                                 User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": 1 } })
                                     .then((result) => {
                                         console.log(result)
@@ -416,55 +415,47 @@ const addToCartGet = (req, res) => {
                         const checks = out.cart
                         console.log(checks);
                         let n = 0;
-                        for (const check of checks) {
-                            if (check._id == productId) {
-                                console.log(check)
-                                console.log(check.productName)
-                                check.count = check.count + 1;
-                                User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": 1 } })
+                        async function f() {
+                            for (const check of checks) {
+                                if (check._id == productId) {
+                                    console.log(check)
+                                    console.log(check.productName)
+                                    // check.count = check.count + 1;
+                                    try {
+                                        await User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": 1 } })
+                                    }
+                                    catch (err) {
+                                        console.log(err)
+                                    }
+                                    n++;
+                                }
+                            }
+                            console.log(n)
+                            if (n > 0) {
+                                res.redirect('back')
+                            } else {
+                                User.findOneAndUpdate({ name: session.userId }, { $push: { cart: result } })
                                     .then((result) => {
-                                        console.log(result)
+                                        // console.log(result)
 
                                         //Update stock
 
                                         // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
                                         //     .then((result) => {
                                         //         console.log(result)
+                                        //         res.redirect('back')
                                         //     })
                                         //     .catch((err) => {
                                         //         console.log(err)
                                         //     })
+                                        res.redirect('back')
                                     })
                                     .catch((err) => {
                                         console.log(err)
                                     })
-                                n++;
                             }
                         }
-                        console.log(n)
-                        if (n > 0) {
-                            res.redirect('back')
-                        } else {
-                            User.findOneAndUpdate({ name: session.userId }, { $push: { cart: result } })
-                                .then((result) => {
-                                    // console.log(result)
-
-                                    //Update stock
-
-                                    // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
-                                    //     .then((result) => {
-                                    //         console.log(result)
-                                    //         res.redirect('back')
-                                    //     })
-                                    //     .catch((err) => {
-                                    //         console.log(err)
-                                    //     })
-                                    res.redirect('back')
-                                })
-                                .catch((err) => {
-                                    console.log(err)
-                                })
-                        }
+                        f();
                     })
                     .catch((err) => {
                         console.log(err)
@@ -545,35 +536,6 @@ const removeFromCart = (req, res) => {
             .catch((err) => {
                 console.log(err)
             })
-        // User.findOneAndUpdate({ name: session.userId }, { $pull: { cart: { unique: productId } } })
-        //     .then((out) => {
-        // const checks = out.cart
-        // console.log(checks);
-        // let removeCount = 0;
-        // let removeId = 0;
-        // for (const check of checks) {
-        //     if (check.unique == productId) {
-        //         console.log(check)
-        //         console.log(check.count)
-        //         removeId = check._id
-        //         removeCount = check.count
-        //     }
-        // }
-        // console.log(removeCount)
-        // console.log(removeId)
-        // Product.updateOne({ "_id": removeId }, { $inc: { "stock": removeCount } })
-        //     .then((result) => {
-        //         console.log(result)
-        //         res.redirect('/cart/')
-        //     })
-        //     .catch((err) => {
-        //         console.log(err)
-        //     })
-        //         res.redirect('/cart/')
-        // })
-        // .catch((err) => {
-        //     console.log(err)
-        // })
     } else {
         res.redirect('/login')
     }
@@ -755,53 +717,93 @@ const removeFromWishlist = (req, res) => {
             .catch((err) => {
                 console.log(err)
             })
-        // User.findOneAndUpdate({ name: session.userId }, { $pull: { wishlist: { unique: productId } } })
-        //     .then((out) => {
-        // const checks = out.wishlist
-        // console.log(checks);
-        // let removeCount = 0;
-        // let removeId = 0;
-        // for (const check of checks) {
-        //     if (check.unique == productId) {
-        //         console.log(check)
-        //         console.log(check.count)
-        //         removeId = check._id
-        //         removeCount = check.count
-        //     }
-        // }
-        // console.log(removeCount)
-        // console.log(removeId)
-        // Product.updateOne({ "_id": removeId }, { $inc: { "stock": removeCount } })
-        //     .then((result) => {
-        //         console.log(result)
-        //         res.redirect('/wishlist/')
-        //     })
-        //     .catch((err) => {
-        //         console.log(err)
-        //     })
-        //         res.redirect('/wishlist/')
-        // })
-        // .catch((err) => {
-        //     console.log(err)
-        // })
     } else {
         res.redirect('/login')
     }
 }
 
+
 const buyNowGet = (req, res) => {
     session = req.session;
     if (session.userId) {
+
         User.findOne({ name: session.userId })
             .then((result) => {
-                const sum = function (items, prop1, prop2) {
-                    return items.reduce(function (a, b) {
-                        return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
-                    }, 0);
-                };
-                const total = sum(result.cart, 'price', 'count');
-                // console.log(result)
-                res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, total: total })
+
+                const cartItems = result.cart;
+
+                let n = cartItems.length;
+                console.log(`n:${n}`)
+                Product.find({})
+                    .then((result) => {
+
+                        let m = result.length;
+                        console.log(`m:${m}`)
+                        let l = 0;
+                        function operation() {
+                            ++l;
+                            console.log(`l:${l}`)
+                            if (l === m * n) {
+                                User.findOne({ name: session.userId })
+                                    .then((result) => {
+                                        console.log(result.cart)
+                                        if (result.cart.length==0) {
+                                            res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, cartEmpty:true }) 
+                                        } else {
+                                            const sum = function (items, prop1, prop2) {
+                                                return items.reduce(function (a, b) {
+                                                    return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
+                                                }, 0);
+                                            };
+                                            const total = sum(result.cart, 'price', 'count');
+                                            // console.log(result)
+                                            if (session.outOfStock) {
+                                                session.outOfStock = false;
+                                                res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, total: total, msg: "Some items in your cart went out of stock" })
+                                            } else {
+                                                res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, total: total })
+                                            }
+                                        }
+                                    })
+                            }
+                        }
+                        async function f() {
+                            for (const cartItem of cartItems) {
+
+                                for (const product of result) {
+                                    console.log(`cartItem._id: ${cartItem._id}`)
+                                    console.log(`cartItem.count: ${cartItem.count}`)
+                                    let x = cartItem._id.toString()
+                                    console.log(`product._id: ${product._id}`)
+                                    console.log(`product.stock: ${product.stock}`)
+                                    let y = product._id.toString()
+                                    let z = product.stock - cartItem.count
+                                    console.log(z)
+                                    if (x == y && cartItem.count > product.stock) {
+                                        console.log("1111")
+                                        if (product.stock == 0) {
+                                            try {
+                                                await User.updateOne({ name: session.userId }, { $pull: { cart: { _id: product._id } } })
+                                            } catch (err) {
+                                                console.log(err);
+                                            }
+                                        }
+                                        try {
+                                            await User.updateOne({ "name": session.userId, "cart._id": product._id }, { $set: { "cart.$.count": product.stock } });
+                                            session.outOfStock = true;
+                                        } catch (err) {
+                                            console.log(err);
+                                        }
+                                    }
+                                    operation()
+                                }
+                            }
+                        }
+                        f();
+                        // User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": -1 } })
+
+                        // User.findOneAndUpdate({ name: session.userId }, { $pull: { cart: { _id: result.cart[_id] } } })
+                    })
             })
             .catch((err) => {
                 console.log(err)
@@ -810,6 +812,9 @@ const buyNowGet = (req, res) => {
         res.redirect('/login')
     }
 }
+
+
+
 
 const buyNowPost = (req, res) => {
     session = req.session;
@@ -975,14 +980,29 @@ const orderGet = (req, res) => {
 
 const cancelOrderGet = (req, res) => {
     session = req.session;
-    productId = req.params.id;
+    uniqueId = req.params.id;
     if (session.userId) {
-        User.updateOne({ "name": session.userId, "order.unique": productId }, { $set: { "order.$.orderStatus": "Order cancelled" } })
+        User.findOne({ name: session.userId })
             .then((result) => {
-                res.redirect('/order')
-            })
-            .catch((err) => {
-                console.log(err)
+                // console.log(result)
+
+                const orders = result.order
+
+                console.log(orders)
+
+                for (let order of orders) {
+                    order = order.toJSON();
+                    if (order.unique === uniqueId) {
+                        Promise.all([(User.updateOne({ "name": session.userId, "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled" } })), (Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } }))])
+                            .then((result) => {
+                                res.redirect('/order')
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            })
+                    }
+
+                }
             })
     } else {
         res.redirect('/login')
@@ -1336,7 +1356,7 @@ const changePasswordPost = (req, res) => {
                             channel: 'sms'
                         })
                         .then((data) => {
-                            password1=req.body.password;
+                            password1 = req.body.password;
                             res.redirect('/passwordChangeOtp')
                         })
                 })
@@ -1350,7 +1370,7 @@ const passwordChangeOtpGet = (req, res) => {
     session = req.session;
     if (session.invalidOTP) {
         session.invalidOTP = false
-        res.render('users/passwordChangeOtp', { title: 'Shop.', otpMsg:"Invalid OTP" });
+        res.render('users/passwordChangeOtp', { title: 'Shop.', otpMsg: "Invalid OTP" });
     } else if (session.userId) {
         res.render('users/passwordChangeOtp')
     } else {
@@ -1406,6 +1426,7 @@ const userlogout = function (req, res) {
     session.mobileAlreadyExist = false
     session.incorrectPwd = false
     session.otpLoginErrors = false
+    session.outOfStock = false
     session.userStatus = ""
     res.redirect('/');
 }
