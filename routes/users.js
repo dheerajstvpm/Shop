@@ -10,7 +10,7 @@ const router = express.Router();
 // const Product = require('../models/productModel')
 // const Order = require('../models/orderModel')
 
-const config = require('../controllers/config')
+// const config = require('../controllers/config')
 // const client = require('twilio')(config.accountSid, config.authToken)
 
 const { check, validationResult } = require('express-validator');
@@ -151,6 +151,10 @@ router.post('/changePassword',
 router.get('/passwordChangeOtp', userController.passwordChangeOtpGet)
 
 router.post('/passwordChangeOtp', userController.passwordChangeOtpPost)
+
+router.post('/verifyPaymentRazorPay', userController.verifyPaymentRazorPay)
+
+router.get('/saveOrder', userController.saveOrder)
 
 router.get('/logout', userController.userlogout);
 
