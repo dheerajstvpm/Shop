@@ -1,7 +1,8 @@
 <div class="container minHeight">
 
     <div class="d-flex justify-content-between border-bottom my-3">
-        <h3 class="text-danger">{{msg}}</h3><h1>Order summary</h1>
+        <h3 class="text-danger">{{msg}}</h3>
+        <h1>Order summary</h1>
     </div>
     {{#if cartEmpty}}
     <h3 class="text-danger">Items in your cart are out of stock</h3>
@@ -51,6 +52,8 @@
             <h1>Total payment : &#x20B9;{{total}}</h1>
         </div>
         <div class="row my-3 d-flex justify-content-end">
+            <input type="number" name="amount" value="{{multiply total 100}}" class="d-none">
+            <input type="text" name="currency" value="INR" class="d-none">
             <label for="category" class="col-md-2 col-form-label">Select delivery adress</label>
             <div class="col-md-3">
                 <select name="address" id="address" style="width: 250px;">
@@ -64,9 +67,9 @@
             <label for="offer" class="col-md-2 col-form-label">Select payment option</label>
             <div class="col-md-3">
                 <select name="paymentOption" id="paymentOption" style="width: 250px;">
-                    <option value="">COD</option>
-                    <option value="">Razorpay</option>
-                    <option value="">Paypal</option>
+                    <option value="COD">COD</option>
+                    <option value="Razorpay">Razorpay</option>
+                    <option value="Paypal">Paypal</option>
                 </select>
             </div>
         </div>
@@ -77,3 +80,6 @@
     {{/if}}
 
 </div>
+
+
+
