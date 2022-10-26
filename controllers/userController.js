@@ -15,8 +15,18 @@ const client = require('twilio')(process.env.accountSid, process.env.authToken);
 
 const { check, validationResult } = require('express-validator');
 
+const crypto = require("crypto");
+
 const { v4: uuidv4 } = require('uuid');
 // const { log } = require('handlebars');
+
+//Razorpay
+const Razorpay = require('razorpay');
+const instance = new Razorpay({
+    key_id: process.env.razorPayTestKeyId,
+    key_secret: process.env.razorPayTestKeySecret,
+});
+
 
 let session;
 
@@ -747,8 +757,8 @@ const buyNowGet = (req, res) => {
                                 User.findOne({ name: session.userId })
                                     .then((result) => {
                                         console.log(result.cart)
-                                        if (result.cart.length==0) {
-                                            res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, cartEmpty:true }) 
+                                        if (result.cart.length == 0) {
+                                            res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, cartEmpty: true })
                                         } else {
                                             const sum = function (items, prop1, prop2) {
                                                 return items.reduce(function (a, b) {
@@ -818,137 +828,23 @@ const buyNowGet = (req, res) => {
 
 const buyNowPost = (req, res) => {
     session = req.session;
+    console.log(req.body)
     if (session.userId) {
-        User.findOne({ name: session.userId })
-            .then((result) => {
-                // console.log(result)
-                const cartItems = result.cart
-                const orders = result.order
-                console.log(cartItems)
+        if (req.body.paymentOption == 'Razorpay') {
+            // STEP 1:
+            const { amount, currency } = req.body;
 
-                let n = 0;
-                function operation() {
-                    ++n;
-                    if (n === 3 * (cartItems.length)) {
-                        res.redirect('/order');
-                    }
-                }
-
-                for (let cartItem of cartItems) {
-                    cartItem = cartItem.toJSON();
-                    cartItem.address = req.body.address;
-                    cartItem.paymentOption = req.body.paymentOption;
-                    cartItem.unique = uuidv4()
-                    cartItem.orderStatus = 'Order is under process'
-                    stockId = cartItem._id
-                    console.log(stockId)
-                    salesCount = cartItem.count
-                    removeCount = cartItem.count * -1;
-                    console.log(removeCount)
-                    // Promise.all([User.findOneAndUpdate({ name: session.userId }, { $push: { order: cartItem } }), Product.updateOne({ "_id": stockId }, { $inc: { "stock": removeCount } })])
-                    //     .then((result) => {
-                    //         console.log(result)
-                    //     })
-                    //     .catch((err) => {
-                    //         console.log(err)
-                    //     })
-
-                    //Push cart to order
-                    User.findOneAndUpdate({ name: session.userId }, { $push: { order: cartItem } })
-                        .then((result) => {
-                            operation();
-                            // Empty cart
-                            User.findOneAndUpdate({ name: session.userId }, { $set: { cart: [] } })
-                                .then((result) => {
-                                    operation();
-                                })
-                                .catch((err) => {
-                                    console.log(err)
-                                })
-                        })
-                        .catch((err) => {
-                            console.log(err)
-                        })
-
-                    // Update stock
-                    Product.updateOne({ "_id": stockId }, { $inc: { "stock": removeCount, "sales": salesCount } })
-                        .then((result) => {
-                            console.log(result)
-                            operation();
-                        })
-                        .catch((err) => {
-                            console.log(err)
-                        })
-                }
-
-
-
-
-                // result = result.toJSON()
-                // result.count = 1;
-                // console.log(result)
-                // User.findOne({ name: session.userId })
-                //     .then((out) => {
-                //         const checks = out.cart
-                //         console.log(checks);
-                //         let n = 0;
-                //         for (const check of checks) {
-                //             if (check._id == productId) {
-                //                 console.log(check)
-                //                 console.log(check.productName)
-                //                 check.count = check.count + 1;
-                //                 User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": 1 } })
-                //                     .then((result) => {
-                //                         console.log(result)
-
-                //                         //Update stock
-
-                //                         // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
-                //                         //     .then((result) => {
-                //                         //         console.log(result)
-                //                         //     })
-                //                         //     .catch((err) => {
-                //                         //         console.log(err)
-                //                         //     })
-                //                     })
-                //                     .catch((err) => {
-                //                         console.log(err)
-                //                     })
-                //                 n++;
-                //             }
-                //         }
-                //         console.log(n)
-                //         if (n > 0) {
-                //             res.redirect('back')
-                //         } else {
-                //             User.findOneAndUpdate({ name: session.userId }, { $push: { cart: result } })
-                //                 .then((result) => {
-                //                     // console.log(result)
-
-                //                     //Update stock
-
-                //                     // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
-                //                     //     .then((result) => {
-                //                     //         console.log(result)
-                //                     //         res.redirect('back')
-                //                     //     })
-                //                     //     .catch((err) => {
-                //                     //         console.log(err)
-                //                     //     })
-                //                     res.redirect('back')
-                //                 })
-                //                 .catch((err) => {
-                //                     console.log(err)
-                //                 })
-                //         }
-                //     })
-                //     .catch((err) => {
-                //         console.log(err)
-                //     })
+            // STEP 2:    
+            instance.orders.create({ amount, currency }, (err, order) => {
+                //STEP 3 & 4: 
+                console.log(order);
+                console.log(order.amount)
+                console.log(order.id)
+                res.render('users/paymentPage', { title: 'Shop.', loginName: session.userId, order: JSON.stringify(order) })
             })
-            .catch((err) => {
-                console.log(err)
-            })
+        } else {
+            res.redirect('/saveOrder')
+        }
     } else {
         res.redirect('/login')
     }
@@ -967,7 +863,14 @@ const orderGet = (req, res) => {
                 const total = sum(result.order, 'price', 'count');
                 // console.log(result)
                 result = result.order.reverse()
-                res.render('users/order', { title: 'Shop.', loginName: session.userId, result, total: total })
+    console.log(56654);
+
+    
+
+                res.render('./users/order', { title: 'Shop.', loginName: session.userId, result, total: total })
+
+    console.log(5);
+
             })
             .catch((err) => {
                 console.log(err)
@@ -1417,6 +1320,95 @@ const passwordChangeOtpPost = (req, res) => {
 }
 
 
+const verifyPaymentRazorPay = function (req, res) {
+
+    console.log(">>>>>>>>>>>>>>>>>>>>>>");
+    console.log(req.body)
+
+    // const { payment_id, order_id, razorpay_signature } = req.body;
+    // const razorpay_signature = req.headers['x-razorpay-signature'];
+    console.log(req.body.razorpay_payment_id)
+    console.log(req.body.razorpay_order_id)
+    console.log(req.body.razorpay_signature)
+    // Pass yours key_secret here
+    // const key_secret = YAEUthsup8SijNs3iveeVlL1;
+
+    // STEP 8: Verification & Send Response to User
+
+    // Creating hmac object 
+    let hmac = crypto.createHmac('sha256', process.env.razorPayTestKeySecret);
+
+    // Passing the data to be hashed
+    hmac.update(req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id);
+
+    // Creating the hmac in the required format
+    const generated_signature = hmac.digest('hex');
+
+
+    // const body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
+    // const expectedSignature = crypto.createHmac('sha256', 'process.env.razorPayTestKeySecret')
+    //     .update(body.toString())
+    //     .digest('hex');
+    // console.log("sig received ", req.body.razorpay_signature);
+    // console.log("sig generated ", expectedSignature);
+    var response = { signatureIsValid: "false" }
+    if (generated_signature === req.body.razorpay_signature) {
+        response = { signatureIsValid: "true" }
+        console.log("signatureIsValid")
+        // res.send(response);
+        res.json(response)
+    } else {
+        res.send(response);
+    }
+}
+
+
+const saveOrder = function (req, res) {
+    User.findOne({ name: session.userId })
+        .then((result) => {
+            // console.log(result)
+            const cartItems = result.cart
+            
+            console.log(cartItems)
+
+            async function f() {
+                for (let cartItem of cartItems) {
+                    cartItem = cartItem.toJSON();
+                    cartItem.address = req.body.address;
+                    cartItem.paymentOption = req.body.paymentOption;
+                    cartItem.unique = uuidv4()
+                    cartItem.orderStatus = 'Order is under process'
+                    stockId = cartItem._id
+                    console.log(stockId)
+                    salesCount = cartItem.count
+                    removeCount = cartItem.count * -1;
+                    console.log(removeCount)
+
+                    //----------------------------------------------------
+                    await User.findOneAndUpdate({ name: session.userId }, { $push: { order: cartItem } })
+
+
+                    // Empty cart
+                    await User.findOneAndUpdate({ name: session.userId }, { $set: { cart: [] } })
+
+
+                    // Update stock
+                    await Product.updateOne({ "_id": stockId }, { $inc: { "stock": removeCount, "sales": salesCount } })
+
+
+
+                    //----------------------------------------------------
+                }
+            }
+            f()
+            res.json({success: 'done'});
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+
 const userlogout = function (req, res) {
     session = req.session
     session.userId = false
@@ -1468,5 +1460,7 @@ module.exports = {
     changePasswordGet,
     changePasswordPost,
     passwordChangeOtpGet,
-    passwordChangeOtpPost
+    passwordChangeOtpPost,
+    verifyPaymentRazorPay,
+    saveOrder
 }
