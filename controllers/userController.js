@@ -824,11 +824,14 @@ const buyNowGet = (req, res) => {
 }
 
 
-
+let orderAddress
+let orderPaymentOption
 
 const buyNowPost = (req, res) => {
     session = req.session;
     console.log(req.body)
+    orderAddress = req.body.address
+    orderPaymentOption = req.body.paymentOption
     if (session.userId) {
         if (req.body.paymentOption == 'Razorpay') {
             // STEP 1:
@@ -839,8 +842,12 @@ const buyNowPost = (req, res) => {
                 //STEP 3 & 4: 
                 console.log(order);
                 console.log(order.amount)
+                console.log(typeof order.amount)
                 console.log(order.id)
-                res.render('users/paymentPage', { title: 'Shop.', loginName: session.userId, order: JSON.stringify(order) })
+                console.log(typeof order.id)
+
+                res.json(order)
+                // res.render('users/paymentPage', { title: 'Shop.', loginName: session.userId, order: JSON.stringify(order) })
             })
         } else {
             res.redirect('/saveOrder')
@@ -863,14 +870,8 @@ const orderGet = (req, res) => {
                 const total = sum(result.order, 'price', 'count');
                 // console.log(result)
                 result = result.order.reverse()
-    console.log(56654);
-
-    
 
                 res.render('./users/order', { title: 'Shop.', loginName: session.userId, result, total: total })
-
-    console.log(5);
-
             })
             .catch((err) => {
                 console.log(err)
@@ -904,7 +905,6 @@ const cancelOrderGet = (req, res) => {
                                 console.log(err)
                             })
                     }
-
                 }
             })
     } else {
@@ -1368,14 +1368,14 @@ const saveOrder = function (req, res) {
         .then((result) => {
             // console.log(result)
             const cartItems = result.cart
-            
+
             console.log(cartItems)
 
             async function f() {
                 for (let cartItem of cartItems) {
                     cartItem = cartItem.toJSON();
-                    cartItem.address = req.body.address;
-                    cartItem.paymentOption = req.body.paymentOption;
+                    cartItem.address = orderAddress;
+                    cartItem.paymentOption = orderPaymentOption;
                     cartItem.unique = uuidv4()
                     cartItem.orderStatus = 'Order is under process'
                     stockId = cartItem._id
@@ -1401,7 +1401,7 @@ const saveOrder = function (req, res) {
                 }
             }
             f()
-            res.json({success: 'done'});
+            res.json({ success: 'done' });
         })
         .catch((err) => {
             console.log(err)
