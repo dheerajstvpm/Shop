@@ -6,11 +6,11 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
-        let order = {{{ order }}}
+        const order = {{{ order }}}
 
         console.log(order)
 
-        var options = {
+        const options = {
             "key": "rzp_test_VdJI59WlbDKQw7", // Enter the Key ID generated from the Dashboard
             "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
             "currency": "INR",
@@ -56,7 +56,7 @@
             }
         };
 
-        var rzp1 = new Razorpay(options);
+        const rzp1 = new Razorpay(options);
         rzp1.on('payment.failed', function (response) {
             alert(response.error.code);
             alert(response.error.description);
