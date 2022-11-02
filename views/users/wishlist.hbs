@@ -30,7 +30,7 @@
                 {{#each result.wishlist}}
                 <tr class="mt-5">
                     <th scope="row" class="text-center"><br>{{addOne @index}}.</th>
-                    <td class="text-center"><img src="{{this.image}}" alt="image" style="width: 5rem; height: 5rem; object-fit: contain;"></td>
+                    <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image" style="width: 5rem; height: 5rem; object-fit: contain;"></td>
                     <td class="text-center"><br>{{this.productName}}</td>
                     <td class="text-center"><br>&#x20B9;{{this.price}}</td>
                     <td class="text-center"><br><a href="/removeFromWishlist/{{this._id}}" class="btn btn-outline-danger">Remove</a></td>
