@@ -106,6 +106,8 @@ router.post('/userHomepageLayout', adminController.userHomepageLayoutPost);
 
 router.get('/orderManagement/:id', adminController.adminOrderManagementGet);
 
+router.get('/allOrderManagement/:page', adminController.adminAllOrderManagementGet);
+
 router.get('/adminOrderCancel/:id', adminController.adminOrderCancel);
 
 router.get('/adminDashboard/', adminController.adminDashboard);
