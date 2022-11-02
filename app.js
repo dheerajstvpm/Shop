@@ -15,6 +15,8 @@ const hbs = require('express-handlebars')
 const adminRouter = require('./routes/admin');
 const usersRouter = require('./routes/users')
 
+const fileUpload=require('express-fileupload')
+
 //env
 require('dotenv').config()
 // console.log(process.env)
@@ -38,6 +40,10 @@ mongoose.connect(dbURI)
     app.listen(3000);
   })
   .catch((err) => console.log(err))
+
+//fileupload
+app.use (fileUpload());
+
 
 // view engine setup
 app.set('view engine', 'hbs');
