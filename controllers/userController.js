@@ -7,6 +7,7 @@ const Offer = require('../models/offerModel')
 const Product = require('../models/productModel')
 const Order = require('../models/orderModel')
 
+
 // const config = require('./config')
 
 require('dotenv').config()
@@ -28,6 +29,8 @@ const instance = new Razorpay({
 });
 
 
+
+
 let session;
 
 let name1;
@@ -41,8 +44,9 @@ let password1;
 
 const userHome = (req, res) => {
     session = req.session;
+
     // To be deleted
-    session.userId = 'Amal';
+    // session.userId = 'Amal';
 
     Homepage.find({})
         .then((result) => {
@@ -148,7 +152,7 @@ const userLoginGet = (req, res) => {
         console.log(session)
         console.log('4')
         req.session.destroy();
-        res.render('users/login', { title: 'Shop.', passwordMessage: 'Incorrect password' })
+        res.render('users/login', { title: 'Shop.', passwordMessage: 'Password incorrect' })
     } else {
         console.log(session)
         res.render('users/login', { title: 'Shop.' })
@@ -157,16 +161,23 @@ const userLoginGet = (req, res) => {
 
 const userLoginPost = function (req, res) {
     let temp;
-    User.find({ username: req.body.username })
+    User.findOne({ username: req.body.username.toLowerCase() })
         .then((result) => {
-            temp = result.find(item => item.username)
-            bcrypt.compare(req.body.password, temp.password)
+            // temp = result.find(item => item.username)
+            bcrypt.compare(req.body.password, result.password)
                 .then(function (bcryptResult) {
 
                     if (bcryptResult) {
                         session = req.session;
-                        session.userId = temp.name;
-                        session.userStatus = temp.status;
+                        session.userId = result.name;
+                        console.log(result._id);
+                        console.log(typeof result._id)
+                        session.uid = result._id
+                        // .toHexString();
+                        // session.kid = "Hi";
+                        console.log(session.uid)
+                        console.log(typeof session.uid)
+                        session.userStatus = result.status;
                         res.redirect('/login');
                     } else {
                         session = req.session
@@ -182,7 +193,7 @@ const userLoginPost = function (req, res) {
                 });
         })
         .catch((err) => {
-            // console.log(err)
+            console.log(err)
             session = req.session
             session.incorrectId = true;
             console.log(session)
@@ -243,7 +254,7 @@ const userSignupPost = function (req, res) {
         //         // let mobile = result.find(item => item.mobileNumber)
 
         //     })
-        Promise.all([User.findOne({ username: req.body.username }), User.findOne({ mobile: req.body.mobileNumber })])
+        Promise.all([User.findOne({ username: req.body.username.toLowerCase() }), User.findOne({ mobile: req.body.mobileNumber })])
             .then((result) => {
                 let usernameResult, mobileResult;
                 [usernameResult, mobileResult] = result;
@@ -276,7 +287,7 @@ const userSignupPost = function (req, res) {
                                     console.log(data)
                                     name1 = req.body.name,
                                         mobileNumber1 = req.body.mobileNumber,
-                                        username1 = req.body.username,
+                                        username1 = req.body.username.toLowerCase(),
                                         password1 = hashPassword,
                                         // address1 = req.body.address
                                         res.redirect('/otpSignupVerify')
@@ -301,7 +312,8 @@ const userCartGet = (req, res) => {
     // console.log(userId);
     session = req.session;
     if (session.userId) {
-        User.findOne({ name: session.userId })
+        console.log(session.uid)
+        User.findById({ _id: session.uid })
             .then((result) => {
                 const sum = function (items, prop1, prop2) {
                     return items.reduce(function (a, b) {
@@ -337,7 +349,7 @@ const buyNowToCart = (req, res) => {
                 result = result.toJSON()
                 result.count = 1;
                 console.log(result)
-                User.findOne({ name: session.userId })
+                User.findOne({ _id: session.uid })
                     .then((out) => {
                         const checks = out.cart
                         console.log(checks);
@@ -370,7 +382,7 @@ const buyNowToCart = (req, res) => {
                         if (n > 0) {
                             res.redirect('/cart/')
                         } else {
-                            User.findOneAndUpdate({ name: session.userId }, { $push: { cart: result } })
+                            User.findOneAndUpdate({ _id: session.uid }, { $push: { cart: result } })
                                 .then((result) => {
                                     // console.log(result)
 
@@ -420,7 +432,7 @@ const addToCartGet = (req, res) => {
                 result = result.toJSON()
                 result.count = 1;
                 console.log(result)
-                User.findOne({ name: session.userId })
+                User.findOne({ _id: session.uid })
                     .then((out) => {
                         const checks = out.cart
                         console.log(checks);
@@ -444,7 +456,7 @@ const addToCartGet = (req, res) => {
                             if (n > 0) {
                                 res.redirect('back')
                             } else {
-                                User.findOneAndUpdate({ name: session.userId }, { $push: { cart: result } })
+                                User.findOneAndUpdate({ _id: session.uid }, { $push: { cart: result } })
                                     .then((result) => {
                                         // console.log(result)
 
@@ -488,7 +500,7 @@ const removeFromCart = (req, res) => {
         console.log(session.userId);
         console.log(productId);
 
-        User.findOne({ name: session.userId })
+        User.findOne({ _id: session.uid })
             .then((out) => {
                 const checks = out.cart
                 console.log(checks);
@@ -498,7 +510,7 @@ const removeFromCart = (req, res) => {
                         console.log(check)
                         console.log(check.productName)
                         check.count = check.count + 1;
-                        // User.findOneAndUpdate({ name: session.userId }, { $push: { cart: result } })
+                        // User.findOneAndUpdate({ _id: session.uid }, { $push: { cart: result } })
                         User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": -1 } })
                             .then((result) => {
                                 console.log(result)
@@ -523,7 +535,7 @@ const removeFromCart = (req, res) => {
                 if (n > 0) {
                     res.redirect('back')
                 } else {
-                    User.findOneAndUpdate({ name: session.userId }, { $pull: { cart: { _id: productId } } })
+                    User.findOneAndUpdate({ _id: session.uid }, { $pull: { cart: { _id: productId } } })
                         .then((result) => {
                             // console.log(result)
 
@@ -555,7 +567,7 @@ const removeFromCart = (req, res) => {
 const userWishlistGet = (req, res) => {
     session = req.session;
     if (session.userId) {
-        User.findOne({ name: session.userId })
+        User.findOne({ _id: session.uid })
             .then((result) => {
                 // const sum = function (items, prop1, prop2) {
                 //     return items.reduce(function (a, b) {
@@ -593,7 +605,7 @@ const addToWishlistGet = (req, res) => {
                 result = result.toJSON()
                 result.count = 1;
                 console.log(result)
-                User.findOne({ name: session.userId })
+                User.findOne({ _id: session.uid })
                     .then((out) => {
                         const checks = out.wishlist
                         console.log(checks);
@@ -627,7 +639,7 @@ const addToWishlistGet = (req, res) => {
                         if (n > 0) {
                             res.redirect('back')
                         } else {
-                            User.findOneAndUpdate({ name: session.userId }, { $push: { wishlist: result } })
+                            User.findOneAndUpdate({ _id: session.uid }, { $push: { wishlist: result } })
                                 .then((result) => {
                                     // console.log(result)
 
@@ -669,7 +681,7 @@ const removeFromWishlist = (req, res) => {
         console.log(session.userId);
         console.log(productId);
 
-        User.findOne({ name: session.userId })
+        User.findOne({ _id: session.uid })
             .then((out) => {
                 const checks = out.wishlist
                 console.log(checks);
@@ -679,7 +691,7 @@ const removeFromWishlist = (req, res) => {
                         console.log(check)
                         console.log(check.productName)
                         check.count = check.count + 1;
-                        // User.findOneAndUpdate({ name: session.userId }, { $push: { wishlist: result } })
+                        // User.findOneAndUpdate({ _id: session.uid }, { $push: { wishlist: result } })
                         User.updateOne({ "name": session.userId, "wishlist._id": productId }, { $inc: { "wishlist.$.count": -1 } })
                             .then((result) => {
                                 console.log(result)
@@ -704,7 +716,7 @@ const removeFromWishlist = (req, res) => {
                 if (n > 0) {
                     res.redirect('/wishlist')
                 } else {
-                    User.findOneAndUpdate({ name: session.userId }, { $pull: { wishlist: { _id: productId } } })
+                    User.findOneAndUpdate({ _id: session.uid }, { $pull: { wishlist: { _id: productId } } })
                         .then((result) => {
                             // console.log(result)
 
@@ -737,26 +749,26 @@ const buyNowGet = (req, res) => {
     session = req.session;
     if (session.userId) {
 
-        User.findOne({ name: session.userId })
+        User.findOne({ _id: session.uid })
             .then((result) => {
 
                 const cartItems = result.cart;
 
                 let n = cartItems.length;
-                console.log(`n:${n}`)
+                // console.log(`n:${n}`)
                 Product.find({})
                     .then((result) => {
 
                         let m = result.length;
-                        console.log(`m:${m}`)
+                        // console.log(`m:${m}`)
                         let l = 0;
                         function operation() {
                             ++l;
-                            console.log(`l:${l}`)
+                            // console.log(`l:${l}`)
                             if (l === m * n) {
-                                User.findOne({ name: session.userId })
+                                User.findOne({ _id: session.uid })
                                     .then((result) => {
-                                        console.log(result.cart)
+                                        // console.log(result.cart)
                                         if (result.cart.length == 0) {
                                             res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, cartEmpty: true })
                                         } else {
@@ -781,19 +793,19 @@ const buyNowGet = (req, res) => {
                             for (const cartItem of cartItems) {
 
                                 for (const product of result) {
-                                    console.log(`cartItem._id: ${cartItem._id}`)
-                                    console.log(`cartItem.count: ${cartItem.count}`)
+                                    // console.log(`cartItem._id: ${cartItem._id}`)
+                                    // console.log(`cartItem.count: ${cartItem.count}`)
                                     let x = cartItem._id.toString()
-                                    console.log(`product._id: ${product._id}`)
-                                    console.log(`product.stock: ${product.stock}`)
+                                    // console.log(`product._id: ${product._id}`)
+                                    // console.log(`product.stock: ${product.stock}`)
                                     let y = product._id.toString()
                                     let z = product.stock - cartItem.count
-                                    console.log(z)
+                                    // console.log(z)
                                     if (x == y && cartItem.count > product.stock) {
                                         console.log("1111")
                                         if (product.stock == 0) {
                                             try {
-                                                await User.updateOne({ name: session.userId }, { $pull: { cart: { _id: product._id } } })
+                                                await User.updateOne({ _id: session.uid }, { $pull: { cart: { _id: product._id } } })
                                             } catch (err) {
                                                 console.log(err);
                                             }
@@ -812,7 +824,7 @@ const buyNowGet = (req, res) => {
                         f();
                         // User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": -1 } })
 
-                        // User.findOneAndUpdate({ name: session.userId }, { $pull: { cart: { _id: result.cart[_id] } } })
+                        // User.findOneAndUpdate({ _id: session.uid }, { $pull: { cart: { _id: result.cart[_id] } } })
                     })
             })
             .catch((err) => {
@@ -827,16 +839,22 @@ const buyNowGet = (req, res) => {
 let orderAddress
 let orderPaymentOption
 
-const buyNowPost = (req, res) => {
+const buyNowPost = async (req, res) => {
     session = req.session;
     console.log(req.body)
-    orderAddress = req.body.address
+    if(req.body.newAddress){
+        console.log(req.body.newAddress)
+        await User.updateOne({ _id: session.uid }, { $push: { address: req.body.newAddress } })
+    }
+    orderAddress = req.body.newAddress || req.body.address
     orderPaymentOption = req.body.paymentOption
     if (session.userId) {
         if (req.body.paymentOption == 'Razorpay') {
             // STEP 1:
-            const { amount, currency } = req.body;
-
+            let { amount, currency } = req.body;
+            amount = amount * 100
+            console.log(amount)
+            console.log(typeof amount)
             // STEP 2:    
             instance.orders.create({ amount, currency }, (err, order) => {
                 //STEP 3 & 4: 
@@ -849,8 +867,17 @@ const buyNowPost = (req, res) => {
                 res.json(order)
                 // res.render('users/paymentPage', { title: 'Shop.', loginName: session.userId, order: JSON.stringify(order) })
             })
-        } else {
+        } else if (req.body.paymentOption == 'Paypal') {
+            // create a new order
+            // const paymentPaypal = async (req, res) => {
+            const order = { id: "Paypal" };
+            console.log(order);
+            res.json(order);
+            // };
+        } else if (req.body.paymentOption == 'COD') {
             res.redirect('/saveOrder')
+        } else {
+            res.redirect('/buyNow')
         }
     } else {
         res.redirect('/login')
@@ -860,7 +887,7 @@ const buyNowPost = (req, res) => {
 const orderGet = (req, res) => {
     session = req.session;
     if (session.userId) {
-        User.findOne({ name: session.userId })
+        User.findOne({ _id: session.uid })
             .then((result) => {
                 const sum = function (items, prop1, prop2) {
                     return items.reduce(function (a, b) {
@@ -886,7 +913,7 @@ const cancelOrderGet = (req, res) => {
     session = req.session;
     uniqueId = req.params.id;
     if (session.userId) {
-        User.findOne({ name: session.userId })
+        User.findOne({ _id: session.uid })
             .then((result) => {
                 // console.log(result)
 
@@ -990,6 +1017,7 @@ const otpLoginVerifyPost = (req, res) => {
                             console.log(result)
                             session = req.session;
                             session.userId = result.name;
+                            session.uid = result._id;
                             session.userStatus = result.status;
                             res.redirect('/login');
                         })
@@ -1013,7 +1041,7 @@ const otpLoginVerifyPost = (req, res) => {
 const profileGet = (req, res) => {
     session = req.session;
     if (session.userId) {
-        User.findOne({ name: session.userId })
+        User.findOne({ _id: session.uid })
             .then((result) => {
                 if (session.mobileAlreadyExist) {
                     session.mobileAlreadyExist = false
@@ -1059,7 +1087,7 @@ const addAddress = (req, res) => {
         session.addAddressError = true
         res.redirect('/profile')
     } else if (session.userId) {
-        User.updateOne({ name: session.userId }, { $push: { address: req.body.newAddress } })
+        User.updateOne({ _id: session.uid }, { $push: { address: req.body.newAddress } })
             .then(() => {
                 res.redirect('/profile')
             })
@@ -1079,7 +1107,7 @@ const nameEdit = (req, res) => {
         session.nameChangeError = true
         res.redirect('/profile')
     } else if (session.userId) {
-        User.updateOne({ name: session.userId }, { $set: { name: req.body.newName } })
+        User.updateOne({ _id: session.uid }, { $set: { name: req.body.newName } })
             .then(() => {
                 session.userId = req.body.newName,
                     res.redirect('/profile')
@@ -1141,7 +1169,7 @@ const mobileChangeOtp = (req, res) => {
             })
             .then((data) => {
                 if (data.status === "approved") {
-                    User.updateOne({ name: session.userId }, { $set: { mobile: mobileNumber3 } })
+                    User.updateOne({ _id: session.uid }, { $set: { mobile: mobileNumber3 } })
                         .then(() => {
                             console.log(data)
                             res.redirect('/profile')
@@ -1171,9 +1199,9 @@ const addressEdit = (req, res) => {
         session.addressChangeError = true
         res.redirect('/profile')
     } else if (session.userId) {
-        User.findOneAndUpdate({ name: session.userId }, { $pull: { address: addressId } })
+        User.findOneAndUpdate({ _id: session.uid }, { $pull: { address: addressId } })
             .then(() => {
-                User.findOneAndUpdate({ name: session.userId }, { $push: { address: req.body.newAddress } })
+                User.findOneAndUpdate({ _id: session.uid }, { $push: { address: req.body.newAddress } })
                     .then(() => {
                         res.redirect('/profile')
                     })
@@ -1194,7 +1222,7 @@ const addressDelete = (req, res) => {
     session = req.session;
     addressId = req.params.id;
     if (session.userId) {
-        User.updateOne({ name: session.userId }, { $pull: { address: addressId } })
+        User.updateOne({ _id: session.uid }, { $pull: { address: addressId } })
             .then(() => {
                 res.redirect('/profile')
             })
@@ -1247,7 +1275,7 @@ const changePasswordPost = (req, res) => {
         res.redirect('/changePassword')
     } else {
         if (session.userId) {
-            User.findOne({ name: session.userId })
+            User.findOne({ _id: session.uid })
                 .then((result) => {
                     mobileNumber3 = result.mobile;
                     client
@@ -1297,7 +1325,7 @@ const passwordChangeOtpPost = (req, res) => {
                 if (data.status === "approved") {
                     bcrypt.hash(password1, 10)
                         .then((hash) => {
-                            User.updateOne({ name: session.userId }, { $set: { password: hash } })
+                            User.updateOne({ _id: session.uid }, { $set: { password: hash } })
                                 .then(() => {
                                     console.log(data)
                                     res.redirect('/profile')
@@ -1345,12 +1373,7 @@ const verifyPaymentRazorPay = function (req, res) {
     const generated_signature = hmac.digest('hex');
 
 
-    // const body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
-    // const expectedSignature = crypto.createHmac('sha256', 'process.env.razorPayTestKeySecret')
-    //     .update(body.toString())
-    //     .digest('hex');
-    // console.log("sig received ", req.body.razorpay_signature);
-    // console.log("sig generated ", expectedSignature);
+
     var response = { signatureIsValid: "false" }
     if (generated_signature === req.body.razorpay_signature) {
         response = { signatureIsValid: "true" }
@@ -1363,55 +1386,152 @@ const verifyPaymentRazorPay = function (req, res) {
 }
 
 
-const saveOrder = function (req, res) {
-    User.findOne({ name: session.userId })
-        .then((result) => {
-            // console.log(result)
-            const cartItems = result.cart
+const saveOrder = async function (req, res) {
 
-            console.log(cartItems)
+    const result = await User.findOne({ _id: session.uid })
+    // .then((result) => {
+    // console.log(result)
+    const cartItems = result.cart
 
-            async function f() {
-                for (let cartItem of cartItems) {
-                    cartItem = cartItem.toJSON();
-                    cartItem.address = orderAddress;
-                    cartItem.paymentOption = orderPaymentOption;
-                    cartItem.unique = uuidv4()
-                    cartItem.orderStatus = 'Order is under process'
-                    stockId = cartItem._id
-                    console.log(stockId)
-                    salesCount = cartItem.count
-                    removeCount = cartItem.count * -1;
-                    console.log(removeCount)
+    // console.log(cartItems)
 
-                    //----------------------------------------------------
-                    await User.findOneAndUpdate({ name: session.userId }, { $push: { order: cartItem } })
+    // async function f() {
+    for (let cartItem of cartItems) {
+        cartItem = cartItem.toJSON();
+        cartItem.address = orderAddress;
+        cartItem.paymentOption = orderPaymentOption;
+        cartItem.unique = uuidv4()
+        cartItem.orderStatus = 'Order is under process'
+        stockId = cartItem._id
+        // console.log(stockId)
+        salesCount = cartItem.count
+        removeCount = cartItem.count * -1;
+        // console.log(removeCount)
 
-
-                    // Empty cart
-                    await User.findOneAndUpdate({ name: session.userId }, { $set: { cart: [] } })
+        //----------------------------------------------------
+        await User.findOneAndUpdate({ _id: session.uid }, { $push: { order: cartItem } })
 
 
-                    // Update stock
-                    await Product.updateOne({ "_id": stockId }, { $inc: { "stock": removeCount, "sales": salesCount } })
+        // Empty cart
+        await User.findOneAndUpdate({ _id: session.uid }, { $set: { cart: [] } })
+
+
+        // Update stock
+        await Product.updateOne({ "_id": stockId }, { $inc: { "stock": removeCount, "sales": salesCount } })
 
 
 
-                    //----------------------------------------------------
-                }
-            }
-            f()
-            res.json({ success: 'done' });
-        })
-        .catch((err) => {
-            console.log(err)
-        })
+        //----------------------------------------------------
+    }
+    res.json({ success: 'done' });
+    // }
+    // f()
+
+    // })
+    // .catch((err) => {
+    //     console.log(err)
+    // })
 }
+
+// ----------------------------------------------
+// For a fully working example, please see:
+// https://github.com/paypal-examples/docs-examples/tree/main/standard-integration
+// import fetch from "node-fetch";
+const fetch = require('node-fetch')
+const base = "https://api-m.sandbox.paypal.com";
+
+
+// const { paypalClientid, paypalClientsecret } = process.env;
+
+const paymentPaypal = async (req, res) => {
+    console.log(req.body);
+    const { amount, currency } = req.body;
+    let orderAmount = amount / 80
+    console.log(orderAmount)
+    const order = await createOrder(orderAmount);
+    console.log(order);
+    console.log(order.id);
+    res.json(order);
+}
+
+
+
+// capture payment & store order information or fullfill order
+const verifyPaymentPaypal = async (req, res) => {
+    console.log(req.params)
+    const orderID = req.params.orderId;
+    console.log(orderID)
+    const captureData = await capturePayment(orderID);
+    // TODO: store payment information such as the transaction ID
+    res.json(captureData);
+};
+
+//////////////////////
+// PayPal API helpers
+//////////////////////
+
+// use the orders api to create an order
+async function createOrder(orderAmount) {
+    const accessToken = await generateAccessToken();
+    const url = `${base}/v2/checkout/orders`;
+    const response = await fetch(url, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+            intent: "CAPTURE",
+            purchase_units: [
+                {
+                    amount: {
+                        currency_code: "USD",
+                        value: orderAmount,
+                    },
+                },
+            ],
+        }),
+    });
+    const data = await response.json();
+    console.log(data)
+    return data;
+}
+
+// use the orders api to capture payment for an order
+async function capturePayment(orderId) {
+    const accessToken = await generateAccessToken();
+    const url = `${base}/v2/checkout/orders/${orderId}/capture`;
+    const response = await fetch(url, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+    const data = await response.json();
+    return data;
+}
+
+// generate an access token using client id and app secret
+async function generateAccessToken() {
+    const auth = Buffer.from(process.env.paypalClientid + ":" + process.env.paypalClientsecret).toString("base64")
+    const response = await fetch(`${base}/v1/oauth2/token`, {
+        method: "post",
+        body: "grant_type=client_credentials",
+        headers: {
+            Authorization: `Basic ${auth}`,
+        },
+    });
+    const data = await response.json();
+    return data.access_token;
+}
+// -------------------------------------------
 
 
 const userlogout = function (req, res) {
     session = req.session
     session.userId = false
+    session.uid = false
     session.invalidOTP = false
     session.incorrectId = false
     session.userAlreadyExist = false
@@ -1462,5 +1582,7 @@ module.exports = {
     passwordChangeOtpGet,
     passwordChangeOtpPost,
     verifyPaymentRazorPay,
-    saveOrder
+    saveOrder,
+    paymentPaypal,
+    verifyPaymentPaypal
 }
