@@ -3,13 +3,78 @@
     <div class="d-flex justify-content-end border-bottom my-3">
         <h1>{{productName}}</h1>
     </div>
+
     <div class="row mb-5">
-        <div class="col zoomEffect d-flex justify-content between">
-            <img src="{{image}}" alt="Cycle" class="productImg border" style="width :500px; height: 400px">
-            <div class="zoom  border" style="display:none;">
-                <img src="{{image}}" alt="Cycle">
+        <div class="col d-flex align-items-start">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home"
+                    aria-selected="true"><img src="/images/image1{{_id}}.jpg" class="border"
+                        style="width :5rem; height: 5rem;object-fit: contain;"></button>
+                <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile"
+                    aria-selected="false"><img src="/images/image2{{_id}}.jpg" class="border"
+                        style="width :5rem; height: 5rem;object-fit: contain;"></button>
+                <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages"
+                    aria-selected="false"><img src="/images/image3{{_id}}.jpg" class="border"
+                        style="width :5rem; height: 5rem;object-fit: contain;"></button>
+            </div>
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                    aria-labelledby="v-pills-home-tab" tabindex="0">
+                    <div class="col zoomEffect d-flex justify-content between">
+                        <img src="/images/image1{{_id}}.jpg" alt="Cycle" class="productImg1 border"
+                            style="width :500px; height: 400px">
+                        <div class="zoom1  border" style="display:none;">
+                            <img src="/images/image1{{_id}}.jpg" class="border" alt="Cycle">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"
+                    tabindex="0">
+                    <div class="col zoomEffect d-flex justify-content between">
+                        <img src="/images/image2{{_id}}.jpg" alt="Cycle" class="productImg2 border"
+                            style="width :500px; height: 400px">
+                        <div class="zoom2  border" style="display:none;">
+                            <img src="/images/image2{{_id}}.jpg" class="border" alt="Cycle">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab"
+                    tabindex="0">
+                    <div class="col zoomEffect d-flex justify-content between">
+                        <img src="/images/image3{{_id}}.jpg" alt="Cycle" class="productImg3 border"
+                            style="width :500px; height: 400px">
+                        <div class="zoom3  border" style="display:none;">
+                            <img src="/images/image3{{_id}}.jpg" class="border" alt="Cycle">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        {{!-- <div class="col zoomEffect d-flex justify-content between">
+            <img src="/images/image1{{_id}}.jpg" alt="Cycle" id="productImg1" class="productImg border"
+                style="width :500px; height: 400px">
+            <div class="zoom  border" style="display:none;">
+                <img src="/images/image1{{_id}}.jpg" class="border" alt="Cycle">
+            </div>
+        </div> --}}
+        {{!-- <div class="col zoomEffect d-flex justify-content between">
+            <img src="/images/image2{{_id}}.jpg" alt="Cycle" class="productImg border"
+                style="width :500px; height: 400px">
+            <div class="zoom  border" style="display:none;">
+                <img src="/images/image2{{_id}}.jpg" alt="Cycle">
+            </div>
+        </div>
+        <div class="col zoomEffect d-flex justify-content between">
+            <img src="/images/image3{{_id}}.jpg" alt="Cycle" class="productImg border"
+                style="width :500px; height: 400px">
+            <div class="zoom  border" style="display:none;">
+                <img src="/images/image3{{_id}}.jpg" alt="Cycle">
+            </div>
+        </div> --}}
+
         <div class="col ms-5 priceAndCart" style="max-width :500px;">
             <div class="row my-5">
                 <div class="col text-nowrap">Price : &#x20B9;{{price}}</div>
@@ -46,22 +111,68 @@
 
 <script>
 
-    let productImg = document.querySelector(".productImg")
-    let zoomDiv = document.querySelector(".zoom")
-    let zoomedImg = document.querySelector(".zoom>img")
+    //Image 1
+    let productImg1 = document.querySelector(".productImg1")
+    let zoomDiv1 = document.querySelector(".zoom1")
+    let zoomedImg1 = document.querySelector(".zoom1>img")
     let priceAndCart = document.querySelector(".priceAndCart")
-    productImg.addEventListener("mousemove", (e) => {
-        zoomDiv.style.display = "block";
+    productImg1.addEventListener("mousemove", (e) => {
+        zoomDiv1.style.display = "block";
         priceAndCart.style.display = "none";
         console.log(e.pageX, e.pageY)
-        let x = (e.pageX - 49) / 500;//49
-        let y = (e.pageY - 157) / 400;//157
+        let x = (e.pageX - 179) / 500;//179
+        let y = (e.pageY - 160) / 400;//160
+        console.log(e.pageX)
+        console.log(e.pageY)
         console.log(x, y)
-        zoomedImg.style.transform = `translate3d(-${50 * x}%,-${50 * y}%,0)`
+        zoomedImg1.style.transform = `translate3d(-${57 * x}%,-${48 * y}%,0)`
     })
-    productImg.addEventListener("mouseleave", (e) => {
-        zoomDiv.style.display = "none"
+    productImg1.addEventListener("mouseleave", (e) => {
+        zoomDiv1.style.display = "none"
         priceAndCart.style.display = "block";
     })
+
+    //Image 2
+    let productImg2 = document.querySelector(".productImg2")
+    let zoomDiv2 = document.querySelector(".zoom2")
+    let zoomedImg2 = document.querySelector(".zoom2>img")
+    //let priceAndCart = document.querySelector(".priceAndCart")
+    productImg2.addEventListener("mousemove", (e) => {
+        zoomDiv2.style.display = "block";
+        priceAndCart.style.display = "none";
+        console.log(e.pageX, e.pageY)
+        let x = (e.pageX - 179) / 500;//179
+        let y = (e.pageY - 160) / 400;//160
+        console.log(e.pageX)
+        console.log(e.pageY)
+        console.log(x, y)
+        zoomedImg2.style.transform = `translate3d(-${57 * x}%,-${48 * y}%,0)`
+    })
+    productImg2.addEventListener("mouseleave", (e) => {
+        zoomDiv2.style.display = "none"
+        priceAndCart.style.display = "block";
+    })
+
+    //Image 3
+    let productImg3 = document.querySelector(".productImg3")
+    let zoomDiv3 = document.querySelector(".zoom3")
+    let zoomedImg3 = document.querySelector(".zoom3>img")
+    //let priceAndCart = document.querySelector(".priceAndCart")
+    productImg3.addEventListener("mousemove", (e) => {
+        zoomDiv3.style.display = "block";
+        priceAndCart.style.display = "none";
+        console.log(e.pageX, e.pageY)
+        let x = (e.pageX - 179) / 500;//179
+        let y = (e.pageY - 160) / 400;//160
+        console.log(e.pageX)
+        console.log(e.pageY)
+        console.log(x, y)
+        zoomedImg3.style.transform = `translate3d(-${57 * x}%,-${48 * y}%,0)`
+    })
+    productImg3.addEventListener("mouseleave", (e) => {
+        zoomDiv3.style.display = "none"
+        priceAndCart.style.display = "block";
+    })
+
 
 </script>
