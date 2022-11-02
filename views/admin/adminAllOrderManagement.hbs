@@ -1,0 +1,111 @@
+<div class="container minHeight">
+
+    <div class="d-flex justify-content-between mt-5">
+        <h1>Order management</h1>
+    </div>
+
+    {{!-- <form action="/search" method="post" class="d-flex mb-3">
+        <div>
+            <button type="submit" class="btn btn-dark me-1">Search</button>
+        </div>
+        <div class="flex-grow-1 mb-3">
+            <div>
+                <input type="text" name="input" class="form-control" placeholder="Search with name or category"
+                    id="searchInput">
+            </div>
+        </div>
+    </form> --}}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            {{#if page.previous}}
+            <li class="page-item"><a class="page-link" href="{{page.previous}}">Previous</a></li>
+            {{else}}
+            <li class="page-item disabled"><a class="page-link" href="{{page.previous}}">Previous</a></li>
+            {{/if}}
+            {{#if page.page1Active}}
+            <li class="page-item active" aria-current="page"><a class="page-link"
+                    href="/admin/allOrderManagement/{{page.page1}}">{{page.page1}}</a></li>
+            {{else}}
+            <li class="page-item"><a class="page-link"
+                    href="/admin/allOrderManagement/{{page.page1}}">{{page.page1}}</a></li>
+            {{/if}}
+            {{#if page.page2Active}}
+            <li class="page-item active"><a class="page-link"
+                    href="/admin/allOrderManagement/{{page.page2}}">{{page.page2}}</a></li>
+            {{else}}
+            <li class="page-item"><a class="page-link"
+                    href="/admin/allOrderManagement/{{page.page2}}">{{page.page2}}</a></li>
+            {{/if}}
+            {{#if page.page3Active}}
+            <li class="page-item active"><a class="page-link"
+                    href="/admin/allOrderManagement/{{page.page3}}">{{page.page3}}</a></li>
+            {{else}}
+            <li class="page-item"><a class="page-link"
+                    href="/admin/allOrderManagement/{{page.page3}}">{{page.page3}}</a></li>
+            {{/if}}
+            {{#if page.next}}
+            <li class="page-item"><a class="page-link" href="{{page.next}}">Next</a></li>
+            {{else}}
+            <li class="page-item disabled"><a class="page-link" href="{{page.next}}">Next</a></li>
+            {{/if}}
+        </ul>
+    </nav>
+    <div class="d-flex mb-3">
+        <table class=" table">
+            {{!-- <thead>
+                <tr>
+                    <th scope="col" class="text-center">Sl.</th>
+                    <th scope="col" class="text-center">Product Name</th>
+                    <th scope="col" class="text-center">Product Name</th>
+                    <th scope="col" class="text-center">Price</th>
+                    <th scope="col" class="text-center">No.of items</th>
+                    <th scope="col" class="text-center">Total</th>
+                    <th scope="col" class="text-center">Status</th>
+                </tr>
+            </thead> --}}
+            <tbody class="table-group-divider">
+                {{#each order}}
+                <tr>
+                    {{!-- <th scope="row" class="text-center">{{addOne @index}}.</th> --}}
+                    <td class="text-center"><img src="{{this.image}}" alt="image"
+                            style="width: 5rem; height: 5rem; object-fit: contain;">
+                    </td>
+                    <td class="text-center"><br>{{this.productName}}</td>
+                    <td class="text-center"><br>&#x20B9;{{this.price}}</td>
+                    {{!-- <td class="text-center">{{this.count}}</td>
+                    <td class="text-center">{{multiply this.price this.count}}</td> --}}
+                    <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
+                    <td class="text-center"><br><a href="/admin/adminOrderCancel/{{this.unique}}"
+                            class="btn btn-dark">Cancel</a>
+                    </td>
+                </tr>
+                {{/each}}
+                {{!-- <tr>
+                    <th scope="row" class="text-center"></th>
+                    <td class="text-center"></td>
+                    <td class="text-center"></td>
+                    <td class="fw-bold text-center">Total</td>
+                    <td class="text-center">{{total}}</td>
+                    <td class="text-center"></td>
+                </tr> --}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item disabled">
+      <span class="page-link">Previous</span>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+
+    <li class="page-item active" aria-current="page"><a class="page-link" href="#">3</a></li>
+        <li class="page-item active" aria-current="page">
+      <span class="page-link">2</span>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="#">Next</a>
+    </li>
+  </ul>
+</nav>
