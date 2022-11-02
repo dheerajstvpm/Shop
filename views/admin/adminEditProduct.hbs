@@ -1,10 +1,10 @@
 <div class="container minHeight">
     <div class="d-flex justify-content-between my-3">
-        <h1 class="mt-5">Edit Product</h1>
+        <h1 class="mt-5">Edit Product {{productResult.productName}}</h1>
     </div>
 
 
-    <form action="/admin/editProduct/{{productResult._id}}" method="post">
+    <form action="/admin/editProduct/{{productResult._id}}" method="post" enctype="multipart/form-data">
 
         <div class="row mb-3">
             <label for="data" class="col-md-2 col-form-label">Current description : </label>
@@ -42,16 +42,45 @@
         </div>
 
         <div class="row my-3">
-            <label for="image" class="col-md-2 col-form-label">Current Image : </label>
+            <label for="image1" class="col-md-2 col-form-label">Current Image 1: </label>
             <div class="col-md-3">
-                <p class="pt-2">{{productResult.image}}</p>
+                <img src="/images/image1{{productResult._id}}.jpg" alt="Cycle" class="productImg border"
+                    style="width: 5rem; height: 5rem; object-fit: contain;">
             </div>
 
-            <label for="newImage" class="col-md-2 col-form-label">New Image:</label>
+            <label for="newImage1" class="col-md-2 col-form-label">New Image 1:</label>
             <div class="col-md-3">
-                <input type="text" name="newImage" class="form-control" id="newImage">
+                <input type="file" name="newImage1" class="form-control" id="newImage1">
             </div>
         </div>
+
+        <div class="row my-3">
+            <label for="image2" class="col-md-2 col-form-label">Current Image 2: </label>
+            <div class="col-md-3">
+                <img src="/images/image2{{productResult._id}}.jpg" alt="Cycle" class="productImg border"
+                    style="width: 5rem; height: 5rem; object-fit: contain;">
+            </div>
+
+
+            <label for="newImage2" class="col-md-2 col-form-label">New Image 2:</label>
+            <div class="col-md-3">
+                <input type="file" name="newImage2" class="form-control" id="newImage2">
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <label for="image3" class="col-md-2 col-form-label">Current Image 3: </label>
+            <div class="col-md-3">
+                <img src="/images/image3{{productResult._id}}.jpg" alt="Cycle" class="productImg border"
+                    style="width: 5rem; height: 5rem; object-fit: contain;">
+            </div>
+
+            <label for="newImage3" class="col-md-2 col-form-label">New Image 3:</label>
+            <div class="col-md-3">
+                <input type="file" name="newImage3" class="form-control" id="newImage3">
+            </div>
+        </div>
+
 
         <div class="row my-3">
             <label for="category" class="col-md-2 col-form-label">Current Category : </label>
