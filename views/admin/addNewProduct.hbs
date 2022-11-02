@@ -4,7 +4,7 @@
     </div>
 
 
-    <form action="/admin/addNewProduct" method="post">
+    <form action="/admin/addNewProduct" method="post" enctype="multipart/form-data">
         <div class="row my-3">
             <label for="product" class="col-md-1 col-form-label">Product Name</label>
             <div class="col-md-3">
@@ -42,12 +42,30 @@
             </div>
         </div>
         <div class="row my-3">
-            <label for="image" class="col-md-1 col-form-label">Image</label>
+            <label for="image" class="col-md-1 col-form-label">Image 1</label>
             <div class="col-md-3">
-                <input type="text" name="image" class="form-control" id="image">
+                <input type="file" name="image1" class="form-control" id="image1">
             </div>
             <div class="col-md-4" role="alert">
-                {{imageMsg}}
+                {{image1Msg}}
+            </div>
+        </div>
+        <div class="row my-3">
+            <label for="image" class="col-md-1 col-form-label">Image 2</label>
+            <div class="col-md-3">
+                <input type="file" name="image2" class="form-control" id="image2">
+            </div>
+            <div class="col-md-4" role="alert">
+                {{image2Msg}}
+            </div>
+        </div>
+        <div class="row my-3">
+            <label for="image" class="col-md-1 col-form-label">Image 3</label>
+            <div class="col-md-3">
+                <input type="file" name="image3" class="form-control" id="image3">
+            </div>
+            <div class="col-md-4" role="alert">
+                {{image3Msg}}
             </div>
         </div>
         <div class="row my-3">
