@@ -31,7 +31,7 @@
                 {{#each result.cart}}
                 <tr>
                     <th scope="row" class="text-center"><br>{{addOne @index}}.</th>
-                    <td class="text-center"><img src="{{this.image}}" alt="image" style="width: 5rem; height: 5rem; object-fit: contain;"></td>
+                    <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image" style="width: 5rem; height: 5rem; object-fit: contain;"></td>
                     <td class="text-center"><br>{{this.productName}}</td>
                     <td class="text-center"><br>&#x20B9;{{this.price}}</td>
                     <td class="text-center" style="width:200px;"><br><a href="/addToCart/{{this._id}}" class="ms-1 me-4 text-decoration-none text-dark"><svg
