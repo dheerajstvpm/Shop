@@ -154,6 +154,10 @@ router.post('/passwordChangeOtp', userController.passwordChangeOtpPost)
 
 router.post('/verifyPaymentRazorPay', userController.verifyPaymentRazorPay)
 
+router.post('/paymentPaypal', userController.paymentPaypal)
+
+router.post('/verifyPaymentPaypal/:orderId/capture', userController.verifyPaymentPaypal)
+
 router.get('/saveOrder', userController.saveOrder)
 
 router.get('/logout', userController.userlogout);
