@@ -12,6 +12,11 @@ const Admin = require('../models/adminModel')
 
 const { check, validationResult } = require('express-validator');
 
+const fs = require('fs');
+const fileUpload = require('express-fileupload');
+const { FieldValueList } = require('twilio/lib/rest/autopilot/v1/assistant/fieldType/fieldValue');
+
+
 const adminHome = (req, res) => {
     adminSession = req.session;
     console.log(adminSession)
@@ -264,7 +269,7 @@ const addNewProductPost = function (req, res) {
                         description: req.body.description,
                         price: req.body.price,
                         stock: req.body.stock,
-                        image: req.body.image,
+                        // image: req.body.image,
                         category: req.body.category,
                         offer: req.body.offer
                     })
@@ -275,6 +280,12 @@ const addNewProductPost = function (req, res) {
                         .catch((err) => {
                             console.log(err)
                         })
+                    let image1 = req.files.image1;
+                    image1.mv('./public/image/' + "image1" + product._id + ".jpg");
+                    let image2 = req.files.image2;
+                    image2.mv('./public/image/' + "image2" + product._id + ".jpg");
+                    let image3 = req.files.image3;
+                    image3.mv('./public/image/' + "image3" + product._id + ".jpg");
                     adminSession = req.session;
                     console.log(adminSession)
                     res.redirect('/admin/adminProductManagement');
@@ -382,17 +393,47 @@ const editProductPost = function (req, res) {
             // } else {
             //     res.redirect('/admin/adminProductManagement')
         }
-        if (req.body.newImage) {
-            Product.updateOne({ _id: newProductId }, { $set: { image: req.body.newImage } })
+        if (req.files.newImage1) {
+            Product.findOne({ _id: newProductId })
                 .then((result) => {
                     console.log(result);
+                    let image1 = req.files.newImage1;
+                    image1.mv('./public/images/' + "image1" + result._id + ".jpg");
                     // res.redirect('/admin/adminProductManagement')
                 })
                 .catch((err) => {
                     console.log(err)
                 })
+
             // } else {
             //     res.redirect('/admin/adminProductManagement')
+        }
+        if (req.files.newImage2) {
+
+            Product.findOne({ _id: newProductId })
+                .then((result) => {
+                    console.log(result);
+                    let image2 = req.files.newImage2;
+                    image2.mv('./public/images/' + "image2" + result._id + ".jpg");
+                    // res.redirect('/admin/adminProductManagement')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
+        }
+        if (req.files.newImage3) {
+
+            Product.findOne({ _id: newProductId })
+                .then((result) => {
+                    console.log(result);
+                    let image3 = req.files.newImage3;
+                    image3.mv('./public/images/' + "image3" + result._id + ".jpg");
+                    // res.redirect('/admin/adminProductManagement')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
         if (req.body.newCategory) {
             Product.updateOne({ _id: newProductId }, { $set: { category: req.body.newCategory } })
@@ -433,6 +474,9 @@ const deleteProduct = function (req, res) {
     if (adminSession.adminId) {
         Product.deleteOne({ _id: productId })
             .then((result) => {
+                fs.unlink('./public/image/' + "image1" + productId + ".jpg");
+                fs.unlink('./public/image/' + "image2" + productId + ".jpg");
+                fs.unlink('./public/image/' + "image3" + productId + ".jpg");
                 if (adminSession.adminId && req.body.input) {
                     res.render('admin/adminProductManagement', { title: 'Shop.admin', result, admin: true })
                 } else {
@@ -1087,6 +1131,83 @@ const adminOrderManagementGet = function (req, res) {
 }
 
 
+const adminAllOrderManagementGet = async (req, res) => {
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        const result = await User.find({})
+
+        // console.log(result)
+        let orders = []
+        for (item of result) {
+            orders = orders.concat(item.order)
+        }
+        // result = result.order.reverse()
+        orders.sort((a, b) => {
+            return b.createdAt - a.createdAt;
+        });
+        const limit = 10
+        const pages = Math.ceil(orders.length/limit)
+        console.log(orders.length)
+        console.log(orders.length/limit)
+        console.log(pages)
+        const page={}
+        page.page = req.params.page
+        if(page.page>1){
+            page.previous=parseInt(page.page)-1
+        }else{
+            page.previous=false
+        }
+        if(page.page<pages){
+            page.next=parseInt(page.page)+1
+        }else{
+            page.next=false
+        }
+        if(page.page>0 &&page.page<pages-1){
+            page.page1=parseInt(page.page)
+            page.page1Active=true
+        }else{
+            page.page1=pages-2
+            page.page1Active=false
+        }
+        if(page.page>0 &&page.page<pages-1){
+            page.page2=parseInt(page.page)+1
+        }else{
+            page.page2=pages-1
+        }
+        if(page.page2==page.page){
+            page.page2Active=true
+        }else{
+            page.page2Active=false
+        }
+        if(page.page>0 &&page.page<pages-1){
+            page.page3=parseInt(page.page)+2
+        }else{
+            page.page3=pages
+        }
+        if(page.page3==page.page){
+            page.page3Active=true
+        }else{
+            page.page3Active=false
+        }
+        
+        console.log(page)
+
+        start = (page.page - 1) * limit
+        end = start + limit
+        // console.log(orders)
+        console.log(start)
+        console.log(end)
+        order = orders.slice(start, end)
+        // console.log(order)
+
+        res.render('admin/adminAllOrderManagement', { title: 'Shop.admin', admin: true, order, page })
+
+    } else {
+        res.redirect('/admin')
+    }
+}
+
+
 const adminOrderCancel = (req, res) => {
     adminSession = req.session;
     uniqueId = req.params.id;
@@ -1148,7 +1269,7 @@ const adminDashboard = (req, res) => {
                     const orders = result.order
                     m.push(orders.length);
                     console.log(`m:${m}`);
-                    
+
                     console.log(`sums:${sums}`)
                     for (let order of orders) {
                         l++;
@@ -1167,10 +1288,10 @@ const adminDashboard = (req, res) => {
 
                         // operation();
                     }
-                    if (l === sums && k===n) {
+                    if (l === sums && k === n) {
                         console.log(sales);
                         console.log(typeof (sales[0]));
-                        
+
                         console.log(timeOfSale);
                         console.log(typeof (timeOfSale[0]));
                         Product.find({})
@@ -1264,6 +1385,7 @@ module.exports = {
     userHomepageLayoutGet,
     userHomepageLayoutPost,
     adminOrderManagementGet,
+    adminAllOrderManagementGet,
     adminOrderCancel,
     adminLogout,
     adminDashboard
