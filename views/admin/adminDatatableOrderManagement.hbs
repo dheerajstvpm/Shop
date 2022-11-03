@@ -1,0 +1,67 @@
+<div class="container minHeight">
+
+    <div class="d-flex justify-content-between mt-5">
+        <h1>Order management</h1>
+    </div>
+
+    <div class="d-flex flex-column my-3">
+        <table id="table_id" class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-center">Sl.</th>
+                    <th scope="col" class="text-center">Image</th>
+                    <th scope="col" class="text-center">Product Name</th>
+                    <th scope="col" class="text-center">Category</th>
+                    <th scope="col" class="text-center">Total</th>
+                    <th scope="col" class="text-center">Status</th>
+                    <th scope="col" class="text-center"></th>
+                    <th scope="col" class="text-center"></th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {{#each orders}}
+                <tr>
+                    <th scope="row" class="text-center"><br>{{addOne @index}}.</th>
+                    <td class="text-center"><img src="{{this.image}}" alt="image"
+                            style="width: 5rem; height: 5rem; object-fit: contain;">
+                    </td>
+                    <td class="text-center"><br>{{this.productName}}</td>
+                    <td class="text-center"><br>{{this.category}}</td>
+                    <td class="text-center"><br>&#x20B9;{{multiply this.count this.price}}</td>
+                    <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
+                    <form action="/admin/adminAllOrderUpdate/{{this.unique}}" method="post">
+                        <td class="text-center"><br>
+                            {{#if updateBtn}}
+                            <select name="status" id="status">
+                                <option selected disabled>Select status</option>
+                                <option value="Dispatched">Dispatched</option>
+                                <option value="Delivered">Delivered</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            {{else}}
+                            <select name="status" id="status" disabled>
+                                <option selected disabled>Select status</option>
+                                <option value="Dispatched">Dispatched</option>
+                                <option value="Delivered">Delivered</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            {{/if}}
+                        </td>
+                        {{#if updateBtn}}
+                        <td class="text-center"><br><button type="submit" class="btn btn-dark">Update</button>
+                        {{else}}
+                        <td class="text-center"><br><button type="submit" class="btn btn-dark disabled">Update</button>
+                        {{/if}}
+                        </td>
+                    </form>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable();
+        });
+    </script>
+</div>
