@@ -859,10 +859,27 @@ const buyNowPost = async (req, res) => {
             console.log(order);
             res.json(order);
         } else {
-            if (req.body.newAddress) {
+            //------------------------------------------------------
+            try {
+                const out = await User.findOne({ _id: session.uid })
+                const checks = out.address
+                console.log(checks);
+                let n = 0;
+                for (const check of checks) {
+                    if (check == req.body.newAddress) {
+                        console.log(check)
+                        session.addressExistErr = true
+                    }
+                }
+            } catch (err) {
+                console.log(err)
+            }
+            //--------------------------------------------------------
+            if (session.addressExistErr!=true) {
                 console.log(req.body.newAddress)
                 await User.updateOne({ _id: session.uid }, { $push: { address: req.body.newAddress } })
             }
+            session.addressExistErr = false
             orderAddress = req.body.newAddress || req.body.address
             orderPaymentOption = req.body.paymentOption
             if (req.body.paymentOption == 'Razorpay') {
@@ -1108,11 +1125,15 @@ const profileGet = (req, res) => {
                     const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
                     console.log(otpLoginErrors)
                     res.render('users/profile', { title: 'Shop.', message: error1.msg, loginName: session.userId, result })
+                    
                 } else if (session.addressChangeError) {
                     session.addressChangeError = false
                     const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
                     console.log(otpLoginErrors)
                     res.render('users/profile', { title: 'Shop.', message: error1.msg, loginName: session.userId, result })
+                } else if (session.addressExistErr) {
+                    session.addressExistErr = false
+                    res.render('users/profile', { title: 'Shop.', message: "This address already exists", loginName: session.userId, result })
                 } else {
                     res.render('users/profile', { title: 'Shop.', message: "", loginName: session.userId, result })
                 }
@@ -1126,7 +1147,7 @@ const profileGet = (req, res) => {
 }
 
 
-const addAddress = (req, res) => {
+const addAddress = async (req, res) => {
     session = req.session;
     console.log(req.body)
     otpLoginErrors = validationResult(req);
@@ -1134,13 +1155,33 @@ const addAddress = (req, res) => {
         session.addAddressError = true
         res.redirect('/profile')
     } else if (session.userId) {
-        User.updateOne({ _id: session.uid }, { $push: { address: req.body.newAddress } })
-            .then(() => {
+        //---------------------------------
+        try {
+            const out = await User.findOne({ _id: session.uid })
+            const checks = out.address
+            console.log(checks);
+            let n = 0;
+            for (const check of checks) {
+                if (check == req.body.newAddress) {
+                    console.log(check)
+                    session.addressExistErr = true
+                }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+        //---------------------------------
+        if (session.addressExistErr) {
+            res.redirect('/profile')
+        } else {
+            try {
+                await User.updateOne({ _id: session.uid }, { $push: { address: req.body.newAddress } })
                 res.redirect('/profile')
-            })
-            .catch((err) => {
+            } catch (err) {
                 console.log(err)
-            })
+            }
+        }
+
     } else {
         res.redirect('/login')
     }
