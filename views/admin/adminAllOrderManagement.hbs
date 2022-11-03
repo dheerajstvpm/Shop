@@ -75,9 +75,27 @@
                     {{!-- <td class="text-center">{{this.count}}</td>
                     <td class="text-center">{{multiply this.price this.count}}</td> --}}
                     <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
-                    <td class="text-center"><br><a href="/admin/adminOrderCancel/{{this.unique}}"
-                            class="btn btn-dark">Cancel</a>
-                    </td>
+                    <form action="/admin/adminAllOrderUpdate/{{this.unique}}" method="post">
+                        <td class="text-center"><br>
+                            {{#if returned}}
+                            <select name="status" id="status" disabled>
+                                <option selected disabled>Select status</option>
+                                <option value="dispatched">Dispatched</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            {{else}}
+                            <select name="status" id="status">
+                                <option selected disabled>Select status</option>
+                                <option value="Dispatched">Dispatched</option>
+                                <option value="Delivered">Delivered</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            {{/if}}
+                        </td>
+                        <td class="text-center"><br><button type="submit" class="btn btn-dark">Update</button>
+                        </td>
+                    </form>
                 </tr>
                 {{/each}}
                 {{!-- <tr>
@@ -92,20 +110,3 @@
         </table>
     </div>
 </div>
-
-<nav aria-label="...">
-  <ul class="pagination">
-    <li class="page-item disabled">
-      <span class="page-link">Previous</span>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-
-    <li class="page-item active" aria-current="page"><a class="page-link" href="#">3</a></li>
-        <li class="page-item active" aria-current="page">
-      <span class="page-link">2</span>
-    </li>
-    <li class="page-item">
-      <a class="page-link" href="#">Next</a>
-    </li>
-  </ul>
-</nav>
