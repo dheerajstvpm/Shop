@@ -108,9 +108,13 @@ router.get('/orderManagement/:id', adminController.adminOrderManagementGet);
 
 router.get('/allOrderManagement/:page', adminController.adminAllOrderManagementGet);
 
+router.get('/datatableOrderManagement', adminController.adminDatatableOrderManagementGet);
+
 router.get('/adminOrderCancel/:id', adminController.adminOrderCancel);
 
 router.get('/adminDashboard/', adminController.adminDashboard);
+
+router.post('/adminAllOrderUpdate/:unique', adminController.adminAllOrderUpdate);
 
 router.post('/adminLogout', adminController.adminLogout);
 
