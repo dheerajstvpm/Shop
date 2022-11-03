@@ -55,7 +55,10 @@ const orderSchema = new Schema({
     paymentOption: { type: String },
     address: { type: String },
     unique: { type: String },
-    orderStatus: { type: String, default: 'Under process' }
+    updateBtn: { type: Boolean, default: true },
+    returnBtn: { type: Boolean, default: false },
+    cancelBtn: { type: Boolean, default: true },
+    orderStatus: { type: String, default: 'Order is under process' }
 }, { timestamps: true })
 
 const userSchema = new Schema({
