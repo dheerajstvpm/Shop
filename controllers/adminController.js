@@ -223,77 +223,78 @@ const addNewProductGet = function (req, res) {
     }
 }
 
-const addNewProductPost = function (req, res) {
+const addNewProductPost = async function (req, res) {
     const errors = validationResult(req);
     console.log(errors)
     var error1 = errors.errors.find(item => item.param === 'productName') || '';
     var error2 = errors.errors.find(item => item.param === 'description') || '';
     var error3 = errors.errors.find(item => item.param === 'price') || '';
     var error4 = errors.errors.find(item => item.param === 'stock') || '';
-    var error5 = errors.errors.find(item => item.param === 'image') || '';
-    var error6 = errors.errors.find(item => item.param === 'category') || '';
+    var error5 = errors.errors.find(item => item.param === 'category') || '';
+    console.log(req.files)
+    if (req.files == null) {
+        image1Msg = "Please upload an image";
+        image2Msg = "Please upload an image";
+        image3Msg = "Please upload an image";
+    } else if (req.files.image1 == null) {
+        image1Msg = "Please upload an image";
+    } else if (req.files.image2 == null) {
+        image2Msg = "Please upload an image";
+    } else if (req.files.image3 == null) {
+        image3Msg = "Please upload an image";
+    }
     console.log(error5.msg);
     adminSession = req.session;
     if (!errors.isEmpty()) {
         let offerResult;
-        Offer.find({})
-            .then((result) => {
-
-                console.log(result);
-                offerResult = result;
-
-                // res.render('admin/addNewProduct', { offerResult });
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        Category.find({})
-            .then((result) => {
-                console.log(result);
-                res.render('admin/addNewProduct', { title: 'Shop.admin', result, offerResult, productNameMsg: error1.msg, descriptionMsg: error2.msg, priceMsg: error3.msg, stockMsg: error4.msg, imageMsg: error5.msg, categoryMsg: error6.msg, admin: true });
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        try {
+            offerResult = await Offer.find({})
+            categoryResult = await Category.find({})
+            res.render('admin/addNewProduct', { title: 'Shop.admin', offerResult, categoryResult, productNameMsg: error1.msg, descriptionMsg: error2.msg, priceMsg: error3.msg, stockMsg: error4.msg, image1Msg: image1Msg, image2Msg: image2Msg, image3Msg: image3Msg, categoryMsg: error5.msg, admin: true });
+        }
+        catch (err) {
+            console.log(err)
+        }
     } else if (adminSession.adminId) {
-        Product.find({ productName: req.body.productName })
-            .then((result) => {
-                let temp = result.find(item => item.productName)
-                if (temp) {
-                    adminSession = req.session;
-                    adminSession.productExist = true;
-                    res.redirect('/admin/addNewProduct');
-                } else {
-                    const product = new Product({
-                        productName: req.body.productName,
-                        description: req.body.description,
-                        price: req.body.price,
-                        stock: req.body.stock,
-                        // image: req.body.image,
-                        category: req.body.category,
-                        offer: req.body.offer
+        try {
+            result = await Product.find({ productName: req.body.productName })
+
+            let temp = result.find(item => item.productName)
+            if (temp) {
+                adminSession = req.session;
+                adminSession.productExist = true;
+                res.redirect('/admin/addNewProduct');
+            } else {
+                const product = new Product({
+                    productName: req.body.productName,
+                    description: req.body.description,
+                    price: req.body.price,
+                    stock: req.body.stock,
+                    // image: req.body.image,
+                    category: req.body.category,
+                    offer: req.body.offer
+                })
+                product.save()
+                    .then((result) => {
+                        console.log(result)
                     })
-                    product.save()
-                        .then((result) => {
-                            console.log(result)
-                        })
-                        .catch((err) => {
-                            console.log(err)
-                        })
-                    let image1 = req.files.image1;
-                    image1.mv('./public/image/' + "image1" + product._id + ".jpg");
-                    let image2 = req.files.image2;
-                    image2.mv('./public/image/' + "image2" + product._id + ".jpg");
-                    let image3 = req.files.image3;
-                    image3.mv('./public/image/' + "image3" + product._id + ".jpg");
-                    adminSession = req.session;
-                    console.log(adminSession)
-                    res.redirect('/admin/adminProductManagement');
-                }
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+                let image1 = req.files.image1;
+                image1.mv('./public/image/' + "image1" + product._id + ".jpg");
+                let image2 = req.files.image2;
+                image2.mv('./public/image/' + "image2" + product._id + ".jpg");
+                let image3 = req.files.image3;
+                image3.mv('./public/image/' + "image3" + product._id + ".jpg");
+                adminSession = req.session;
+                console.log(adminSession)
+                res.redirect('/admin/adminProductManagement');
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
     } else {
         res.redirect('/admin');
     }
