@@ -220,8 +220,8 @@ const userSignupGet = (req, res) => {
         const error3 = signupErrors.errors.find(item => item.param === 'username') || '';
         const error4 = signupErrors.errors.find(item => item.param === 'password') || '';
         const error5 = signupErrors.errors.find(item => item.param === 'confirmPassword') || '';
-        const error6 = signupErrors.errors.find(item => item.param === 'address') || '';
-        res.render('users/signup', { title: 'Shop.', nameMsg: error1.msg, mobileMsg: error2.msg, usernameMsg: error3.msg, pwdMsg: error4.msg, confirmPwdMsg: error5.msg, addressMsg: error6.msg });
+
+        res.render('users/signup', { title: 'Shop.', nameMsg: error1.msg, mobileMsg: error2.msg, usernameMsg: error3.msg, pwdMsg: error4.msg, confirmPwdMsg: error5.msg });
     } else {
         res.render('users/signup', { title: 'Shop.' })
     }
@@ -782,7 +782,15 @@ const buyNowGet = (req, res) => {
                                             if (session.outOfStock) {
                                                 session.outOfStock = false;
                                                 res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, total: total, msg: "Some items in your cart went out of stock" })
+                                            } else if (session.addAddressError) {
+                                                session.addAddressError = false
+                                                const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
+                                                console.log(error1.msg)
+                                                console.log("hello")
+                                                res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, total: total, msg: "Enter key not allowed in address field" })
+                                                // res.render('users/buyNow', { title: 'Shop.', msg: error1.msg, loginName: session.userId, result, total: total })
                                             } else {
+                                                console.log('hi')
                                                 res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, total: total })
                                             }
                                         }
@@ -842,42 +850,51 @@ let orderPaymentOption
 const buyNowPost = async (req, res) => {
     session = req.session;
     console.log(req.body)
-    if(req.body.newAddress){
-        console.log(req.body.newAddress)
-        await User.updateOne({ _id: session.uid }, { $push: { address: req.body.newAddress } })
-    }
-    orderAddress = req.body.newAddress || req.body.address
-    orderPaymentOption = req.body.paymentOption
-    if (session.userId) {
-        if (req.body.paymentOption == 'Razorpay') {
-            // STEP 1:
-            let { amount, currency } = req.body;
-            amount = amount * 100
-            console.log(amount)
-            console.log(typeof amount)
-            // STEP 2:    
-            instance.orders.create({ amount, currency }, (err, order) => {
-                //STEP 3 & 4: 
-                console.log(order);
-                console.log(order.amount)
-                console.log(typeof order.amount)
-                console.log(order.id)
-                console.log(typeof order.id)
 
-                res.json(order)
-                // res.render('users/paymentPage', { title: 'Shop.', loginName: session.userId, order: JSON.stringify(order) })
-            })
-        } else if (req.body.paymentOption == 'Paypal') {
-            // create a new order
-            // const paymentPaypal = async (req, res) => {
-            const order = { id: "Paypal" };
+    if (session.userId) {
+        otpLoginErrors = validationResult(req);
+        if (!otpLoginErrors.isEmpty()) {
+            session.addAddressError = true
+            const order = { id: "addAddressError" };
             console.log(order);
             res.json(order);
-            // };
-        } else if (req.body.paymentOption == 'COD') {
-            res.redirect('/saveOrder')
         } else {
-            res.redirect('/buyNow')
+            if (req.body.newAddress) {
+                console.log(req.body.newAddress)
+                await User.updateOne({ _id: session.uid }, { $push: { address: req.body.newAddress } })
+            }
+            orderAddress = req.body.newAddress || req.body.address
+            orderPaymentOption = req.body.paymentOption
+            if (req.body.paymentOption == 'Razorpay') {
+                // STEP 1:
+                let { amount, currency } = req.body;
+                amount = amount * 100
+                console.log(amount)
+                console.log(typeof amount)
+                // STEP 2:    
+                instance.orders.create({ amount, currency }, (err, order) => {
+                    //STEP 3 & 4: 
+                    console.log(order);
+                    console.log(order.amount)
+                    console.log(typeof order.amount)
+                    console.log(order.id)
+                    console.log(typeof order.id)
+
+                    res.json(order)
+                    // res.render('users/paymentPage', { title: 'Shop.', loginName: session.userId, order: JSON.stringify(order) })
+                })
+            } else if (req.body.paymentOption == 'Paypal') {
+                // create a new order
+                // const paymentPaypal = async (req, res) => {
+                const order = { id: "Paypal" };
+                console.log(order);
+                res.json(order);
+                // };
+            } else if (req.body.paymentOption == 'COD') {
+                res.redirect('/saveOrder')
+            } else {
+                res.redirect('/buyNow')
+            }
         }
     } else {
         res.redirect('/login')
@@ -909,35 +926,65 @@ const orderGet = (req, res) => {
     }
 }
 
-const cancelOrderGet = (req, res) => {
+const cancelOrderGet = async (req, res) => {
     session = req.session;
     uniqueId = req.params.id;
     if (session.userId) {
-        User.findOne({ _id: session.uid })
-            .then((result) => {
-                // console.log(result)
+        result = await User.findOne({ _id: session.uid })
 
-                const orders = result.order
+        // console.log(result)
 
-                console.log(orders)
+        const orders = result.order
 
-                for (let order of orders) {
-                    order = order.toJSON();
-                    if (order.unique === uniqueId) {
-                        Promise.all([(User.updateOne({ "name": session.userId, "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled" } })), (Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } }))])
-                            .then((result) => {
-                                res.redirect('/order')
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                            })
-                    }
-                }
-            })
+        console.log(orders)
+
+        for (let order of orders) {
+            order = order.toJSON();
+            if (order.unique === uniqueId) {
+                await User.updateOne({ "name": session.userId, "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled" } })
+                await User.updateOne({ "name": session.userId, "order.unique": uniqueId }, { $set: { "order.$.cancelBtn": false } })
+                await User.updateOne({ "name": session.userId, "order.unique": uniqueId }, { $set: { "order.$.returnBtn": false } })
+                await User.updateOne({ "name": session.userId, "order.unique": uniqueId }, { $set: { "order.$.updateBtn": false } })
+                await Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } })
+            }
+        }
+        res.redirect('/order')
+
     } else {
         res.redirect('/login')
     }
 }
+
+
+const returnOrderGet = async (req, res) => {
+    session = req.session;
+    uniqueId = req.params.id;
+    if (session.userId) {
+        result = await User.findOne({ _id: session.uid })
+
+        // console.log(result)
+
+        const orders = result.order
+
+        console.log(orders)
+
+        for (let order of orders) {
+            order = order.toJSON();
+            if (order.unique === uniqueId) {
+                await User.updateOne({ "name": session.userId, "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order returned" } })
+                await User.updateOne({ "name": session.userId, "order.unique": uniqueId }, { $set: { "order.$.cancelBtn": false } })
+                await User.updateOne({ "name": session.userId, "order.unique": uniqueId }, { $set: { "order.$.returnBtn": false } })
+                await User.updateOne({ "name": session.userId, "order.unique": uniqueId }, { $set: { "order.$.updateBtn": false } })
+                await Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } })
+            }
+        }
+        res.redirect('/order')
+
+    } else {
+        res.redirect('/login')
+    }
+}
+
 
 const userMobileLoginGet = (req, res) => {
     session = req.session;
@@ -1584,5 +1631,6 @@ module.exports = {
     verifyPaymentRazorPay,
     saveOrder,
     paymentPaypal,
-    verifyPaymentPaypal
+    verifyPaymentPaypal,
+    returnOrderGet
 }
