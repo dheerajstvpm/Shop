@@ -15,8 +15,8 @@
             </div>
         </div>
     </form> --}}
-    <div class="d-flex mb-3">
-        <table class=" table">
+    <div class="d-flex flex-column  mb-3">
+        <table id="table_id" class=" table">
             <thead>
                 <tr>
                     <th scope="col" class="text-center">Sl.</th>
@@ -32,15 +32,27 @@
                 {{#each result}}
                 <tr>
                     {{!-- <th scope="row" class="text-center">{{addOne @index}}.</th> --}}
-                    <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image" style="width: 5rem; height: 5rem; object-fit: contain;">
+                    <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
+                            style="width: 5rem; height: 5rem; object-fit: contain;">
                     </td>
                     <td class="text-center"><br>{{this.productName}}</td>
                     <td class="text-center"><br>&#x20B9;{{this.price}}</td>
                     <td class="text-center"><br>{{this.count}}</td>
                     <td class="text-center"><br>&#x20B9;{{multiply this.price this.count}}</td>
                     <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
+                    {{#if cancelBtn}}
                     <td class="text-center"><br><a href="/cancelOrder/{{this.unique}}" class="btn btn-dark">Cancel</a>
                     </td>
+                    {{else}}
+                    {{#if returnBtn}}
+                    <td class="text-center"><br><a href="/returnOrder/{{this.unique}}" class="btn btn-dark">Return</a>
+                    </td>
+                    {{else}}
+                    <td class="text-center"><br></td>
+                    {{/if}}
+                    {{/if}}
+
+
                 </tr>
                 {{/each}}
                 {{!-- <tr>
@@ -54,4 +66,9 @@
             </tbody>
         </table>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable();
+        });
+    </script>
 </div>
