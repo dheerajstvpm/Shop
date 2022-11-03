@@ -71,9 +71,9 @@
                         {{/each}}
 
                     </div>
-                    <div class="d-flex justify-content-end mt-3">
-                        <label for="offer" class="col-md-5 col-form-label">Select payment option :</label>
-                        <div class="col-md-6 d-flex justify-content-end">
+                    <div class="d-flex justify-content-end mt-3">                        
+                        <div class="d-flex justify-content-end">
+                            <label for="offer" class="col-md-5 col-form-label">Select payment option :</label>
                             <select name="paymentOption" id="paymentOption" style="width: 250px;">
                                 <option selected disabled>Select one</option>
                                 <option value="COD">COD</option>
@@ -129,6 +129,8 @@
 
             if (order.success) {
                 window.location.href = "/order";
+            } else if (order.id === 'addAddressError') {
+                window.location.href = "/buyNow";
             } else if (order.id === 'Paypal') {
                 paypal.Buttons({
                     // Order is created on the server and the order id is returned
