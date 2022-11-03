@@ -1,6 +1,6 @@
 <div class="container minHeight">
 
-    <div class="d-flex justify-content-between mt-5">
+    <div class="d-flex justify-content-between mt-5 border-bottom">
         <h1>User order management</h1>
     </div>
 
@@ -15,32 +15,37 @@
             </div>
         </div>
     </form> --}}
-    <div class="d-flex mb-3">
-        <table class=" table">
-            {{!-- <thead>
-                <tr>
-                    <th scope="col" class="text-center">Sl.</th>
+    <div class="d-flex flex-column my-3">
+        <table id="table_id" class=" table">
+            <thead>
+                <tr>                    
+                    <th scope="col" class="text-center">Image</th>
                     <th scope="col" class="text-center">Product Name</th>
-                    <th scope="col" class="text-center">Product Name</th>
-                    <th scope="col" class="text-center">Price</th>
-                    <th scope="col" class="text-center">No.of items</th>
                     <th scope="col" class="text-center">Total</th>
                     <th scope="col" class="text-center">Status</th>
+                    <th scope="col" class="text-center"></th>
                 </tr>
-            </thead> --}}
+            </thead>
             <tbody class="table-group-divider">
                 {{#each result}}
                 <tr>
                     {{!-- <th scope="row" class="text-center">{{addOne @index}}.</th> --}}
-                    <td class="text-center"><img src="{{this.image}}" alt="image" style="width: 5rem; height: 5rem; object-fit: contain;">
+                    <td class="text-center"><img src="{{this.image}}" alt="image"
+                            style="width: 5rem; height: 5rem; object-fit: contain;">
                     </td>
                     <td class="text-center"><br>{{this.productName}}</td>
-                    <td class="text-center"><br>&#x20B9;{{this.price}}</td>
+                    <td class="text-center"><br>&#x20B9;{{multiply this.count this.price}}</td>
                     {{!-- <td class="text-center">{{this.count}}</td>
                     <td class="text-center">{{multiply this.price this.count}}</td> --}}
                     <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
-                    <td class="text-center"><br><a href="/admin/adminOrderCancel/{{this.unique}}" class="btn btn-dark">Cancel</a>
-                    </td>
+                    {{#if cancelBtn}}
+                    <td class="text-center"><br><a href="/admin/adminOrderCancel/{{this.unique}}"
+                            class="btn btn-dark">Cancel</a></td>
+                    {{else}}
+                    <td class="text-center"><br><a href="/admin/adminOrderCancel/{{this.unique}}"
+                            class="btn btn-dark disabled">Cancel</a></td>
+                    {{/if}}
+
                 </tr>
                 {{/each}}
                 {{!-- <tr>
@@ -54,4 +59,9 @@
             </tbody>
         </table>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable();
+        });
+    </script>
 </div>
