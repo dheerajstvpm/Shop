@@ -51,7 +51,6 @@ router.post('/addNewProduct',
     check('description').notEmpty().withMessage('Please enter a description'),
     check('price').notEmpty().withMessage('Please enter price of the product'),
     check('stock').notEmpty().withMessage('Please enter number of items'),
-    check('image').notEmpty().withMessage('Please enter link to image'),
     check('category').notEmpty().withMessage('Please enter category'),
     adminController.addNewProductPost);
 
