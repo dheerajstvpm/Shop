@@ -80,7 +80,10 @@ router.get('/removeFromWishlist/:productId', userController.removeFromWishlist)
 
 router.get('/buyNow', userController.buyNowGet)
 
-router.post('/buyNow', userController.buyNowPost)
+router.post('/buyNow',
+    check('newAddress').matches(/^((?!\n).)*$/)
+        .withMessage('Enter key not allowed'),
+    userController.buyNowPost)
 
 router.get('/order', userController.orderGet)
 
@@ -104,7 +107,8 @@ router.get('/profile', userController.profileGet)
 router.post('/addAddress',
     check('newAddress').matches(/^((?!\n).)*$/)
         .withMessage('Enter key not allowed'),
-    check('newAddress').notEmpty().withMessage('Please enter an address'),
+    check('newAddress').notEmpty()
+        .withMessage('Please enter an address'),
     userController.addAddress)
 
 router.post('/nameEdit',
@@ -159,6 +163,8 @@ router.post('/paymentPaypal', userController.paymentPaypal)
 router.post('/verifyPaymentPaypal/:orderId/capture', userController.verifyPaymentPaypal)
 
 router.get('/saveOrder', userController.saveOrder)
+
+router.get('/returnOrder/:id', userController.returnOrderGet)
 
 router.get('/logout', userController.userlogout);
 
