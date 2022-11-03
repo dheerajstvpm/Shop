@@ -1146,50 +1146,50 @@ const adminAllOrderManagementGet = async (req, res) => {
             return b.createdAt - a.createdAt;
         });
         const limit = 10
-        const pages = Math.ceil(orders.length/limit)
+        const pages = Math.ceil(orders.length / limit)
         console.log(orders.length)
-        console.log(orders.length/limit)
+        console.log(orders.length / limit)
         console.log(pages)
-        const page={}
+        const page = {}
         page.page = req.params.page
-        if(page.page>1){
-            page.previous=parseInt(page.page)-1
-        }else{
-            page.previous=false
+        if (page.page > 1) {
+            page.previous = parseInt(page.page) - 1
+        } else {
+            page.previous = false
         }
-        if(page.page<pages){
-            page.next=parseInt(page.page)+1
-        }else{
-            page.next=false
+        if (page.page < pages) {
+            page.next = parseInt(page.page) + 1
+        } else {
+            page.next = false
         }
-        if(page.page>0 &&page.page<pages-1){
-            page.page1=parseInt(page.page)
-            page.page1Active=true
-        }else{
-            page.page1=pages-2
-            page.page1Active=false
+        if (page.page > 0 && page.page < pages - 1) {
+            page.page1 = parseInt(page.page)
+            page.page1Active = true
+        } else {
+            page.page1 = pages - 2
+            page.page1Active = false
         }
-        if(page.page>0 &&page.page<pages-1){
-            page.page2=parseInt(page.page)+1
-        }else{
-            page.page2=pages-1
+        if (page.page > 0 && page.page < pages - 1) {
+            page.page2 = parseInt(page.page) + 1
+        } else {
+            page.page2 = pages - 1
         }
-        if(page.page2==page.page){
-            page.page2Active=true
-        }else{
-            page.page2Active=false
+        if (page.page2 == page.page) {
+            page.page2Active = true
+        } else {
+            page.page2Active = false
         }
-        if(page.page>0 &&page.page<pages-1){
-            page.page3=parseInt(page.page)+2
-        }else{
-            page.page3=pages
+        if (page.page > 0 && page.page < pages - 1) {
+            page.page3 = parseInt(page.page) + 2
+        } else {
+            page.page3 = pages
         }
-        if(page.page3==page.page){
-            page.page3Active=true
-        }else{
-            page.page3Active=false
+        if (page.page3 == page.page) {
+            page.page3Active = true
+        } else {
+            page.page3Active = false
         }
-        
+
         console.log(page)
 
         start = (page.page - 1) * limit
@@ -1207,35 +1207,53 @@ const adminAllOrderManagementGet = async (req, res) => {
     }
 }
 
+const adminDatatableOrderManagementGet = async (req, res) => {
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        const result = await User.find({})
 
-const adminOrderCancel = (req, res) => {
+        // console.log(result)
+        let orders = []
+        for (item of result) {
+            orders = orders.concat(item.order)
+        }
+        // result = result.order.reverse()
+        orders.sort((a, b) => {
+            return b.createdAt - a.createdAt;
+        });
+        res.render('admin/adminDatatableOrderManagement', { title: 'Shop.admin', admin: true, orders })
+
+    } else {
+        res.redirect('/admin')
+    }
+}
+
+
+const adminOrderCancel = async (req, res) => {
     adminSession = req.session;
     uniqueId = req.params.id;
     console.log(uniqueId)
     console.log(customerId)
     if (adminSession.adminId) {
-        User.findOne({ _id: customerId })
-            .then((result) => {
-                // console.log(result)
+        result = await User.findOne({ _id: customerId })
+        // console.log(result)
 
-                const orders = result.order
+        const orders = result.order
 
-                console.log(orders)
+        console.log(orders)
 
-                for (let order of orders) {
-                    order = order.toJSON();
-                    if (order.unique === uniqueId) {
-                        Promise.all([(User.updateOne({ "_id": customerId, "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled" } })), (Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } }))])
-                            .then((result) => {
-                                res.redirect('back')
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                            })
-                    }
+        for (let order of orders) {
+            order = order.toJSON();
+            if (order.unique === uniqueId) {
+                await User.updateOne({ "_id": customerId, "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled" } })
+                await User.updateOne({ "_id": customerId, "order.unique": uniqueId }, { $set: { "order.$.cancelBtn": false } })
+                await User.updateOne({ "_id": customerId, "order.unique": uniqueId }, { $set: { "order.$.returnBtn": false } })
+                await User.updateOne({ "_id": customerId, "order.unique": uniqueId }, { $set: { "order.$.updateBtn": false } })
+                await Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } })
+            }
 
-                }
-            })
+        }
+        res.redirect('back')
     } else {
         res.redirect('/admin')
     }
@@ -1244,6 +1262,7 @@ const adminOrderCancel = (req, res) => {
 
 
 const adminDashboard = (req, res) => {
+    adminSession = req.session;
     if (adminSession.adminId) {
         const sales = [];
         const timeOfSale = [];
@@ -1251,12 +1270,7 @@ const adminDashboard = (req, res) => {
         let l = 0;
         let m = [];
         let n;
-        // function operation() {
-        //     l++;
-        //     if (l === m*n) {
-        //         res.redirect('/order');
-        //     }
-        // }
+
         User.find({})
             .then((results) => {
                 // console.log(result)
@@ -1309,34 +1323,60 @@ const adminDashboard = (req, res) => {
                     }
                 }
             })
-
-
-
-
-        // console.log(orders)
-
-        // for (let order of orders) {
-        //     order = order.toJSON();
-        //     if (order.unique === uniqueId) {
-        //         Promise.all([(User.updateOne({ "_id": customerId, "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled" } })), (Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } }))])
-        //             .then((result) => {
-        //                 res.redirect('back')
-        //             })
-        //             .catch((err) => {
-        //                 console.log(err)
-        //             })
-        //     }
-
-        // }
-
-
-
-
     } else {
         res.redirect('/admin')
     }
 }
 
+const adminAllOrderUpdate = async (req, res) => {
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        uniqueId = req.params.unique
+        try {
+            result = await User.find({})
+            // console.log(result)
+            let orders = []
+            for (item of result) {
+                orders = orders.concat(item.order)
+            }
+            // console.log(orders)
+
+            for (let order of orders) {
+                order = order.toJSON();
+                if (order.unique === uniqueId) {
+                    console.log(req.body)
+                    console.log(req.params)
+                    if (req.body.status === "Cancelled") {
+                        console.log("cancelled")
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled" } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.cancelBtn": false } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.returnBtn": false } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.updateBtn": false } })
+                        await Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } })
+                    } else if (req.body.status === "Dispatched") {
+                        console.log("dispatched")
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order dispatched" } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.cancelBtn": true } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.returnBtn": false } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.updateBtn": true } })
+                    } else if (req.body.status === "Delivered") {
+                        console.log("delivered")
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order delivered" } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.cancelBtn": false } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.returnBtn": true } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.updateBtn": false } })
+                    }
+                }
+            }
+            res.redirect('back')
+        } catch (err) {
+            console.log(err)
+        }
+
+    } else {
+        res.redirect('/admin')
+    }
+}
 
 
 const adminLogout = function (req, res) {
@@ -1388,5 +1428,7 @@ module.exports = {
     adminAllOrderManagementGet,
     adminOrderCancel,
     adminLogout,
-    adminDashboard
+    adminDashboard,
+    adminAllOrderUpdate,
+    adminDatatableOrderManagementGet
 }
