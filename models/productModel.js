@@ -8,8 +8,6 @@ const productSchema = new Schema({
     price: { type: Number },
     stock: { type: Number, min: 0 },
     sales: { type: Number, default: 0 },
-    image: { type: String },
-    croppedImage: { type: String },
     category: { type: String },
     offer: { type: String }
 }, { timestamps: true })
