@@ -36,9 +36,10 @@ var moment = require('moment'); // require
 const dbURI = "mongodb+srv://netninja:test1234@cluster0.uzdlv9f.mongodb.net/Shop?retryWrites=true&w=majority"
 mongoose.connect(dbURI)
   .then(() => {
-    console.log('connected to db')
+    
     //listening for requests
     app.listen(3000);
+    console.log('connected to db')
   })
   .catch((err) => console.log(err))
 
