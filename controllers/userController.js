@@ -865,6 +865,7 @@ const buyNowPost = async (req, res) => {
                 const checks = out.address
                 console.log(checks);
                 let n = 0;
+                session.addressExistErr = false
                 for (const check of checks) {
                     if (check == req.body.newAddress) {
                         console.log(check)
