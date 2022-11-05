@@ -63,7 +63,7 @@
                         {{#each result.address}}
                         <div class="form-check form-check-reverse ms-3 border">
                             <input class="form-check-input" type="radio" name="address" id="exampleRadios1"
-                                value="{{this}}" checked>
+                                value="{{this}}">
                             <label class="form-check-label" style="width:180px" for="exampleRadios1">
                                 {{this}}
                             </label>
@@ -71,7 +71,7 @@
                         {{/each}}
 
                     </div>
-                    <div class="d-flex justify-content-end mt-3">                        
+                    <div class="d-flex justify-content-end mt-3">
                         <div class="d-flex justify-content-end">
                             <label for="offer" class="col-md-5 col-form-label">Select payment option :</label>
                             <select name="paymentOption" id="paymentOption" style="width: 250px;">
@@ -114,7 +114,9 @@
             const amount = form.amount.value
             const currency = form.currency.value
             const newAddress = form.newAddress.value
-            const address = form.address.value
+            const address = function (address = "") {
+                return address = form.address.value
+            };
             const paymentOption = form.paymentOption.value
 
             let order = await fetch('/buyNow', {
