@@ -28,7 +28,7 @@
             <thead>
                 <tr>
                     <th scope="col" class="text-center">Sl.</th>
-                    <th scope="col" class="text-center">Image</th>
+                    {{!-- <th scope="col" class="text-center">Image</th> --}}
                     <th scope="col" class="text-center">Product Name</th>
                     <th scope="col" class="text-center">Price</th>
                     <th scope="col" class="text-center">Sales in numbers</th>
@@ -39,8 +39,8 @@
                 {{#each result}}
                 <tr>
                     <th scope="row" class="text-center">{{addOne @index}}</td>
-                    <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
-                            style="width: 5rem; height: 5rem; object-fit: contain;"></td>
+                    {{!-- <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
+                            style="width: 5rem; height: 5rem; object-fit: contain;"></td> --}}
                     <td class="text-center">{{this.productName}}</td>
                     <td class="text-center">&#x20B9;{{this.price}}</td>
                     <td class="text-center">{{this.sales}}</td>
@@ -51,7 +51,7 @@
             <tfoot>
                 <tr>
                     <th scope="row" class="text-center"></th>
-                    <td class="text-center"></td>
+                    {{!-- <td class="text-center"></td> --}}
                     <td class="text-center"></td>
                     <td class="text-center"></td>
                     <td class="fw-bold text-center">Total sales</td>
