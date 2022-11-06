@@ -39,7 +39,8 @@
                 {{#each result}}
                 <tr>
                     <th scope="row" class="text-center">{{addOne @index}}</td>
-                    {{!-- <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
+                        {{!--
+                    <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
                             style="width: 5rem; height: 5rem; object-fit: contain;"></td> --}}
                     <td class="text-center">{{this.productName}}</td>
                     <td class="text-center">&#x20B9;{{this.price}}</td>
@@ -119,7 +120,10 @@
         $('#example').DataTable({
             dom: 'Bfrtip',
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                { extend: 'copyHtml5', footer: true },
+                { extend: 'excelHtml5', footer: true },
+                { extend: 'csvHtml5', footer: true },
+                { extend: 'pdfHtml5', footer: true }
             ]
         });
     });
