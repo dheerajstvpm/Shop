@@ -33,8 +33,8 @@ var moment = require('moment'); // require
 
 //connect to MongoDB
 // const dbURI = "mongodb://0.0.0.0:27017/Shop"
-const dbURI = "mongodb+srv://netninja:test1234@cluster0.uzdlv9f.mongodb.net/Shop?retryWrites=true&w=majority"
-mongoose.connect(dbURI)
+
+mongoose.connect(process.env.dbURI)
   .then(() => {
     
     //listening for requests
