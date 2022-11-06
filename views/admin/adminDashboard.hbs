@@ -23,8 +23,8 @@
         <div id="myPlot" style="max-width:500px" class="col my-3"></div>
     </div>
 
-    <div class="d-flex mb-3">
-        <table class=" table">
+    <div class="d-flex flex-column mb-3">
+        <table class="table table-hover" id="example">
             <thead>
                 <tr>
                     <th scope="col" class="text-center">Sl.</th>
@@ -47,6 +47,8 @@
                     <td class="text-center">&#x20B9;{{multiply this.price this.sales}}</td>
                 </tr>
                 {{/each}}
+            </tbody>
+            <tfoot>
                 <tr>
                     <th scope="row" class="text-center"></th>
                     <td class="text-center"></td>
@@ -55,8 +57,7 @@
                     <td class="fw-bold text-center">Total sales</td>
                     <td class="text-center">&#x20B9;{{total}}</td>
                 </tr>
-            </tbody>
-
+            </tfoot>
         </table>
     </div>
 
@@ -113,5 +114,14 @@
     Plotly.newPlot("myPlot", data, layout);
 
     Plotly.newPlot("myBar", barData, barLayout);
+
+    $(document).ready(function () {
+        $('#example').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
 
 </script>
