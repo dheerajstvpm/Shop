@@ -1,46 +1,33 @@
 <div class="container minHeight">
     <div class="d-flex justify-content-between my-3">
-        <h1 class="mt-5">Edit {{result.offerName}} Offer</h1>
+        <h1 class="mt-5">Edit Offer</h1>
     </div>
 
 
     <form action="/admin/editOffer/{{result._id}}" method="post">
 
         <div class="row mb-3">
-            <label for="minOrder" class="col-md-2 col-form-label">Current minimum order to avail offer: </label>
+            <label for="oldName" class="col-md-2 col-form-label">Current offer name: </label>
             <div class="col-md-3">
-                <p class="pt-2">{{result.minOrder}}</p>
+                <p class="pt-2">{{result.offerName}}</p>
             </div>
-            <label for="newMinOrder" class="col-md-2 col-form-label">New minimum order to avail offer</label>
+            <label for="newName" class="col-md-2 col-form-label">New offer name</label>
             <div class="col-md-3">
-                <input type="text" id="newMinOrder" class="form-control" name="newMinOrder">
+                <input type="text" id="newName" class="form-control" name="newName">
             </div>
         </div>
 
         <div class="row my-3">
-            <label for="discount" class="col-md-2 col-form-label">Current Discount : </label>
+            <label for="discount" class="col-md-2 col-form-label">Current Discount %: </label>
             <div class="col-md-3">
                 <p class="pt-2">{{result.discount}}</p>
             </div>
 
-            <label for="newDiscount" class="col-md-2 col-form-label">New Discount:</label>
+            <label for="newDiscount" class="col-md-2 col-form-label">New Discount %:</label>
             <div class="col-md-3">
                 <input type="text" name="newDiscount" class="form-control" id="newDiscount">
             </div>
         </div>
-
-        <div class="row my-3">
-            <label for="maxDiscount" class="col-md-2 col-form-label">Current Maximum Discount : </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{result.maxDiscount}}</p>
-            </div>
-
-            <label for="newMaxDiscount" class="col-md-2 col-form-label">New Maximum Discount:</label>
-            <div class="col-md-3">
-                <input type="text" name="newMaxDiscount" class="form-control" id="newMaxDiscount">
-            </div>
-        </div>
-
 
         <button type="submit" class="btn btn-dark mb-3">Update</button>
 
