@@ -30,7 +30,7 @@ const adminHome = (req, res) => {
 const adminLoginGet = (req, res) => {
     adminSession = req.session;
     // To be deleted
-    // adminSession.adminId = 'admin';
+    adminSession.adminId = 'admin';
     //
     if (adminSession.adminId) {
         console.log(adminSession)
@@ -187,26 +187,6 @@ const addNewProductGet = function (req, res) {
             const item = [{ message: 'Product already exist' }]
             res.render('admin/addNewProduct', { title: 'Shop.admin', item, admin: true });
         } else {
-            // let offerResult;
-            // Offer.find({})
-            //     .then((result) => {
-
-            //         console.log(result);
-            //         offerResult = result;
-
-            //         // res.render('admin/addNewProduct', { offerResult });
-            //     })
-            //     .catch((err) => {
-            //         console.log(err)
-            //     })
-            // Category.find({})
-            //     .then((result) => {
-            //         console.log(result);
-            //         // res.render('admin/addNewProduct', { result, offerResult, admin: true });
-            //     })
-            //     .catch((err) => {
-            //         console.log(err)
-            //     })
             Promise.all([Offer.find({}), Category.find({})])
                 .then((result) => {
                     let offerResult, categoryResult;
@@ -348,7 +328,7 @@ const editProductGet = function (req, res) {
     }
 }
 
-const editProductPost = function (req, res) {
+const editProductPost = async function (req, res) {
     console.log(req.params);
     console.log(req.body);
     let newProductId = req.params.id;
@@ -357,35 +337,99 @@ const editProductPost = function (req, res) {
     adminSession = req.session;
     if (adminSession.adminId) {
         if (req.body.newDescription) {
-            Product.updateOne({ _id: newProductId }, { $set: { description: req.body.newDescription } })
-                .then((result) => {
-                    console.log(result);
-                    // res.redirect('/admin/adminProductManagement')
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+            //--------------------------------
+            try {
+                const results = await User.find({})
+                for (result of results) {
+                    carts = result.cart
+                    for (let cart of carts) {
+                        cartId = "" + cart._id
+                        if (cartId === newProductId) {
+                            result2 = await User.updateOne({ "_id": result._id, "cart._id": newProductId }, { $set: { "cart.$.description": req.body.newDescription } })
+                        }
+                    }
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+            //--------------------------------
+            try {
+                const results = await User.find({})
+                for (result of results) {
+                    wishlists = result.wishlist
+                    for (let wishlist of wishlists) {
+                        wishlistId = "" + wishlist._id
+                        if (wishlistId === newProductId) {
+                            result2 = await User.updateOne({ "_id": result._id, "wishlist._id": newProductId }, { $set: { "wishlist.$.description": req.body.newDescription } })
+                        }
+                    }
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+            //-----------------------------------
+            //-----------------------------------
+            try {
+                await Product.updateOne({ _id: newProductId }, { $set: { description: req.body.newDescription } })
+            }
+            catch (err) {
+                console.log(err)
+            }
             // } else {
             //     res.redirect('/admin/adminProductManagement')
         }
         if (req.body.newPrice) {
-            Product.updateOne({ _id: newProductId }, { $set: { price: req.body.newPrice } })
-                .then((result) => {
-                    console.log(result);
-                    // res.redirect('/admin/adminProductManagement')
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-            // } else {
-            //     console.log('hello')
-            //     res.redirect('/admin/adminProductManagement')
+
+            //--------------------------------
+            try {
+                const results = await User.find({})
+                for (result of results) {
+                    carts = result.cart
+                    for (let cart of carts) {
+                        cartId = "" + cart._id
+                        if (cartId === newProductId) {
+                            result2 = await User.updateOne({ "_id": result._id, "cart._id": newProductId }, { $set: { "cart.$.price": req.body.newPrice } })
+                        }
+                    }
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+            //-----------------------------------
+
+            //--------------------------------
+            try {
+                const results = await User.find({})
+                for (result of results) {
+                    wishlists = result.wishlist
+                    for (let wishlist of wishlists) {
+                        wishlistId = "" + wishlist._id
+                        if (wishlistId === newProductId) {
+                            result2 = await User.updateOne({ "_id": result._id, "wishlist._id": newProductId }, { $set: { "wishlist.$.price": req.body.newPrice } })
+                        }
+                    }
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+            //-----------------------------------
+            try {
+                await Product.updateOne({ _id: newProductId }, { $set: { price: req.body.newPrice } })
+            }
+            catch (err) {
+                console.log(err)
+            }
+            //-----------------------------------
         }
         if (req.body.newStock) {
             Product.updateOne({ _id: newProductId }, { $set: { stock: req.body.newStock } })
                 .then((result) => {
                     // console.log("hi");
-                    console.log(result);
+                    // console.log(result);
                     // res.redirect('/admin/adminProductManagement')
                 })
                 .catch((err) => {
@@ -394,10 +438,10 @@ const editProductPost = function (req, res) {
             // } else {
             //     res.redirect('/admin/adminProductManagement')
         }
-        if (req.files.newImage1) {
+        if (req.files?.newImage1 || '') {
             Product.findOne({ _id: newProductId })
                 .then((result) => {
-                    console.log(result);
+                    console.log("image1");
                     let image1 = req.files.newImage1;
                     image1.mv('./public/images/' + "image1" + result._id + ".jpg");
                     // res.redirect('/admin/adminProductManagement')
@@ -405,12 +449,11 @@ const editProductPost = function (req, res) {
                 .catch((err) => {
                     console.log(err)
                 })
-
             // } else {
             //     res.redirect('/admin/adminProductManagement')
         }
-        if (req.files.newImage2) {
-
+        if (req.files?.newImage2 || '') {
+            console.log("image2");
             Product.findOne({ _id: newProductId })
                 .then((result) => {
                     console.log(result);
@@ -423,8 +466,8 @@ const editProductPost = function (req, res) {
                 })
 
         }
-        if (req.files.newImage3) {
-
+        if (req.files?.newImage3 || '') {
+            console.log("image3");
             Product.findOne({ _id: newProductId })
                 .then((result) => {
                     console.log(result);
@@ -437,6 +480,23 @@ const editProductPost = function (req, res) {
                 })
         }
         if (req.body.newCategory) {
+            //--------------------------------
+            try {
+                const results = await User.find({})
+                for (result of results) {
+                    carts = result.cart
+                    for (let cart of carts) {
+                        cartId = "" + cart._id
+                        if (cartId === newProductId) {
+                            result2 = await User.updateOne({ "_id": result._id, "cart._id": newProductId }, { $set: { "cart.$.category": req.body.newCategory } })
+                        }
+                    }
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+            //-----------------------------------
             Product.updateOne({ _id: newProductId }, { $set: { category: req.body.newCategory } })
                 .then((result) => {
                     console.log(result);
@@ -449,6 +509,23 @@ const editProductPost = function (req, res) {
             //     res.redirect('/admin/adminProductManagement')
         }
         if (req.body.newOffer) {
+            //--------------------------------
+            try {
+                const results = await User.find({})
+                for (result of results) {
+                    carts = result.cart
+                    for (let cart of carts) {
+                        cartId = "" + cart._id
+                        if (cartId === newProductId) {
+                            result2 = await User.updateOne({ "_id": result._id, "cart._id": newProductId }, { $set: { "cart.$.offer": req.body.newOffer } })
+                        }
+                    }
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+            //-----------------------------------
             Product.updateOne({ _id: newProductId }, { $set: { offer: req.body.newOffer } })
                 .then((result) => {
                     console.log(result);
@@ -576,24 +653,32 @@ const unblockUser = function (req, res) {
     }
 }
 
-const adminCategoryManagement = function (req, res) {
+const adminCategoryManagement = async function (req, res) {
     adminSession = req.session;
-    console.log(adminSession)
-    Category.find({}).sort({ _id: -1 })
-        .then((result) => {
-            if (adminSession.categoryProductExist) {
-                adminSession.categoryProductExist = false
-                res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, categoryMsg: "Can not delete this category. Product in this category exists.", admin: true })
-            } else if (adminSession.adminId) {
-                res.render('admin/adminCategoryManagement', { title: 'Shop.admin', result, admin: true })
-            } else {
-                res.redirect('/admin');
-            }
-        })
-        .catch((err) => {
-            console.log(err)
-            res.redirect('/admin');
-        })
+
+    offerResult = await Offer.find({})
+    categoryResult = await Category.find({}).sort({ _id: -1 })
+    let newArray = []
+    for (let category of categoryResult) {
+        // category=category.toJSON()
+        category.offerResult = offerResult
+        newArray.push(category)
+    }
+    if (adminSession.categoryProductExist) {
+        adminSession.categoryProductExist = false
+        console.log(`categoryResult:${categoryResult}`)
+        console.log(offerResult)
+        res.render('admin/adminCategoryManagement', { title: 'Shop.admin', newArray, categoryMsg: "Can not delete this category. Product in this category exists.", admin: true })
+    } else if (adminSession.adminId) {
+        console.log(categoryResult)
+
+        console.log(offerResult)
+
+        console.log(newArray)
+        res.render('admin/adminCategoryManagement', { title: 'Shop.admin', newArray, admin: true })
+    } else {
+        res.redirect('/admin');
+    }
 }
 
 const adminCategorySearch = function (req, res) {
@@ -827,7 +912,7 @@ const editOfferGet = function (req, res) {
     }
 }
 
-const editOfferPost = function (req, res) {
+const editOfferPost = async function (req, res) {
     console.log(req.params);
     console.log(req.body);
     let newOfferId = req.params.id;
@@ -835,41 +920,34 @@ const editOfferPost = function (req, res) {
 
     adminSession = req.session;
     if (adminSession.adminId) {
+        if (req.body.newName) {
+            try {
+                const result = await Offer.findOneAndUpdate({ _id: newOfferId }, { $set: { offerName: req.body.newName } })
+                const prdt = await Product.updateMany({ offer: result.offerName }, { $set: { offer: req.body.newName } })
+            } catch (err) {
+                console.log(err)
+            }
+        }
         if (req.body.newMinOrder) {
-            Offer.updateOne({ _id: newOfferId }, { $set: { minOrder: req.body.newMinOrder } })
-                .then((result) => {
-
-                    res.redirect('/admin/adminOfferManagement')
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-            // } else {
-            //     res.redirect('/admin/adminProductManagement')
+            try {
+                const result = await Offer.updateOne({ _id: newOfferId }, { $set: { minOrder: req.body.newMinOrder } })
+            } catch (err) {
+                console.log(err)
+            }
         }
         if (req.body.newDiscount) {
-            Offer.updateOne({ _id: newOfferId }, { $set: { discount: req.body.newDiscount } })
-                .then((result) => {
-
-                    res.redirect('/admin/adminOfferManagement')
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-            // } else {
-            //     res.redirect('/admin/adminProductManagement')
+            try {
+                const result = await Offer.updateOne({ _id: newOfferId }, { $set: { discount: req.body.newDiscount } })
+            } catch (err) {
+                console.log(err)
+            }
         }
         if (req.body.newMaxDiscount) {
-            Offer.updateOne({ _id: newOfferId }, { $set: { maxDiscount: req.body.newMaxDiscount } })
-                .then((result) => {
-
-                    res.redirect('/admin/adminOfferManagement')
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-            // } else {
-            //     res.redirect('/admin/adminProductManagement')
+            try {
+                const result = await Offer.updateOne({ _id: newOfferId }, { $set: { maxDiscount: req.body.newMaxDiscount } })
+            } catch (err) {
+                console.log(err)
+            }
         }
         res.redirect('/admin/adminOfferManagement')
     } else {
@@ -1349,23 +1427,14 @@ const adminAllOrderUpdate = async (req, res) => {
                     console.log(req.params)
                     if (req.body.status === "Cancelled") {
                         console.log("cancelled")
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled" } })
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.cancelBtn": false } })
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.returnBtn": false } })
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.updateBtn": false } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order cancelled", "order.$.cancelBtn": false, "order.$.returnBtn": false, "order.$.updateBtn": false } })
                         await Product.updateOne({ "_id": order._id }, { $inc: { "stock": order.count, "sales": (order.count * -1) } })
                     } else if (req.body.status === "Dispatched") {
                         console.log("dispatched")
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order dispatched" } })
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.cancelBtn": true } })
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.returnBtn": false } })
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.updateBtn": true } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order dispatched", "order.$.cancelBtn": true, "order.$.returnBtn": false, "order.$.updateBtn": true } })
                     } else if (req.body.status === "Delivered") {
                         console.log("delivered")
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order delivered" } })
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.cancelBtn": false } })
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.returnBtn": true } })
-                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.updateBtn": false } })
+                        await User.updateOne({ "order.unique": uniqueId }, { $set: { "order.$.orderStatus": "Order delivered", "order.$.cancelBtn": false, "order.$.returnBtn": true, "order.$.updateBtn": false } })
                     }
                 }
             }
@@ -1378,6 +1447,39 @@ const adminAllOrderUpdate = async (req, res) => {
         res.redirect('/admin')
     }
 }
+
+
+const adminCategoryOfferUpdate = async function (req, res) {
+    console.log(req.params);
+    console.log(req.body);
+    let category = req.params.category;
+    console.log(category);
+    console.log(req.body.offer);
+
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        if (req.body.offer) {
+            try {
+                await Product.updateMany({ category: req.params.category }, { $set: { offer: req.body.offer } })
+                offerResult = await Offer.find({})
+                categoryResult = await Category.find({}).sort({ _id: -1 })
+                console.log(categoryResult)
+                let newArray = []
+                console.log(offerResult)
+                for (let category of categoryResult) {
+                    // category=category.toJSON()
+                    category.offerResult = offerResult
+                    newArray.push(category)
+                }
+                console.log(newArray)
+                res.render('admin/adminCategoryManagement', { title: 'Shop.admin', newArray, admin: true })
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    }
+}
+
 
 
 const adminLogout = function (req, res) {
@@ -1431,5 +1533,6 @@ module.exports = {
     adminLogout,
     adminDashboard,
     adminAllOrderUpdate,
-    adminDatatableOrderManagementGet
+    adminDatatableOrderManagementGet,
+    adminCategoryOfferUpdate
 }
