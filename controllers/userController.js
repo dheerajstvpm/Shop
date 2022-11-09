@@ -46,7 +46,8 @@ const userHome = (req, res) => {
     session = req.session;
 
     // To be deleted
-    // session.userId = 'Amal';
+    session.userId = 'Amal';
+    session.uid = '634c03053c0bba01e5275e4d';
 
     Homepage.find({})
         .then((result) => {
@@ -62,23 +63,35 @@ const userHome = (req, res) => {
         })
 }
 
-const product = (req, res) => {
+const product = async (req, res) => {
     session = req.session;
     const productId = req.params.id;
     console.log(productId)
-    Product.find({ _id: productId })
-        .then((result) => {
-            console.log(result);
+    try {
+        const result = await Product.findOne({ _id: productId })
+        // console.log(result);
+        try {
+            const out = await Offer.findOne({ offerName: result.offer })
+            const discount = out.discount * result.price / 100
+            const offerPrice = result.price - discount
             if (session.userId) {
-                res.render('users/product', { title: 'Shop.', loginName: session.userId, result })
+                console.log(result)
+                console.log(offerPrice)
+                res.render('users/product', { title: 'Shop.', loginName: session.userId, offerPrice: offerPrice, result })
             } else {
-                res.render('users/product', { title: 'Shop.', result })
+                console.log(result)
+                console.log(offerPrice)
+                res.render('users/product', { title: 'Shop.', offerPrice: offerPrice, result })
             }
             // res.render('admin/userHomepageLayout', { result });
-        })
-        .catch((err) => {
+        }
+        catch (err) {
             console.log(err)
-        })
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
 }
 
 const otpSignupVerifyGet = (req, res) => {
@@ -306,28 +319,42 @@ const userSignupPost = function (req, res) {
 
 
 
-const userCartGet = (req, res) => {
+const userCartGet = async (req, res) => {
     // console.log(req.params);
     // let userId = req.params.id;
     // console.log(userId);
     session = req.session;
     if (session.userId) {
         console.log(session.uid)
-        User.findById({ _id: session.uid })
-            .then((result) => {
-                const sum = function (items, prop1, prop2) {
-                    return items.reduce(function (a, b) {
-                        return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
-                    }, 0);
-                };
-                const total = sum(result.cart, 'price', 'count');
-                // console.log(result)
-                res.render('users/cart', { title: 'Shop.', loginName: session.userId, result, total: total })
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        try {
+            const result = await User.findById({ _id: session.uid })
 
+            //-------------------------
+            const carts = result.cart
+            const cartArray = []
+            for (let cart of carts) {
+                try {
+                    const out = await Offer.findOne({ offerName: cart.offer })
+                    const discount = out.discount * cart.price / 100
+                    const offerPrice = cart.price - discount
+                    cart.offerPrice = offerPrice
+                    cartArray.push(cart)
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+            //--------------------
+            const sum = function (items, prop1, prop2) {
+                return items.reduce(function (a, b) {
+                    return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
+                }, 0);
+            };
+            const total = sum(cartArray, 'offerPrice', 'count');
+            // console.log(result)
+            res.render('users/cart', { title: 'Shop.', loginName: session.userId, cartArray, total: total })
+        } catch (err) {
+            console.log(err)
+        }
     } else {
         res.redirect('/login')
     }
@@ -772,27 +799,67 @@ const buyNowGet = (req, res) => {
                                         if (result.cart.length == 0) {
                                             res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, cartEmpty: true })
                                         } else {
-                                            const sum = function (items, prop1, prop2) {
-                                                return items.reduce(function (a, b) {
-                                                    return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
-                                                }, 0);
-                                            };
-                                            const total = sum(result.cart, 'price', 'count');
+                                            //-------------------------------------------
+                                            console.log(session.uid)
+
+                                            async function f2() {
+                                                let cartArray=[]
+                                                let total
+                                                try {
+                                                    const result = await User.findById({ _id: session.uid })
+                                                    
+                                                    //-------------------------
+                                                    const carts = result.cart                                                    
+                                                    for (let cart of carts) {
+                                                        try {
+                                                            const out = await Offer.findOne({ offerName: cart.offer })
+                                                            const discount = out.discount * cart.price / 100
+                                                            const offerPrice = cart.price - discount
+                                                            cart.offerPrice = offerPrice
+                                                            cartArray.push(cart)
+                                                            console.log('hit')
+                                                        } catch (err) {
+                                                            console.log(err)
+                                                        }
+                                                    }
+                                                    //--------------------
+                                                    const sum = function (items, prop1, prop2) {
+                                                        return items.reduce(function (a, b) {
+                                                            return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
+                                                        }, 0);
+                                                    };
+                                                     total = sum(cartArray, 'offerPrice', 'count');
+                                                    // console.log(result)
+                                                    //res.render('users/cart', { title: 'Shop.', loginName: session.userId, cartArray, total: total })
+                                                } catch (err) {
+                                                    console.log(err)
+                                                }
+                                                if (session.outOfStock) {
+                                                    session.outOfStock = false;
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Some items in your cart went out of stock" })
+                                                } else if (session.addAddressError) {
+                                                    session.addAddressError = false
+                                                    const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
+                                                    console.log(error1.msg)
+                                                    console.log("hello")
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Enter key not allowed in address field" })
+                                                    // res.render('users/buyNow', { title: 'Shop.', msg: error1.msg, loginName: session.userId, result, total: total })
+                                                } else {
+                                                    console.log('hi')
+                                                    console.log(cartArray)
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total })
+                                                }
+                                            } 
+                                            f2()
+                                            //-------------------------------------------
+                                            // const sum = function (items, prop1, prop2) {
+                                            //     return items.reduce(function (a, b) {
+                                            //         return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
+                                            //     }, 0);
+                                            // };
+                                            // const total = sum(result.cart, 'price', 'count');
                                             // console.log(result)
-                                            if (session.outOfStock) {
-                                                session.outOfStock = false;
-                                                res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, total: total, msg: "Some items in your cart went out of stock" })
-                                            } else if (session.addAddressError) {
-                                                session.addAddressError = false
-                                                const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
-                                                console.log(error1.msg)
-                                                console.log("hello")
-                                                res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, total: total, msg: "Enter key not allowed in address field" })
-                                                // res.render('users/buyNow', { title: 'Shop.', msg: error1.msg, loginName: session.userId, result, total: total })
-                                            } else {
-                                                console.log('hi')
-                                                res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, total: total })
-                                            }
+
                                         }
                                     })
                             }
@@ -846,6 +913,7 @@ const buyNowGet = (req, res) => {
 
 let orderAddress
 let orderPaymentOption
+let orderAmountAfterOffer
 
 const buyNowPost = async (req, res) => {
     session = req.session;
@@ -876,11 +944,12 @@ const buyNowPost = async (req, res) => {
                 console.log(err)
             }
             //--------------------------------------------------------
-            if (session.addressExistErr!=true) {
+            if (session.addressExistErr != true) {
                 console.log(req.body.newAddress)
                 await User.updateOne({ _id: session.uid }, { $push: { address: req.body.newAddress } })
             }
             session.addressExistErr = false
+            orderAmountAfterOffer = req.body.amount
             orderAddress = req.body.newAddress || req.body.address
             orderPaymentOption = req.body.paymentOption
             if (req.body.paymentOption == 'Razorpay') {
@@ -1126,7 +1195,7 @@ const profileGet = (req, res) => {
                     const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
                     console.log(otpLoginErrors)
                     res.render('users/profile', { title: 'Shop.', message: error1.msg, loginName: session.userId, result })
-                    
+
                 } else if (session.addressChangeError) {
                     session.addressChangeError = false
                     const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
@@ -1492,6 +1561,8 @@ const saveOrder = async function (req, res) {
         cartItem.unique = uuidv4()
         cartItem.orderStatus = 'Order is under process'
         stockId = cartItem._id
+        cartItem.priceAfterOffer=orderAmountAfterOffer
+        
         // console.log(stockId)
         salesCount = cartItem.count
         removeCount = cartItem.count * -1;
