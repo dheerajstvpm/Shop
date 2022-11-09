@@ -115,6 +115,8 @@ router.get('/adminDashboard/', adminController.adminDashboard);
 
 router.post('/adminAllOrderUpdate/:unique', adminController.adminAllOrderUpdate);
 
+router.post('/adminCategoryOfferUpdate/:category', adminController.adminCategoryOfferUpdate);
+
 router.post('/adminLogout', adminController.adminLogout);
 
 
