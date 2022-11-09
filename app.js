@@ -66,6 +66,9 @@ app.engine('hbs', hbs.engine({
     multiply: function (value1, value2, options) {
       return parseInt(value1 * value2);
     },
+    substract: function (value1, value2, options) {
+      return parseInt(value1 - value2);
+    },
     dateFormat: function (timestamp) {
       return moment(new Date(timestamp)).format("MMM DD, YYYY")
     }
