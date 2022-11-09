@@ -72,14 +72,16 @@
     console.log(timeOfSale)
 
     let xArray = timeOfSale.split(',')
+    console.log(typeof xArray[0])
     console.log(xArray)
     let yArray = [{{ sales }}];
+    console.log(yArray)
 
     // Define Data
     let data = [{
         x: xArray,
         y: yArray,
-        mode: "line",
+        mode: "markers",
         type: "scatter"
     }];
 
