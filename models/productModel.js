@@ -9,7 +9,7 @@ const productSchema = new Schema({
     stock: { type: Number, min: 0 },
     sales: { type: Number, default: 0 },
     category: { type: String },
-    offer: { type: Number }
+    offer: { type: String }
 }, { timestamps: true })
 
 
