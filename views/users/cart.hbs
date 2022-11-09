@@ -23,18 +23,20 @@
                     <th class="text-center">Image</th>
                     <th scope="col" class="text-center">Product Name</th>
                     <th scope="col" class="text-center">Price</th>
+                    <th scope="col" class="text-center">Offer price</th>
                     <th scope="col" class="text-center">No.of items</th>
                     <th scope="col" class="text-center">Total</th>
                 </tr>
             </thead>
             <tbody>
-                {{#each result.cart}}
+                {{#each cartArray}}
                 <tr>
                     <th scope="row" class="text-center"><br>{{addOne @index}}.</th>
                     <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
                             style="width: 5rem; height: 5rem; object-fit: contain;"></td>
                     <td class="text-center"><br>{{this.productName}}</td>
                     <td class="text-center"><br>&#x20B9;{{this.price}}</td>
+                    <td class="text-center"><br>&#x20B9;{{this.offerPrice}}</td>
                     <td class="text-center" style="width:200px;"><br><a href="/removeFromCart/{{this._id}}"
                             class="ms-1 me-4 text-decoration-none text-dark"
                             onclick="return confirm('Are you sure, you want to remove product :{{this.productName}} from the cart?')"><svg
@@ -48,11 +50,12 @@
                                 viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                             </svg></a></td>
-                    <td class="text-center"><br>&#x20B9;{{multiply this.price this.count}}</td>
+                    <td class="text-center"><br>&#x20B9;{{multiply this.offerPrice this.count}}</td>
                 </tr>
                 {{/each}}
                 <tr>
                     <th scope="row" class="text-center"></th>
+                    <td class="text-center"></td>
                     <td class="text-center"></td>
                     <td class="text-center"></td>
                     <td class="text-center"></td>
@@ -61,6 +64,7 @@
                 </tr>
                 <tr>
                     <th scope="row"></th>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
