@@ -46,8 +46,8 @@ const userHome = (req, res) => {
     session = req.session;
 
     // To be deleted
-    session.userId = 'Amal';
-    session.uid = '634c03053c0bba01e5275e4d';
+    // session.userId = 'Amal';
+    // session.uid = '634c03053c0bba01e5275e4d';
 
     Homepage.find({})
         .then((result) => {
