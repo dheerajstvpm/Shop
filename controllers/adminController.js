@@ -30,7 +30,7 @@ const adminHome = (req, res) => {
 const adminLoginGet = (req, res) => {
     adminSession = req.session;
     // To be deleted
-    adminSession.adminId = 'admin';
+    // adminSession.adminId = 'admin';
     //
     if (adminSession.adminId) {
         console.log(adminSession)
