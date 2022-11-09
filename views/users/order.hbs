@@ -6,7 +6,7 @@
 
     {{!-- <form action="/search" method="post" class="d-flex mb-3">
         <div>
-            <button type="submit" class="shadow-lg btn btn-dark me-1">Search</button>
+            <button type="submit" class="shadow btn btn-dark me-1">Search</button>
         </div>
         <div class="flex-grow-1 mb-3">
             <div>
@@ -41,11 +41,11 @@
                     <td class="text-center"><br>&#x20B9;{{multiply this.price this.count}}</td>
                     <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
                     {{#if cancelBtn}}
-                    <td class="text-center"><br><a href="/cancelOrder/{{this.unique}}" class="shadow-lg btn btn-dark">Cancel</a>
+                    <td class="text-center"><br><a href="/cancelOrder/{{this.unique}}" class="shadow btn btn-dark">Cancel</a>
                     </td>
                     {{else}}
                     {{#if returnBtn}}
-                    <td class="text-center"><br><a href="/returnOrder/{{this.unique}}" class="shadow-lg btn btn-dark">Return</a>
+                    <td class="text-center"><br><a href="/returnOrder/{{this.unique}}" class="shadow btn btn-dark">Return</a>
                     </td>
                     {{else}}
                     <td class="text-center"><br></td>
