@@ -333,8 +333,10 @@ const userCartGet = async (req, res) => {
             const carts = result.cart
             const cartArray = []
             for (let cart of carts) {
+                cart = cart.toJSON()
                 try {
                     const out = await Offer.findOne({ offerName: cart.offer })
+                    console.log(out.discount)
                     const discount = out.discount * cart.price / 100
                     const offerPrice = cart.price - discount
                     cart.offerPrice = offerPrice
@@ -350,7 +352,7 @@ const userCartGet = async (req, res) => {
                 }, 0);
             };
             const total = sum(cartArray, 'offerPrice', 'count');
-            // console.log(result)
+            console.log(cartArray)
             res.render('users/cart', { title: 'Shop.', loginName: session.userId, cartArray, total: total })
         } catch (err) {
             console.log(err)
@@ -803,13 +805,13 @@ const buyNowGet = (req, res) => {
                                             console.log(session.uid)
 
                                             async function f2() {
-                                                let cartArray=[]
+                                                let cartArray = []
                                                 let total
                                                 try {
                                                     const result = await User.findById({ _id: session.uid })
-                                                    
+
                                                     //-------------------------
-                                                    const carts = result.cart                                                    
+                                                    const carts = result.cart
                                                     for (let cart of carts) {
                                                         try {
                                                             const out = await Offer.findOne({ offerName: cart.offer })
@@ -828,13 +830,17 @@ const buyNowGet = (req, res) => {
                                                             return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
                                                         }, 0);
                                                     };
-                                                     total = sum(cartArray, 'offerPrice', 'count');
+                                                    total = sum(cartArray, 'offerPrice', 'count');
                                                     // console.log(result)
                                                     //res.render('users/cart', { title: 'Shop.', loginName: session.userId, cartArray, total: total })
                                                 } catch (err) {
                                                     console.log(err)
                                                 }
-                                                if (session.outOfStock) {
+                                                
+                                                if (session.noValidOption) {
+                                                    session.noValidOption = false;
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Please select a valid option" })
+                                                } else if (session.outOfStock) {
                                                     session.outOfStock = false;
                                                     res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Some items in your cart went out of stock" })
                                                 } else if (session.addAddressError) {
@@ -842,14 +848,14 @@ const buyNowGet = (req, res) => {
                                                     const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
                                                     console.log(error1.msg)
                                                     console.log("hello")
-                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Enter key not allowed in address field" })
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Please enter a valid address. Enter key not allowed in address field" })
                                                     // res.render('users/buyNow', { title: 'Shop.', msg: error1.msg, loginName: session.userId, result, total: total })
                                                 } else {
                                                     console.log('hi')
                                                     console.log(cartArray)
                                                     res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total })
                                                 }
-                                            } 
+                                            }
                                             f2()
                                             //-------------------------------------------
                                             // const sum = function (items, prop1, prop2) {
@@ -926,6 +932,11 @@ const buyNowPost = async (req, res) => {
             const order = { id: "addAddressError" };
             console.log(order);
             res.json(order);
+        } else if (req.body.newAddress == "" && req.body.address=="") {
+            session.addAddressError = true
+            const order = { id: "addAddressError" };
+            console.log(order);
+            res.json(order);
         } else {
             //------------------------------------------------------
             try {
@@ -944,7 +955,7 @@ const buyNowPost = async (req, res) => {
                 console.log(err)
             }
             //--------------------------------------------------------
-            if (session.addressExistErr != true) {
+            if (session.addressExistErr != true && req.body.newAddress!="") {
                 console.log(req.body.newAddress)
                 await User.updateOne({ _id: session.uid }, { $push: { address: req.body.newAddress } })
             }
@@ -980,7 +991,10 @@ const buyNowPost = async (req, res) => {
             } else if (req.body.paymentOption == 'COD') {
                 res.redirect('/saveOrder')
             } else {
-                res.redirect('/buyNow')
+                session.noValidOption = true
+                const order = { id: "noValidOption" };
+                console.log(order);
+                res.json(order);
             }
         }
     } else {
@@ -1561,8 +1575,8 @@ const saveOrder = async function (req, res) {
         cartItem.unique = uuidv4()
         cartItem.orderStatus = 'Order is under process'
         stockId = cartItem._id
-        cartItem.priceAfterOffer=orderAmountAfterOffer
-        
+        cartItem.priceAfterOffer = orderAmountAfterOffer
+
         // console.log(stockId)
         salesCount = cartItem.count
         removeCount = cartItem.count * -1;
