@@ -840,6 +840,9 @@ const buyNowGet = (req, res) => {
                                                 if (session.noValidOption) {
                                                     session.noValidOption = false;
                                                     res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Please select a valid option" })
+                                                } else if (session.noValidAddressError) {
+                                                    session.noValidAddressError = false;
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Please enter a valid address." })
                                                 } else if (session.outOfStock) {
                                                     session.outOfStock = false;
                                                     res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Some items in your cart went out of stock" })
@@ -848,7 +851,7 @@ const buyNowGet = (req, res) => {
                                                     const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
                                                     console.log(error1.msg)
                                                     console.log("hello")
-                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Please enter a valid address. Enter key not allowed in address field" })
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Enter key not allowed in address field." })
                                                     // res.render('users/buyNow', { title: 'Shop.', msg: error1.msg, loginName: session.userId, result, total: total })
                                                 } else {
                                                     console.log('hi')
@@ -933,8 +936,8 @@ const buyNowPost = async (req, res) => {
             console.log(order);
             res.json(order);
         } else if (req.body.newAddress == "" && req.body.address=="") {
-            session.addAddressError = true
-            const order = { id: "addAddressError" };
+            session.noValidAddressError = true
+            const order = { id: "noValidAddressError" };
             console.log(order);
             res.json(order);
         } else {
