@@ -81,8 +81,6 @@ router.get('/removeFromWishlist/:productId', userController.removeFromWishlist)
 router.get('/buyNow', userController.buyNowGet)
 
 router.post('/buyNow',
-    check('newAddress').notEmpty()
-        .withMessage('Please enter an address'),
     check('newAddress').matches(/^((?!\n).)*$/)
         .withMessage('Enter key not allowed'),
     userController.buyNowPost)
