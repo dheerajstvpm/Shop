@@ -35,22 +35,39 @@
                     <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
                             style="width: 5rem; height: 5rem; object-fit: contain;"></td>
                     <td class="text-center"><br>{{this.productName}}</td>
-                    <td class="text-center"><br>&#x20B9;{{this.price}}</td>
-                    <td class="text-center"><br>&#x20B9;{{this.offerPrice}}</td>
-                    <td class="text-center" style="width:200px;"><br><a href="/removeFromCart/{{this._id}}"
+                    <td class="text-center"><br><span>&#x20B9;{{this.price}}</span></td>
+                    <td class="text-center"><br><span>&#x20B9;{{this.offerPrice}}</span></td>
+                    <td class="text-center" style="width:200px;"><br>
+                    <div class="d-flex justify-content-center">
+                        <a id="reduceCount" onclick=reduceCount("{{this._id}}","{{this.offerPrice}}")
                             class="ms-1 me-4 text-decoration-none text-dark"
-                            onclick="return confirm('Are you sure, you want to remove product :{{this.productName}} from the cart?')"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-dash-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
-                            </svg></a>{{this.count}}<a href="/addToCart/{{this._id}}"
-                            class="ms-4 text-decoration-none text-dark"><svg xmlns="http://www.w3.org/2000/svg"
-                                width="16" height="16" fill="currentColor" class="bi bi-plus-circle"
-                                viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                            </svg></a></td>
-                    <td class="text-center"><br>&#x20B9;{{multiply this.offerPrice this.count}}</td>
+                            onclick="return confirm('Are you sure, you want to remove product :{{this.productName}} from the cart?')">
+
+                            {{!-- <button id="reduceCount" onclick=reduceCount("{{this._id}}","{{this.offerPrice}}")>
+                                --}}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-dash-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
+                                </svg>
+                                {{!-- </button> --}}
+                        </a>
+                        <span id="{{this._id}}Count">{{this.count}}</span>
+                        <a id="addCount" onclick=addCount("{{this._id}}","{{this.offerPrice}}")
+                            class="ms-4 text-decoration-none text-dark">
+                            {{!-- <button id="addCount" onclick=addCount("{{this._id}}","{{this.offerPrice}}")> --}}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    <path
+                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                </svg>
+                                {{!-- </button> --}}
+                        </a>
+                        </div>
+                    </td>
+                    <td class="text-center"><br><span id="{{this._id}}ProductTotal">&#x20B9;{{multiply this.offerPrice
+                            this.count}}</span></td>
                 </tr>
                 {{/each}}
                 <tr>
@@ -60,7 +77,7 @@
                     <td class="text-center"></td>
                     <td class="text-center"></td>
                     <td class="fw-bold text-center">Total</td>
-                    <td class="text-center">&#x20B9;{{total}}</td>
+                    <td class="text-center"><span id="Total">&#x20B9;{{total}}</span></td>
                 </tr>
                 <tr>
                     <th scope="row"></th>
@@ -69,10 +86,74 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="text-center"><a href="/buyNow/" class="shadow-lg btn btn-dark" style="width: 100px;">Buy now</a>
+                    <td class="text-center"><a href="/buyNow/" class="shadow-lg btn btn-dark" style="width: 100px;">Buy
+                            now</a>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+
+    async function reduceCount(prodId, offerPrice) {
+        console.log("hi")
+        console.log(prodId)
+        console.log(offerPrice)
+        console.log(typeof offerPrice)
+        const url = `/removeFromCart/${prodId}`
+        let result = await fetch(url, {
+            method: 'GET', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            //params: JSON.stringify({ amount, currency, newAddress, address, paymentOption }),
+        })
+        result = await result.json()
+        console.log(result)
+        if (result.id == "productRemove") {
+            window.location.href = "/cart";
+        } else {
+            const Count = `${prodId}Count`
+            const ProductTotal = `${prodId}ProductTotal`
+            //const Total = `${prodId}Total`
+            const offer = parseInt(offerPrice) * parseInt(result.count)
+            document.getElementById(Count).innerHTML = result.count;
+            document.getElementById(ProductTotal).innerHTML = offer;
+            document.getElementById("Total").innerHTML = result.total;
+        }
+    }
+
+    async function addCount(prodId, offerPrice) {
+        console.log("hello")
+        console.log(prodId)
+        console.log(offerPrice)
+        console.log(typeof offerPrice)
+        const url = `/addToCart/${prodId}`
+        let result = await fetch(url, {
+            method: 'GET', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            //body: JSON.stringify({ amount, currency, newAddress, address, paymentOption }),
+        })
+        result = await result.json()
+        console.log(result)
+        if (result.productRemove) {
+            window.location.href = "/cart";
+        } else {
+            const Count = `${prodId}Count`
+            const ProductTotal = `${prodId}ProductTotal`
+            //const Total = `${prodId}Total`
+            const offer = parseInt(offerPrice) * parseInt(result.count)
+            document.getElementById(Count).innerHTML = result.count;
+            document.getElementById(ProductTotal).innerHTML = offer;
+            
+            document.getElementById("Total").innerHTML = result.total;
+        }
+    }
+
+
+
+</script>
