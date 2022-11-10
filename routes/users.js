@@ -70,6 +70,8 @@ router.get('/buyNowToCart/:productId', userController.buyNowToCart)
 
 router.get('/addToCart/:productId', userController.addToCartGet)
 
+router.get('/addToCartFromProductPage/:productId', userController.addToCartFromProductPage)
+
 router.get('/removeFromCart/:productId', userController.removeFromCart)
 
 router.get('/wishlist', userController.userWishlistGet)
