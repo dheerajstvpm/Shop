@@ -1460,6 +1460,23 @@ const adminCategoryOfferUpdate = async function (req, res) {
     if (adminSession.adminId) {
         if (req.body.offer) {
             try {
+                //--------------------------------
+                try {
+                    const results = await User.find({})
+                    for (result of results) {
+                        carts = result.cart
+                        for (let cart of carts) {
+                            cartCategory = cart.category
+                            if (cartCategory === req.params.category) {
+                                result2 = await User.updateOne({ "_id": result._id, "cart._id": cart._id }, { $set: { "cart.$.offer": req.body.offer } })
+                            }
+                        }
+                    }
+                }
+                catch (err) {
+                    console.log(err)
+                }
+                //-----------------------------------
                 await Product.updateMany({ category: req.params.category }, { $set: { offer: req.body.offer } })
                 offerResult = await Offer.find({})
                 categoryResult = await Category.find({}).sort({ _id: -1 })
@@ -1477,6 +1494,8 @@ const adminCategoryOfferUpdate = async function (req, res) {
                 console.log(err)
             }
         }
+    } else {
+        res.redirect('/admin')
     }
 }
 
