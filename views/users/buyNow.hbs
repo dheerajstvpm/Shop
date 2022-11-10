@@ -102,9 +102,10 @@
             const amount = form.amount.value
             const currency = form.currency.value
             const newAddress = form.newAddress.value
-            const address = function (address = "") {
+            const addAddress = function (address = "") {
                 return address = form.address.value
             };
+            const address = addAddress()
             const paymentOption = form.paymentOption.value
 
             let order = await fetch('/buyNow', {
@@ -119,6 +120,8 @@
 
             if (order.success) {
                 window.location.href = "/order";
+            } else if (order.id === 'noValidOption') {
+                window.location.href = "/buyNow";
             } else if (order.id === 'addAddressError') {
                 window.location.href = "/buyNow";
             } else if (order.id === 'Paypal') {
