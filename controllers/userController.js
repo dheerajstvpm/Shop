@@ -457,20 +457,22 @@ const addToCartGet = (req, res) => {
         console.log(productId);
         Product.findOne({ _id: productId })
             .then((result) => {
-                console.log(result)
+                // console.log(result)
                 result = result.toJSON()
                 result.count = 1;
                 console.log(result)
                 User.findOne({ _id: session.uid })
                     .then((out) => {
                         const checks = out.cart
-                        console.log(checks);
+                        // console.log(checks);
                         let n = 0;
                         async function f() {
+                            let cartItem;
                             for (const check of checks) {
                                 if (check._id == productId) {
                                     console.log(check)
-                                    console.log(check.productName)
+                                    cartItem = check
+                                    // console.log(check.productName)
                                     // check.count = check.count + 1;
                                     try {
                                         await User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": 1 } })
@@ -481,13 +483,58 @@ const addToCartGet = (req, res) => {
                                     n++;
                                 }
                             }
+                            console.log(cartItem)
+
                             console.log(n)
                             if (n > 0) {
-                                res.redirect('back')
+                                //------------------------------
+                                try {
+                                    const result = await User.findById({ _id: session.uid })
+
+                                    //-------------------------
+                                    const carts = result.cart
+                                    const cartArray = []
+                                    for (let cart of carts) {
+                                        cart = cart.toJSON()
+                                        try {
+                                            const out = await Offer.findOne({ offerName: cart.offer })
+                                            console.log(out.discount)
+                                            const discount = out.discount * cart.price / 100
+                                            const offerPrice = cart.price - discount
+                                            cart.offerPrice = offerPrice
+                                            cartArray.push(cart)
+                                        } catch (err) {
+                                            console.log(err)
+                                        }
+                                    }
+                                    //--------------------
+                                    const sum = function (items, prop1, prop2) {
+                                        return items.reduce(function (a, b) {
+                                            return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
+                                        }, 0);
+                                    };
+                                    const total = sum(cartArray, 'offerPrice', 'count');
+                                    console.log(cartArray)
+                                    userData = await User.findOne({ "name": session.userId })
+                                    cartItems = userData.cart
+                                    let cartItem;
+                                    for (cartItem of cartItems) {
+                                        if (cartItem._id == productId) {
+                                            break;
+                                        }
+                                    }
+                                    cartItem = cartItem.toJSON()
+                                    cartItem.total = total;
+                                    res.json(cartItem)
+                                } catch (err) {
+                                    console.log(err)
+                                }
+                                //------------------------------
+                                // res.redirect('back')
                             } else {
                                 User.findOneAndUpdate({ _id: session.uid }, { $push: { cart: result } })
                                     .then((result) => {
-                                        // console.log(result)
+                                        console.log(result)
 
                                         //Update stock
 
@@ -521,68 +568,202 @@ const addToCartGet = (req, res) => {
 }
 
 
-const removeFromCart = (req, res) => {
+const removeFromCart = async (req, res) => {
     session = req.session;
     if (session.userId) {
         console.log(req.params);
         let productId = req.params.productId;
         console.log(session.userId);
         console.log(productId);
+        try {
+            out = await User.findOne({ _id: session.uid })
 
-        User.findOne({ _id: session.uid })
-            .then((out) => {
-                const checks = out.cart
-                console.log(checks);
-                let n = 0;
-                for (const check of checks) {
-                    if (check._id == productId && check.count > 1) {
-                        console.log(check)
-                        console.log(check.productName)
-                        check.count = check.count + 1;
-                        // User.findOneAndUpdate({ _id: session.uid }, { $push: { cart: result } })
-                        User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": -1 } })
-                            .then((result) => {
-                                console.log(result)
+            const checks = out.cart
+            console.log(checks);
+            let n = 0;
 
-                                //Update stock
+            for (const check of checks) {
+                if (check._id == productId && check.count > 1) {
+                    // console.log(check)
 
-                                // Product.updateOne({ "_id": productId }, { $inc: { "stock": 1 } })
-                                //     .then((result) => {
-                                //         console.log(result)
-                                //     })
-                                //     .catch((err) => {
-                                //         console.log(err)
-                                //     })
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                            })
-                        n++;
+                    // console.log(check.productName)
+                    check.count = check.count + 1;
+                    // User.findOneAndUpdate({ _id: session.uid }, { $push: { cart: result } })
+                    try {
+                        await User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": -1 } })
+
+                        // console.log(result)
+
+                        //Update stock
+
+                        // Product.updateOne({ "_id": productId }, { $inc: { "stock": 1 } })
+                        //     .then((result) => {
+                        //         console.log(result)
+                        //     })
+                        //     .catch((err) => {
+                        //         console.log(err)
+                        //     })
                     }
+                    catch (err) {
+                        console.log(err)
+                    }
+                    n++;
                 }
-                console.log(n)
-                if (n > 0) {
-                    res.redirect('back')
-                } else {
-                    User.findOneAndUpdate({ _id: session.uid }, { $pull: { cart: { _id: productId } } })
-                        .then((result) => {
-                            // console.log(result)
+            }
+            console.log(n)
+            if (n > 0) {
+                //------------------------------
+                try {
+                    const result = await User.findById({ _id: session.uid })
 
-                            //Update stock
-                            // Product.updateOne({ "_id": productId }, { $inc: { "stock": 1 } })
-                            //     .then((result) => {
-                            //         console.log(result)
-                            //         res.redirect('/cart')
-                            //     })
-                            //     .catch((err) => {
-                            //         console.log(err)
-                            //     })
-                            res.redirect('back')
-                        })
-                        .catch((err) => {
+                    //-------------------------
+                    const carts = result.cart
+                    const cartArray = []
+                    for (let cart of carts) {
+                        cart = cart.toJSON()
+                        try {
+                            const out = await Offer.findOne({ offerName: cart.offer })
+                            console.log(out.discount)
+                            const discount = out.discount * cart.price / 100
+                            const offerPrice = cart.price - discount
+                            cart.offerPrice = offerPrice
+                            cartArray.push(cart)
+                        } catch (err) {
                             console.log(err)
-                        })
+                        }
+                    }
+                    //--------------------
+                    const sum = function (items, prop1, prop2) {
+                        return items.reduce(function (a, b) {
+                            return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
+                        }, 0);
+                    };
+                    const total = sum(cartArray, 'offerPrice', 'count');
+                    console.log(cartArray)
+                    userData = await User.findOne({ "name": session.userId })
+                    cartItems = userData.cart
+                    let cartItem;
+                    for (cartItem of cartItems) {
+                        if (cartItem._id == productId) {
+                            break;
+                        }
+                    }
+                    cartItem = cartItem.toJSON()
+                    cartItem.total = total;
+                    console.log(cartItem)
+                    res.json(cartItem)
+                } catch (err) {
+                    console.log(err)
                 }
+                //------------------------------
+                //res.redirect('back')
+            } else {
+                try {
+                    await User.findOneAndUpdate({ _id: session.uid }, { $pull: { cart: { _id: productId } } })
+
+                    // console.log(result)
+
+                    //Update stock
+                    // Product.updateOne({ "_id": productId }, { $inc: { "stock": 1 } })
+                    //     .then((result) => {
+                    //         console.log(result)
+                    //         res.redirect('/cart')
+                    //     })
+                    //     .catch((err) => {
+                    //         console.log(err)
+                    //     })
+                    const cartItem = { id: "productRemove" };
+                    res.json(cartItem)
+
+                    //------------------------------
+
+                    // res.redirect('back')
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    } else {
+        res.redirect('/login')
+    }
+}
+
+const addToCartFromProductPage = (req, res) => {
+    session = req.session;
+    // To be deleted
+    // session.userId = 'Amal';
+    //
+    if (session.userId) {
+        console.log(req.params);
+        let productId = req.params.productId;
+        console.log(session.userId);
+        console.log(productId);
+        Product.findOne({ _id: productId })
+            .then((result) => {
+                // console.log(result)
+                result = result.toJSON()
+                result.count = 1;
+                console.log(result)
+                User.findOne({ _id: session.uid })
+                    .then((out) => {
+                        const checks = out.cart
+                        // console.log(checks);
+                        let n = 0;
+                        async function f() {
+
+                            for (const check of checks) {
+                                if (check._id == productId) {
+                                    console.log(check)
+                                    cartItem = check
+                                    // console.log(check.productName)
+                                    // check.count = check.count + 1;
+                                    try {
+                                        await User.updateOne({ "name": session.userId, "cart._id": productId }, { $inc: { "cart.$.count": 1 } })
+                                    }
+                                    catch (err) {
+                                        console.log(err)
+                                    }
+                                    n++;
+                                }
+                            }
+
+
+                            console.log(n)
+                            if (n > 0) {
+                                //------------------------------
+
+                                //------------------------------
+                                res.redirect('back')
+
+                            } else {
+                                User.findOneAndUpdate({ _id: session.uid }, { $push: { cart: result } })
+                                    .then((result) => {
+                                        console.log(result)
+
+                                        //Update stock
+
+                                        // Product.updateOne({ "_id": productId }, { $inc: { "stock": -1 } })
+                                        //     .then((result) => {
+                                        //         console.log(result)
+                                        //         res.redirect('back')
+                                        //     })
+                                        //     .catch((err) => {
+                                        //         console.log(err)
+                                        //     })
+                                        res.redirect('back')
+                                    })
+                                    .catch((err) => {
+                                        console.log(err)
+                                    })
+                            }
+                        }
+                        f();
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
             })
             .catch((err) => {
                 console.log(err)
@@ -836,7 +1017,7 @@ const buyNowGet = (req, res) => {
                                                 } catch (err) {
                                                     console.log(err)
                                                 }
-                                                
+
                                                 if (session.noValidOption) {
                                                     session.noValidOption = false;
                                                     res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Please select a valid option" })
@@ -935,7 +1116,7 @@ const buyNowPost = async (req, res) => {
             const order = { id: "addAddressError" };
             console.log(order);
             res.json(order);
-        } else if (req.body.newAddress == "" && req.body.address=="") {
+        } else if (req.body.newAddress == "" && req.body.address == "") {
             session.noValidAddressError = true
             const order = { id: "noValidAddressError" };
             console.log(order);
@@ -958,7 +1139,7 @@ const buyNowPost = async (req, res) => {
                 console.log(err)
             }
             //--------------------------------------------------------
-            if (session.addressExistErr != true && req.body.newAddress!="") {
+            if (session.addressExistErr != true && req.body.newAddress != "") {
                 console.log(req.body.newAddress)
                 await User.updateOne({ _id: session.uid }, { $push: { address: req.body.newAddress } })
             }
@@ -1762,5 +1943,6 @@ module.exports = {
     saveOrder,
     paymentPaypal,
     verifyPaymentPaypal,
-    returnOrderGet
+    returnOrderGet,
+    addToCartFromProductPage
 }
