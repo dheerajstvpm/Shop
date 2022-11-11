@@ -25,8 +25,9 @@ router.post('/adminLogin', adminController.adminLoginPost);
 
 router.get('/addNewAdmin', adminController.addNewAdminGet)
 
-router.post('/addNewAdmin', check('username').notEmpty()
-    .withMessage('Please enter a username'),
+router.post('/addNewAdmin',
+    check('username').notEmpty()
+        .withMessage('Please enter a username'),
     check('username').matches(/[\w\d!@#$%^&*?]{5,}/)
         .withMessage("Username must be a atleast five characters"),
     check('password').matches(/[\w\d!@#$%^&*?]{8,}/)
@@ -40,7 +41,7 @@ router.post('/addNewAdmin', check('username').notEmpty()
     check('password').matches(/[!@#$%^&*?]/)
         .withMessage("Password must contain at least one special character"), adminController.addNewAdminPost);
 
-router.get('/adminProductManagement',adminController.adminProductManagement);
+router.get('/adminProductManagement', adminController.adminProductManagement);
 
 router.post('/adminProductSearch', adminController.adminProductSearch);
 
@@ -116,6 +117,29 @@ router.get('/adminDashboard/', adminController.adminDashboard);
 router.post('/adminAllOrderUpdate/:unique', adminController.adminAllOrderUpdate);
 
 router.post('/adminCategoryOfferUpdate/:category', adminController.adminCategoryOfferUpdate);
+
+router.get('/adminCouponManagement', adminController.adminCouponManagement);
+
+router.get('/addNewCoupon/', adminController.addNewCouponGet);
+
+router.post('/addNewCoupon/',
+    check('coupon').notEmpty()
+        .withMessage('Please enter a name'),
+    check('reduction').notEmpty()
+        .withMessage('Please enter a valid number'),
+    check('reduction').matches(/\d/)
+        .withMessage('Please enter a valid number'),
+    check('minOrder').notEmpty()
+        .withMessage('Please enter a valid number'),
+    check('minOrder').matches(/\d/)
+        .withMessage('Please enter a valid number'),
+    adminController.addNewCouponPost);
+
+router.get('/editCoupon/:id', adminController.adminEditCouponGet);
+
+router.post('/editCoupon/:id', adminController.adminEditCouponPost);
+
+router.get('/deleteCoupon/:id', adminController.adminDeleteCoupon);
 
 router.post('/adminLogout', adminController.adminLogout);
 
