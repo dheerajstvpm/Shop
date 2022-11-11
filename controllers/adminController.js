@@ -6,6 +6,7 @@ const User = require('../models/userModel')
 const Category = require('../models/categoryModel')
 const Homepage = require('../models/homepageModel')
 const Offer = require('../models/offerModel')
+const Coupon = require('../models/couponModel')
 const Product = require('../models/productModel')
 const Order = require('../models/orderModel')
 const Admin = require('../models/adminModel')
@@ -1501,6 +1502,109 @@ const adminCategoryOfferUpdate = async function (req, res) {
 
 
 
+const adminCouponManagement = async function (req, res) {
+    adminSession = req.session;
+    console.log(adminSession)
+    Coupon.find({}).sort({ _id: -1 })
+        .then((result) => {
+            if (adminSession.adminId) {
+                res.render('admin/adminCouponManagement', { title: 'Shop.admin', result, admin: true })
+            } else {
+                res.redirect('/admin');
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.redirect('/admin');
+        })
+}
+
+const addNewCouponGet = async function (req, res) {
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        res.render('admin/addNewCoupon', { title: 'Shop.admin', admin: true })
+
+    } else {
+        res.redirect('/admin');
+    }
+}
+
+const addNewCouponPost = async function (req, res) {
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        const errors = validationResult(req);
+        console.log(errors)
+        const error1 = errors.errors.find(item => item.param === 'coupon') || '';
+        const error2 = errors.errors.find(item => item.param === 'reduction') || '';
+        const error3 = errors.errors.find(item => item.param === 'minOrder') || '';
+        if (!errors.isEmpty()) {
+            res.render('admin/addNewCoupon', { title: 'Shop.admin', couponMsg: error1.msg, reductionMsg: error2.msg, minOrderMsg: error3.msg, admin: true });
+        } else {
+            const coupon = new Coupon({
+                coupon: req.body.coupon,
+                reduction: req.body.reduction,
+                minOrder: req.body.minOrder,
+                expiry: req.body.expiry
+            })
+            coupon.save()
+                .then((result) => {
+                    // console.log(result)
+                    res.redirect('/admin/adminCouponManagement')
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+    } else {
+        res.redirect('/admin');
+    }
+}
+
+const adminEditCouponGet = async function (req, res) {
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        console.log(req.params)
+        const result = await Coupon.findOne({ _id: req.params.id })
+        console.log(result)
+        res.render('admin/adminEditCoupon', { title: 'Shop.admin', result, admin: true })
+    } else {
+        res.redirect('/admin');
+    }
+}
+
+const adminEditCouponPost = async function (req, res) {
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        if (req.body.newName) {
+            await Coupon.updateOne({ _id: req.params.id }, { $set: { coupon: req.body.newName } })
+        }
+        if (req.body.newReduction) {
+            await Coupon.updateOne({ _id: req.params.id }, { $set: { reduction: req.body.newReduction } })
+        }
+        if (req.body.newMinOrder) {
+            await Coupon.updateOne({ _id: req.params.id }, { $set: { minOrder: req.body.newMinOrder } })
+        }
+        if (req.body.newExpiry) {
+            await Coupon.updateOne({ _id: req.params.id }, { $set: { expiry: req.body.newExpiry } })
+        }
+        res.redirect('/admin/adminCouponManagement')
+    } else {
+        res.redirect('/admin');
+    }
+}
+
+const adminDeleteCoupon = async function (req, res) {
+    adminSession = req.session;
+    if (adminSession.adminId) {
+        await Coupon.deleteOne({ _id: req.params.id })
+        res.redirect('/admin/adminCouponManagement')
+    } else {
+        res.redirect('/admin');
+    }
+}
+
+
+
 const adminLogout = function (req, res) {
     adminSession = req.session
     adminSession.adminId = false
@@ -1553,5 +1657,11 @@ module.exports = {
     adminDashboard,
     adminAllOrderUpdate,
     adminDatatableOrderManagementGet,
-    adminCategoryOfferUpdate
+    adminCategoryOfferUpdate,
+    adminCouponManagement,
+    addNewCouponGet,
+    addNewCouponPost,
+    adminEditCouponGet,
+    adminEditCouponPost,
+    adminDeleteCoupon
 }
