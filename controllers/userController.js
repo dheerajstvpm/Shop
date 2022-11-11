@@ -45,11 +45,6 @@ let password1;
 
 const userHome = (req, res) => {
     session = req.session;
-
-    // To be deleted
-    session.userId = 'Amal';
-    session.uid = '634c03053c0bba01e5275e4d';
-
     Homepage.find({})
         .then((result) => {
             // console.log(result)
@@ -365,9 +360,7 @@ const userCartGet = async (req, res) => {
 
 const buyNowToCart = (req, res) => {
     session = req.session;
-    // To be deleted
-    // session.userId = 'Amal';
-    //
+
     if (session.userId) {
         console.log(req.params);
         let productId = req.params.productId;
@@ -448,9 +441,7 @@ const buyNowToCart = (req, res) => {
 
 const addToCartGet = (req, res) => {
     session = req.session;
-    // To be deleted
-    // session.userId = 'Amal';
-    //
+
     if (session.userId) {
         console.log(req.params);
         let productId = req.params.productId;
@@ -693,9 +684,7 @@ const removeFromCart = async (req, res) => {
 
 const addToCartFromProductPage = (req, res) => {
     session = req.session;
-    // To be deleted
-    // session.userId = 'Amal';
-    //
+
     if (session.userId) {
         console.log(req.params);
         let productId = req.params.productId;
@@ -802,9 +791,7 @@ const userWishlistGet = (req, res) => {
 
 const addToWishlistGet = (req, res) => {
     session = req.session;
-    // To be deleted
-    // session.userId = 'Amal';
-    //
+
     if (session.userId) {
         console.log(req.params);
         let productId = req.params.productId;
