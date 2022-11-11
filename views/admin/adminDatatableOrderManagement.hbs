@@ -9,10 +9,11 @@
             <thead>
                 <tr>
                     <th scope="col" class="text-center">Sl.</th>
-                    <th scope="col" class="text-center">Image</th>
+                    
                     <th scope="col" class="text-center">Product Name</th>
-                    <th scope="col" class="text-center">Category</th>
-                    <th scope="col" class="text-center">Total</th>
+                    <th scope="col" class="text-center">Count</th>
+                    {{!-- <th scope="col" class="text-center">Total</th> --}}
+                    <th scope="col" class="text-center">Delivery address</th>
                     <th scope="col" class="text-center">Status</th>
                     <th scope="col" class="text-center"></th>
                     <th scope="col" class="text-center"></th>
@@ -22,12 +23,11 @@
                 {{#each orders}}
                 <tr>
                     <th scope="row" class="text-center"><br>{{addOne @index}}.</th>
-                    <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
-                            style="width: 5rem; height: 5rem; object-fit: contain;">
-                    </td>
+                    
                     <td class="text-center"><br>{{this.productName}}</td>
-                    <td class="text-center"><br>{{this.category}}</td>
-                    <td class="text-center"><br>&#x20B9;{{multiply this.count this.price}}</td>
+                    <td class="text-center"><br>{{this.count}}</td>
+                    {{!-- <td class="text-center"><br>&#x20B9;{{multiply this.count this.price}}</td> --}}
+                    <td class="text-center"><br>{{this.userId}}<br>{{this.address}}</td>
                     <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
                     <form action="/admin/adminAllOrderUpdate/{{this.unique}}" method="post">
                         <td class="text-center"><br>
