@@ -50,8 +50,8 @@
             {{/if}}
         </ul>
     </nav>
-    <div class="d-flex mb-3">
-        <table class=" table">
+    <div class="d-flex flex-column mb-3">
+        <table class=" table" id="table_id">
             {{!-- <thead>
                 <tr>
                     <th scope="col" class="text-center">Sl.</th>
@@ -109,4 +109,9 @@
             </tbody>
         </table>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable();
+        });
+    </script>
 </div>
