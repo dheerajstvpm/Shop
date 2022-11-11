@@ -55,6 +55,8 @@ const orderSchema = new Schema({
     paymentOption: { type: String },
     address: { type: String },
     unique: { type: String },
+    userId: { type: String },
+    priceAfterOffer: { type: Number },
     updateBtn: { type: Boolean, default: true },
     returnBtn: { type: Boolean, default: false },
     cancelBtn: { type: Boolean, default: true },
@@ -68,7 +70,7 @@ const userSchema = new Schema({
     mobile: { type: String },
     address: {
         type: [],
-        default: undefined
+        default: []
     },
     status: { type: String, default: ''},
     wishlist: {
