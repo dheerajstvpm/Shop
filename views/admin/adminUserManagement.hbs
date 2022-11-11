@@ -1,13 +1,13 @@
 <div class="container minHeight">
 
-    <div class="d-flex justify-content-between my-3">
+    <div class="d-flex justify-content-between my-3 border-bottom">
         <h1>User Management</h1>
         <form action="/admin/adminLogout" method="post">
             <button type="submit" class="btn btn-dark">Logout</button>
         </form>
     </div>
 
-    <form action="/admin/adminUserSearch" method="post" class="d-flex mb-3">
+    {{!-- <form action="/admin/adminUserSearch" method="post" class="d-flex mb-3">
         <div>
             <button type="submit" class="btn btn-dark me-1">Search</button>
         </div>
@@ -17,10 +17,10 @@
                     id="searchInput">
             </div>
         </div>
-    </form>
+    </form> --}}
 
-    <div class="d-flex mb-3">
-        <table class=" table">
+    <div class="d-flex flex-column mb-3">
+        <table class=" table" id="table_id">
             <thead>
                 <tr>
                     <th scope="col">Sl.</th>
@@ -52,4 +52,9 @@
             </tbody>
         </table>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable();
+        });
+    </script>
 </div>
