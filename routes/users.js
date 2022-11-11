@@ -168,6 +168,8 @@ router.get('/saveOrder', userController.saveOrder)
 
 router.get('/returnOrder/:id', userController.returnOrderGet)
 
+router.post('/coupon', userController.couponPost)
+
 router.get('/logout', userController.userlogout);
 
 module.exports = router;
