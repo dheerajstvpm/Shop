@@ -4,6 +4,7 @@ const User = require('../models/userModel')
 const Category = require('../models/categoryModel')
 const Homepage = require('../models/homepageModel')
 const Offer = require('../models/offerModel')
+const Coupon = require('../models/couponModel')
 const Product = require('../models/productModel')
 const Order = require('../models/orderModel')
 
@@ -46,8 +47,8 @@ const userHome = (req, res) => {
     session = req.session;
 
     // To be deleted
-    // session.userId = 'Amal';
-    // session.uid = '634c03053c0bba01e5275e4d';
+    session.userId = 'Amal';
+    session.uid = '634c03053c0bba01e5275e4d';
 
     Homepage.find({})
         .then((result) => {
@@ -1012,32 +1013,34 @@ const buyNowGet = (req, res) => {
                                                         }, 0);
                                                     };
                                                     total = sum(cartArray, 'offerPrice', 'count');
+                                                    beforeTotal = sum(cartArray, 'price', 'count');
                                                     // console.log(result)
                                                     //res.render('users/cart', { title: 'Shop.', loginName: session.userId, cartArray, total: total })
                                                 } catch (err) {
                                                     console.log(err)
                                                 }
+                                                const couponList = await Coupon.find({})
 
                                                 if (session.noValidOption) {
                                                     session.noValidOption = false;
-                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Please select a valid option" })
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, couponList, cartArray, total: total, beforeTotal: beforeTotal, msg: "Please select a valid option" })
                                                 } else if (session.noValidAddressError) {
                                                     session.noValidAddressError = false;
-                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Please enter a valid address." })
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, couponList, cartArray, total: total, beforeTotal: beforeTotal, msg: "Please enter a valid address." })
                                                 } else if (session.outOfStock) {
                                                     session.outOfStock = false;
-                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Some items in your cart went out of stock" })
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, couponList, cartArray, total: total, beforeTotal: beforeTotal, msg: "Some items in your cart went out of stock" })
                                                 } else if (session.addAddressError) {
                                                     session.addAddressError = false
                                                     const error1 = otpLoginErrors.errors.find(item => item.param === 'newAddress') || '';
                                                     console.log(error1.msg)
                                                     console.log("hello")
-                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total, msg: "Enter key not allowed in address field." })
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, couponList, cartArray, total: total, beforeTotal: beforeTotal, msg: "Enter key not allowed in address field." })
                                                     // res.render('users/buyNow', { title: 'Shop.', msg: error1.msg, loginName: session.userId, result, total: total })
                                                 } else {
                                                     console.log('hi')
-                                                    console.log(cartArray)
-                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, cartArray, total: total })
+                                                    console.log(couponList)
+                                                    res.render('users/buyNow', { title: 'Shop.', loginName: session.userId, result, couponList, cartArray, total: total, beforeTotal: beforeTotal })
                                                 }
                                             }
                                             f2()
@@ -1760,6 +1763,7 @@ const saveOrder = async function (req, res) {
         cartItem.orderStatus = 'Order is under process'
         stockId = cartItem._id
         cartItem.priceAfterOffer = orderAmountAfterOffer
+        cartItem.userId = session.userId
 
         // console.log(stockId)
         salesCount = cartItem.count
@@ -1777,7 +1781,8 @@ const saveOrder = async function (req, res) {
         // Update stock
         await Product.updateOne({ "_id": stockId }, { $inc: { "stock": removeCount, "sales": salesCount } })
 
-
+        // Update coupon
+        await Coupon.updateOne({ coupon: session.coupon }, { $push: { users: session.uid } })
 
         //----------------------------------------------------
     }
@@ -1885,6 +1890,65 @@ async function generateAccessToken() {
 }
 // -------------------------------------------
 
+const couponPost = async (req, res) => {
+    session = req.session;
+    console.log(req.body)
+    
+    if (session.userId) {
+        if (req.body.coupon && req.body.coupon!='Select a coupon') {
+            session.coupon = req.body.coupon
+            console.log(req.body.coupon)
+            const result = await Coupon.findOne({ coupon: req.body.coupon })
+            console.log(result)
+            const users = result.users;
+            const today = new Date();
+            console.log(users)
+            console.log(today)
+            if (result.expiry < today) {
+                console.log("couponExpired")
+                const response = { id: "couponExpired" }
+                res.json(response)
+            }
+            if(users){
+                let n = 0;
+                for (let user of users) {
+                    if (user == session.uid) {
+                        n++
+                        break;
+                    }
+                }
+                if (n > 0) {
+                    console.log("couponAlready")
+                    const response = { id: "couponAlready" }
+                    res.json(response)
+                } else {
+                    if (req.body.amountBefore < result.minOrder) {
+                        console.log("notApplicable")
+                        const response = { id: "notApplicable" }
+                        res.json(response)
+                    } else {
+                        console.log(result.reduction)
+                        const response = { id: result.reduction }
+                        res.json(response)
+                    }
+                }
+            }else{
+                console.log(result.reduction)
+                const response = { id: result.reduction }
+                res.json(response)
+            }
+        }
+        else {
+            console.log(req.body.coupon)
+            const response = { id: 0 }
+            res.json(response)
+        }
+    } else {
+        const response = { id: "noLogin" }
+        res.json(response)
+    }
+}
+
 
 const userlogout = function (req, res) {
     session = req.session
@@ -1944,5 +2008,6 @@ module.exports = {
     paymentPaypal,
     verifyPaymentPaypal,
     returnOrderGet,
-    addToCartFromProductPage
+    addToCartFromProductPage,
+    couponPost
 }
