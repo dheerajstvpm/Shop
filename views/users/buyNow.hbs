@@ -1,7 +1,7 @@
 <div class="container minHeight">
 
     <div class="d-flex justify-content-end border-bottom my-3">
-        
+
         <h1>Order summary</h1>
     </div>
     {{#if cartEmpty}}
@@ -161,13 +161,19 @@
 
             } else if (couponAmt.id == "couponAlready") {
                 document.getElementById("afterCoupon").innerHTML = "Coupon already availed";
-
+                reduction = 0;
+                const savings = beforeOffer - amountBefore + reduction
+                document.getElementById("savings").innerHTML = `Total Savings : &#x20B9;${savings}`;
             } else if (couponAmt.id == "couponExpired") {
                 document.getElementById("afterCoupon").innerHTML = "Coupon expired";
-
+                reduction = 0;
+                const savings = beforeOffer - amountBefore + reduction
+                document.getElementById("savings").innerHTML = `Total Savings : &#x20B9;${savings}`;
             } else if (couponAmt.id == "notApplicable") {
                 document.getElementById("afterCoupon").innerHTML = "Coupon not applicable";
-
+                reduction = 0;
+                const savings = beforeOffer - amountBefore + reduction
+                document.getElementById("savings").innerHTML = `Total Savings : &#x20B9;${savings}`;
             } else {
                 reduction = couponAmt.id;
                 console.log(reduction)
