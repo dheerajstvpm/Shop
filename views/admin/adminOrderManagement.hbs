@@ -33,16 +33,16 @@
                     <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
                             style="width: 5rem; height: 5rem; object-fit: contain;">
                     </td>
-                    <td class="text-center"><br>{{this.productName}}</td>
-                    <td class="text-center"><br>&#x20B9;{{multiply this.count this.price}}</td>
+                    <td class="text-center">{{this.productName}}</td>
+                    <td class="text-center">&#x20B9;{{multiply this.count this.price}}</td>
                     {{!-- <td class="text-center">{{this.count}}</td>
                     <td class="text-center">{{multiply this.price this.count}}</td> --}}
-                    <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
+                    <td class="text-center">Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
                     {{#if cancelBtn}}
-                    <td class="text-center"><br><a href="/admin/adminOrderCancel/{{this.unique}}"
+                    <td class="text-center"><a href="/admin/adminOrderCancel/{{this.unique}}"
                             class="btn btn-dark">Cancel</a></td>
                     {{else}}
-                    <td class="text-center"><br><a href="/admin/adminOrderCancel/{{this.unique}}"
+                    <td class="text-center"><a href="/admin/adminOrderCancel/{{this.unique}}"
                             class="btn btn-dark disabled">Cancel</a></td>
                     {{/if}}
 
