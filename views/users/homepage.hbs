@@ -46,143 +46,331 @@
         </button>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-5">
 
-        <div class="col mt-5">
-            <div class="shadow-lg card" style="width: 15rem; height: 22rem">
-                <a href="/product/{{firstRow1._id}}"><img src="/images/image1{{firstRow1._id}}.jpg"
-                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
-                        alt="cycle"></a>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title">{{firstRow1.productName}}</h5>
-                        <p>&#x20B9;{{firstRow1.price}}</p>
+
+    <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
+                type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Home</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
+                type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Dutch cycles</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane"
+                type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Fixie</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id=“another-tab" data-bs-toggle="tab" data-bs-target="#another-tab-pane"
+                type="button" role="tab" aria-controls="another-tab-pane" aria-selected="false">Belt drive</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+            tabindex="0">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-5">
+
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{firstRow1._id}}"><img src="/images/image1{{firstRow1._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{firstRow1.productName}}</h5>
+                                <p>&#x20B9;{{firstRow1.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{firstRow1.description}}</p>
+                            {{!-- <a href="/addToCart/{{firstRow1._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{firstRow1._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
                     </div>
-                    <p class="card-title text-truncate">{{firstRow1.description}}</p>
-                    {{!-- <a href="/addToCart/{{firstRow1._id}}" class="shadow btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{firstRow1._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                </div>
+
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{firstRow2._id}}"><img src="/images/image1{{firstRow2._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{firstRow2.productName}}</h5>
+                                <p>&#x20B9;{{firstRow2.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{firstRow2.description}}</p>
+                            {{!-- <a href="/addToCart/{{firstRow2._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{firstRow2._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{firstRow3._id}}"><img src="/images/image1{{firstRow3._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{firstRow3.productName}}</h5>
+                                <p>&#x20B9;{{firstRow3.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{firstRow3.description}}</p>
+                            {{!-- <a href="/addToCart/{{firstRow3._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{firstRow3._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{firstRow4._id}}"><img src="/images/image1{{firstRow4._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{firstRow4.productName}}</h5>
+                                <p>&#x20B9;{{firstRow4.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{firstRow4.description}}</p>
+                            {{!-- <a href="/addToCart/{{firstRow4._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{firstRow4._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-5">
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{lastRow1._id}}"><img src="/images/image1{{lastRow1._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{lastRow1.productName}}</h5>
+                                <p>&#x20B9;{{lastRow1.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{lastRow1.description}}</p>
+                            {{!-- <a href="/addToCart/{{lastRow1._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{lastRow1._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{lastRow2._id}}"><img src="/images/image1{{lastRow2._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{lastRow2.productName}}</h5>
+                                <p>&#x20B9;{{lastRow2.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{lastRow2.description}}</p>
+                            {{!-- <a href="/addToCart/{{lastRow2._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{lastRow2._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{lastRow3._id}}"><img src="/images/image1{{lastRow3._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{lastRow3.productName}}</h5>
+                                <p>&#x20B9;{{lastRow3.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{lastRow3.description}}</p>
+                            {{!-- <a href="/addToCart/{{lastRow3._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{lastRow3._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col my-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{lastRow4._id}}"><img src="/images/image1{{lastRow4._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{lastRow4.productName}}</h5>
+                                <p>&#x20B9;{{lastRow4.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{lastRow4.description}}</p>
+                            {{!-- <a href="/addToCart/{{lastRow4._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{lastRow4._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-5">
 
-        <div class="col mt-5">
-            <div class="shadow-lg card" style="width: 15rem; height: 22rem">
-                <a href="/product/{{firstRow2._id}}"><img src="/images/image1{{firstRow2._id}}.jpg"
-                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
-                        alt="cycle"></a>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title">{{firstRow2.productName}}</h5>
-                        <p>&#x20B9;{{firstRow2.price}}</p>
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{firstRow1._id}}"><img src="/images/image1{{firstRow1._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{firstRow1.productName}}</h5>
+                                <p>&#x20B9;{{firstRow1.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{firstRow1.description}}</p>
+                            {{!-- <a href="/addToCart/{{firstRow1._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{firstRow1._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
                     </div>
-                    <p class="card-title text-truncate">{{firstRow2.description}}</p>
-                    {{!-- <a href="/addToCart/{{firstRow2._id}}" class="shadow btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{firstRow2._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                </div>
+
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{firstRow2._id}}"><img src="/images/image1{{firstRow2._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{firstRow2.productName}}</h5>
+                                <p>&#x20B9;{{firstRow2.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{firstRow2.description}}</p>
+                            {{!-- <a href="/addToCart/{{firstRow2._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{firstRow2._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{firstRow3._id}}"><img src="/images/image1{{firstRow3._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{firstRow3.productName}}</h5>
+                                <p>&#x20B9;{{firstRow3.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{firstRow3.description}}</p>
+                            {{!-- <a href="/addToCart/{{firstRow3._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{firstRow3._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{firstRow4._id}}"><img src="/images/image1{{firstRow4._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{firstRow4.productName}}</h5>
+                                <p>&#x20B9;{{firstRow4.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{firstRow4.description}}</p>
+                            {{!-- <a href="/addToCart/{{firstRow4._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{firstRow4._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-5">
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{lastRow1._id}}"><img src="/images/image1{{lastRow1._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{lastRow1.productName}}</h5>
+                                <p>&#x20B9;{{lastRow1.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{lastRow1.description}}</p>
+                            {{!-- <a href="/addToCart/{{lastRow1._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{lastRow1._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{lastRow2._id}}"><img src="/images/image1{{lastRow2._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{lastRow2.productName}}</h5>
+                                <p>&#x20B9;{{lastRow2.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{lastRow2.description}}</p>
+                            {{!-- <a href="/addToCart/{{lastRow2._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{lastRow2._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="col mt-5">
-            <div class="shadow-lg card" style="width: 15rem; height: 22rem">
-                <a href="/product/{{firstRow3._id}}"><img src="/images/image1{{firstRow3._id}}.jpg"
-                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
-                        alt="cycle"></a>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title">{{firstRow3.productName}}</h5>
-                        <p>&#x20B9;{{firstRow3.price}}</p>
+        <div class="tab-pane fade" id="another-tab-pane" role="tabpanel" aria-labelledby="another-tab" tabindex="0">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-5">
+                <div class="col mt-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{lastRow3._id}}"><img src="/images/image1{{lastRow3._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{lastRow3.productName}}</h5>
+                                <p>&#x20B9;{{lastRow3.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{lastRow3.description}}</p>
+                            {{!-- <a href="/addToCart/{{lastRow3._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{lastRow3._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
                     </div>
-                    <p class="card-title text-truncate">{{firstRow3.description}}</p>
-                    {{!-- <a href="/addToCart/{{firstRow3._id}}" class="shadow btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{firstRow3._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
                 </div>
-            </div>
-        </div>
 
-        <div class="col mt-5">
-            <div class="shadow-lg card" style="width: 15rem; height: 22rem">
-                <a href="/product/{{firstRow4._id}}"><img src="/images/image1{{firstRow4._id}}.jpg"
-                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
-                        alt="cycle"></a>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title">{{firstRow4.productName}}</h5>
-                        <p>&#x20B9;{{firstRow4.price}}</p>
+                <div class="col my-5">
+                    <div class="shadow-lg card" style="width: 15rem; height: 22rem">
+                        <a href="/product/{{lastRow4._id}}"><img src="/images/image1{{lastRow4._id}}.jpg"
+                                style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
+                                alt="cycle"></a>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">{{lastRow4.productName}}</h5>
+                                <p>&#x20B9;{{lastRow4.price}}</p>
+                            </div>
+                            <p class="card-title text-truncate">{{lastRow4.description}}</p>
+                            {{!-- <a href="/addToCart/{{lastRow4._id}}" class="shadow btn btn-outline-dark">Add to
+                                cart</a>
+                            <a href="/addToWishlist/{{lastRow4._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
+                        </div>
                     </div>
-                    <p class="card-title text-truncate">{{firstRow4.description}}</p>
-                    {{!-- <a href="/addToCart/{{firstRow4._id}}" class="shadow btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{firstRow4._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-5">
-        <div class="col mt-5">
-            <div class="shadow-lg card" style="width: 15rem; height: 22rem">
-                <a href="/product/{{lastRow1._id}}"><img src="/images/image1{{lastRow1._id}}.jpg"
-                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
-                        alt="cycle"></a>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title">{{lastRow1.productName}}</h5>
-                        <p>&#x20B9;{{lastRow1.price}}</p>
-                    </div>
-                    <p class="card-title text-truncate">{{lastRow1.description}}</p>
-                    {{!-- <a href="/addToCart/{{lastRow1._id}}" class="shadow btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{lastRow1._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
-                </div>
-            </div>
-        </div>
-
-        <div class="col mt-5">
-            <div class="shadow-lg card" style="width: 15rem; height: 22rem">
-                <a href="/product/{{lastRow2._id}}"><img src="/images/image1{{lastRow2._id}}.jpg"
-                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
-                        alt="cycle"></a>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title">{{lastRow2.productName}}</h5>
-                        <p>&#x20B9;{{lastRow2.price}}</p>
-                    </div>
-                    <p class="card-title text-truncate">{{lastRow2.description}}</p>
-                    {{!-- <a href="/addToCart/{{lastRow2._id}}" class="shadow btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{lastRow2._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
-                </div>
-            </div>
-        </div>
-
-        <div class="col mt-5">
-            <div class="shadow-lg card" style="width: 15rem; height: 22rem">
-                <a href="/product/{{lastRow3._id}}"><img src="/images/image1{{lastRow3._id}}.jpg"
-                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
-                        alt="cycle"></a>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title">{{lastRow3.productName}}</h5>
-                        <p>&#x20B9;{{lastRow3.price}}</p>
-                    </div>
-                    <p class="card-title text-truncate">{{lastRow3.description}}</p>
-                    {{!-- <a href="/addToCart/{{lastRow3._id}}" class="shadow btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{lastRow3._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
-                </div>
-            </div>
-        </div>
-
-        <div class="col my-5">
-            <div class="shadow-lg card" style="width: 15rem; height: 22rem">
-                <a href="/product/{{lastRow4._id}}"><img src="/images/image1{{lastRow4._id}}.jpg"
-                        style="width: 14.9rem; height: 15rem; object-fit: contain;" class=" card-img-top"
-                        alt="cycle"></a>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title">{{lastRow4.productName}}</h5>
-                        <p>&#x20B9;{{lastRow4.price}}</p>
-                    </div>
-                    <p class="card-title text-truncate">{{lastRow4.description}}</p>
-                    {{!-- <a href="/addToCart/{{lastRow4._id}}" class="shadow btn btn-outline-dark">Add to cart</a>
-                    <a href="/addToWishlist/{{lastRow4._id}}" class="shadow btn btn-dark">Wishlist</a> --}}
                 </div>
             </div>
         </div>
