@@ -70,13 +70,13 @@
                     <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
                             style="width: 5rem; height: 5rem; object-fit: contain;">
                     </td>
-                    <td class="text-center"><br>{{this.productName}}</td>
-                    <td class="text-center"><br>&#x20B9;{{this.price}}</td>
+                    <td class="text-center">{{this.productName}}</td>
+                    <td class="text-center">&#x20B9;{{this.price}}</td>
                     {{!-- <td class="text-center">{{this.count}}</td>
                     <td class="text-center">{{multiply this.price this.count}}</td> --}}
-                    <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
+                    <td class="text-center">Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
                     <form action="/admin/adminAllOrderUpdate/{{this.unique}}" method="post">
-                        <td class="text-center"><br>
+                        <td class="text-center">
                             {{#if returned}}
                             <select name="status" id="status" disabled>
                                 <option selected disabled>Select status</option>
@@ -93,7 +93,7 @@
                             </select>
                             {{/if}}
                         </td>
-                        <td class="text-center"><br><button type="submit" class="btn btn-dark">Update</button>
+                        <td class="text-center"><button type="submit" class="btn btn-dark">Update</button>
                         </td>
                     </form>
                 </tr>
