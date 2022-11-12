@@ -1880,10 +1880,10 @@ async function generateAccessToken() {
 const couponPost = async (req, res) => {
     session = req.session;
     console.log(req.body)
-    
+
     if (session.userId) {
-        if (req.body.coupon && req.body.coupon!='Select a coupon') {
-            session.coupon = req.body.coupon
+        if (req.body.coupon && req.body.coupon != 'Select a coupon') {
+
             console.log(req.body.coupon)
             const result = await Coupon.findOne({ coupon: req.body.coupon })
             console.log(result)
@@ -1895,8 +1895,7 @@ const couponPost = async (req, res) => {
                 console.log("couponExpired")
                 const response = { id: "couponExpired" }
                 res.json(response)
-            }
-            if(users){
+            } else if (users && users.length > 0) {
                 let n = 0;
                 for (let user of users) {
                     if (user == session.uid) {
@@ -1914,15 +1913,23 @@ const couponPost = async (req, res) => {
                         const response = { id: "notApplicable" }
                         res.json(response)
                     } else {
+                        session.coupon = req.body.coupon
                         console.log(result.reduction)
                         const response = { id: result.reduction }
                         res.json(response)
                     }
                 }
-            }else{
-                console.log(result.reduction)
-                const response = { id: result.reduction }
-                res.json(response)
+            } else {
+                if (req.body.amountBefore < result.minOrder) {
+                    console.log("notApplicable")
+                    const response = { id: "notApplicable" }
+                    res.json(response)
+                } else {
+                    session.coupon = req.body.coupon
+                    console.log(result.reduction)
+                    const response = { id: result.reduction }
+                    res.json(response)
+                }
             }
         }
         else {
