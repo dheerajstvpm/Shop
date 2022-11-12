@@ -87,6 +87,11 @@ const product = async (req, res) => {
     }
     catch (err) {
         console.log(err)
+        if (session.userId) {
+            res.render('error', { title: 'Shop.', loginName: session.userId })
+        } else {
+            res.render('error', { title: 'Shop.'})
+        }
     }
 }
 
