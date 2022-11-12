@@ -21,16 +21,16 @@
             </thead>
             <tbody class="table-group-divider">
                 {{#each orders}}
-                <tr>
-                    <th scope="row" class="text-center"><br>{{addOne @index}}.</th>
+                <tr class="align-items-center">
+                    <th scope="row" class="text-center">{{addOne @index}}.</th>
                     
-                    <td class="text-center"><br>{{this.productName}}</td>
-                    <td class="text-center"><br>{{this.count}}</td>
+                    <td class="text-center">{{this.productName}}</td>
+                    <td class="text-center">{{this.count}}</td>
                     {{!-- <td class="text-center"><br>&#x20B9;{{multiply this.count this.price}}</td> --}}
-                    <td class="text-center"><br>{{this.userId}}<br>{{this.address}}</td>
-                    <td class="text-center"><br>Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
+                    <td class="text-center">{{this.userId}}<br>{{this.address}}</td>
+                    <td class="text-center">Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
                     <form action="/admin/adminAllOrderUpdate/{{this.unique}}" method="post">
-                        <td class="text-center"><br>
+                        <td class="text-center">
                             {{#if updateBtn}}
                             <select name="status" id="status">
                                 <option selected disabled>Select status</option>
@@ -48,9 +48,9 @@
                             {{/if}}
                         </td>
                         {{#if updateBtn}}
-                        <td class="text-center"><br><button type="submit" class="btn btn-dark">Update</button>
+                        <td class="text-center"><button type="submit" class="btn btn-dark">Update</button>
                         {{else}}
-                        <td class="text-center"><br><button type="submit" class="btn btn-dark disabled">Update</button>
+                        <td class="text-center"><button type="submit" class="btn btn-dark disabled">Update</button>
                         {{/if}}
                         </td>
                     </form>
