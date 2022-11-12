@@ -15,7 +15,7 @@ const hbs = require('express-handlebars')
 const adminRouter = require('./routes/admin');
 const usersRouter = require('./routes/users')
 
-const fileUpload=require('express-fileupload')
+const fileUpload = require('express-fileupload')
 
 //env
 require('dotenv').config()
@@ -27,7 +27,7 @@ require('dotenv').config()
 //express app
 const app = express();
 
- //moment js app
+//moment js app
 var moment = require('moment'); // require
 // moment().format(); 
 
@@ -36,7 +36,7 @@ var moment = require('moment'); // require
 
 mongoose.connect(process.env.dbURI)
   .then(() => {
-    
+
     //listening for requests
     app.listen(3000);
     console.log('connected to db')
@@ -44,7 +44,7 @@ mongoose.connect(process.env.dbURI)
   .catch((err) => console.log(err))
 
 //fileupload
-app.use (fileUpload());
+app.use(fileUpload());
 
 
 // view engine setup
@@ -99,5 +99,9 @@ app.use('/admin', adminRouter)
 
 //404 page
 app.use((req, res) => {
-  res.status(404).render('error')
+  if (session.userId) {
+    res.status(404).render('error', { title: 'Shop.',loginName: session.userId })
+  } else {
+    res.status(404).render('error', { title: 'Shop.'})
+  }
 })
