@@ -48,13 +48,13 @@ const userHome = (req, res) => {
     Homepage.find({})
         .then((result) => {
             // console.log(result)
-            async function f() {
-                const userDetails = await User.findById({ _id: session.uid })
-                session.cartCount = userDetails.cart.length
-                session.wishlistCount = userDetails.wishlist.length
-            }
-            f();
             if (session.userId) {
+                async function f() {
+                    const userDetails = await User.findOne({ _id: session.uid })
+                    session.cartCount = userDetails.cart.length
+                    session.wishlistCount = userDetails.wishlist.length
+                }
+                f();
                 res.render('users/homepage', { title: 'Shop.', loginName: session.userId, cartCount: session.cartCount, wishlistCount: session.wishlistCount, cartCount: session.cartCount, wishlistCount: session.wishlistCount, result })
             } else {
                 res.render('users/homepage', { title: 'Shop.', result })
@@ -75,15 +75,16 @@ const product = async (req, res) => {
         try {
             const out = await Offer.findOne({ offerName: result.offer })
 
-            const userDetails = await User.findById({ _id: session.uid })
-            session.cartCount = userDetails.cart.length
-            session.wishlistCount = userDetails.wishlist.length
+
 
             const discount = out.discount * result.price / 100
             const offerPrice = result.price - discount
             if (session.userId) {
                 console.log(result)
                 console.log(session.cartCount)
+                const userDetails = await User.findOne({ _id: session.uid })
+                session.cartCount = userDetails.cart.length
+                session.wishlistCount = userDetails.wishlist.length
 
                 res.render('users/product', { title: 'Shop.', loginName: session.userId, cartCount: session.cartCount, wishlistCount: session.wishlistCount, offerPrice: offerPrice, result })
             } else {
@@ -340,7 +341,7 @@ const userCartGet = async (req, res) => {
     if (session.userId) {
         console.log(session.uid)
         try {
-            const result = await User.findById({ _id: session.uid })
+            const result = await User.findOne({ _id: session.uid })
             session.cartCount = result.cart.length
             session.wishlistCount = result.wishlist.length
             //-------------------------
@@ -507,7 +508,7 @@ const addToCartGet = (req, res) => {
                             if (n > 0) {
                                 //------------------------------
                                 try {
-                                    const result = await User.findById({ _id: session.uid })
+                                    const result = await User.findOne({ _id: session.uid })
                                     session.cartCount = result.cart.length
                                     session.wishlistCount = result.wishlist.length
                                     //-------------------------
@@ -638,7 +639,7 @@ const removeFromCart = async (req, res) => {
             if (n > 0) {
                 //------------------------------
                 try {
-                    const result = await User.findById({ _id: session.uid })
+                    const result = await User.findOne({ _id: session.uid })
                     session.cartCount = result.cart.length
                     session.wishlistCount = result.wishlist.length
                     //-------------------------
@@ -1034,7 +1035,7 @@ const buyNowGet = (req, res) => {
                                                 let cartArray = []
                                                 let total
                                                 try {
-                                                    const result = await User.findById({ _id: session.uid })
+                                                    const result = await User.findOne({ _id: session.uid })
                                                     session.cartCount = result.cart.length
                                                     session.wishlistCount = result.wishlist.length
                                                     //-------------------------
@@ -1242,12 +1243,7 @@ const buyNowPost = async (req, res) => {
 
 const orderGet = (req, res) => {
     session = req.session;
-    async function f() {
-        const userDetails = await User.findById({ _id: session.uid })
-        session.cartCount = userDetails.cart.length
-        session.wishlistCount = userDetails.wishlist.length
-    }
-    f();
+
     if (session.userId) {
         User.findOne({ _id: session.uid })
             .then((result) => {
@@ -1259,6 +1255,9 @@ const orderGet = (req, res) => {
                 const total = sum(result.order, 'price', 'count');
                 // console.log(result)
                 result = result.order.reverse()
+
+                session.cartCount = result.cart.length
+                session.wishlistCount = result.wishlist.length
 
                 res.render('./users/order', { title: 'Shop.', loginName: session.userId, cartCount: session.cartCount, wishlistCount: session.wishlistCount, result, total: total })
             })
@@ -1836,7 +1835,7 @@ const saveOrder = async function (req, res) {
         // Empty cart
         await User.findOneAndUpdate({ _id: session.uid }, { $set: { cart: [] } })
 
-        const userDetails = await User.findById({ _id: session.uid })
+        const userDetails = await User.findOne({ _id: session.uid })
         session.cartCount = userDetails.cart.length
         session.wishlistCount = userDetails.wishlist.length
 
