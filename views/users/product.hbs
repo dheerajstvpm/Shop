@@ -54,27 +54,6 @@
                 </div>
             </div>
         </div>
-        {{!-- <div class="col zoomEffect d-flex justify-content between">
-            <img src="/images/image1{{_id}}.jpg" alt="Cycle" id="productImg1" class="productImg border"
-                style="width :500px; height: 400px">
-            <div class="zoom  border" style="display:none;">
-                <img src="/images/image1{{_id}}.jpg" class="border" alt="Cycle">
-            </div>
-        </div> --}}
-        {{!-- <div class="col zoomEffect d-flex justify-content between">
-            <img src="/images/image2{{_id}}.jpg" alt="Cycle" class="productImg border"
-                style="width :500px; height: 400px">
-            <div class="zoom  border" style="display:none;">
-                <img src="/images/image2{{_id}}.jpg" alt="Cycle">
-            </div>
-        </div>
-        <div class="col zoomEffect d-flex justify-content between">
-            <img src="/images/image3{{_id}}.jpg" alt="Cycle" class="productImg border"
-                style="width :500px; height: 400px">
-            <div class="zoom  border" style="display:none;">
-                <img src="/images/image3{{_id}}.jpg" alt="Cycle">
-            </div>
-        </div> --}}
 
         <div class="col ms-5 priceAndCart" style="max-width :500px;">
             <div class="row my-5">
@@ -86,8 +65,14 @@
             </div>
             <div class="row">
                 {{#if result.stock}}
-                <div class="col"><a href="/addToCartFromProductPage/{{result._id}}" class="shadow btn btn-outline-dark mb-5"
-                        style="width:120px ;">Add to cart</a></div>
+                <div class="col"><a href="/addToCartFromProductPage/{{result._id}}"
+                        class="shadow btn btn-outline-dark mb-5" style="width:120px ;" onclick="Swal.fire({
+  position: 'top-center',
+  icon: 'success',
+  title: 'Item added to cart!',
+  showConfirmButton: false,
+  timer: 1500
+})">Add to cart</a></div>
                 <div class="col"><a href="/buyNowToCart/{{result._id}}" class="shadow btn btn-outline-dark mb-5"
                         style="width:120px ;">Buy now</a></div>
                 {{else}}
@@ -97,7 +82,13 @@
             </div>
             <div class="row mb-5">
                 <div class="col"><a href="/addToWishlist/{{result._id}}" class="shadow btn btn-outline-dark"
-                        style="width:120px ;">Wishlist</a></div>
+                        style="width:120px ;" onclick="Swal.fire({
+  position: 'top-center',
+  icon: 'success',
+  title: 'Item added to wishlist!',
+  showConfirmButton: false,
+  timer: 1500
+})">Wishlist</a></div>
             </div>
         </div>
     </div>

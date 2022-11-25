@@ -220,6 +220,13 @@
         console.log(order)
 
         if (order.success) {
+            Swal.fire({
+                position: 'top-center',
+                icon: 'success',
+                title: 'Order placed',
+                showConfirmButton: false,
+                timer: 1500
+            })
             window.location.href = "/order";
         } else if (order.id === 'noValidOption') {
             window.location.href = "/buyNow";
@@ -270,6 +277,13 @@
 
                                     console.log(saveRes + "saveRes")
                                     if (saveRes) {
+                                        Swal.fire({
+                                            position: 'top-center',
+                                            icon: 'success',
+                                            title: 'Order placed',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
                                         window.location.href = "/order";
                                     }
                                 }
@@ -311,6 +325,13 @@
 
                         console.log(saveRes + "saveRes")
                         if (saveRes) {
+                            Swal.fire({
+                                position: 'top-center',
+                                icon: 'success',
+                                title: 'Order placed',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
                             window.location.href = "/order";
                         }
                     }

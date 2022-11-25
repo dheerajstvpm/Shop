@@ -13,12 +13,26 @@
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     {{#if loginName}}
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/cart/"><button class="dropdown-item"
-                                type="button">Cart</button></a>
+                        <a class="nav-link" aria-current="page" href="/cart/"><button
+                                class="dropdown-item position-relative" type="button">Cart
+                                {{#if cartCount}}
+                                <span
+                                    class="position-absolute top-100 start-0 mt-1 translate-middle badge rounded-pill text-primary border">
+                                    {{cartCount}}
+                                </span>   
+                                {{/if}}                             
+                            </button></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/wishlist/"><button class="dropdown-item"
-                                type="button">Wishlist</button></a>
+                        <a class="nav-link" href="/wishlist/"><button class="dropdown-item position-relative"
+                                type="button">Wishlist
+                                {{#if wishlistCount}}
+                                <span
+                                    class="position-absolute top-100 start-0 mt-1 translate-middle badge rounded-pill text-primary border">
+                                    {{wishlistCount}}
+                                </span>
+                                {{/if}}
+                            </button></a>
                     </li>
                     <li class="nav-item dropdown">
 
