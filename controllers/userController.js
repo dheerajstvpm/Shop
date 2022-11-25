@@ -1247,6 +1247,8 @@ const orderGet = (req, res) => {
     if (session.userId) {
         User.findOne({ _id: session.uid })
             .then((result) => {
+                session.cartCount = result.cart.length
+                session.wishlistCount = result.wishlist.length
                 const sum = function (items, prop1, prop2) {
                     return items.reduce(function (a, b) {
                         return parseInt(a) + (parseInt(b[prop1]) * parseInt(b[prop2]));
@@ -1255,9 +1257,6 @@ const orderGet = (req, res) => {
                 const total = sum(result.order, 'price', 'count');
                 // console.log(result)
                 result = result.order.reverse()
-
-                session.cartCount = result.cart.length
-                session.wishlistCount = result.wishlist.length
 
                 res.render('./users/order', { title: 'Shop.', loginName: session.userId, cartCount: session.cartCount, wishlistCount: session.wishlistCount, result, total: total })
             })
