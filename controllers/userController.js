@@ -188,6 +188,7 @@ const userLoginGet = (req, res) => {
 
 const userLoginPost = function (req, res) {
     let temp;
+
     User.findOne({ username: req.body.username.toLowerCase() })
         .then((result) => {
             // temp = result.find(item => item.username)
@@ -205,6 +206,7 @@ const userLoginPost = function (req, res) {
                         console.log(session.uid)
                         console.log(typeof session.uid)
                         session.userStatus = result.status;
+                        console.log('Time : '+new Date());
                         res.redirect('/login');
                     } else {
                         session = req.session
