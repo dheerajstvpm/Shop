@@ -95,7 +95,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", usersRouter);
 app.use("/healthCheck", (req,res)=>[
-  res.status(200).send({ status: "Invalid route" })
+  res.status(200).send({ status: "Success" })
 ]);
 app.use("/admin", adminRouter);
 
