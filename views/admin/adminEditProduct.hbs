@@ -1,122 +1,164 @@
 <div class="container minHeight">
-    <div class="d-flex justify-content-between my-3">
-        <h1 class="mt-5">Edit Product {{productResult.productName}}</h1>
+  <div class="d-flex justify-content-between my-3">
+    <h1 class="mt-5">Edit Product {{productResult.productName}}</h1>
+  </div>
+
+  <form
+    action="/admin/editProduct/{{productResult._id}}"
+    method="post"
+    enctype="multipart/form-data"
+  >
+
+    <div class="row mb-3">
+      <label for="data" class="col-md-2 col-form-label">Current description :
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{productResult.description}}</p>
+      </div>
+      <label for="newDescription" class="col-md-2 col-form-label">New
+        description</label>
+      <div class="col-md-3">
+        <textarea
+          type="text"
+          id="newDescription"
+          class="form-control"
+          name="newDescription"
+        ></textarea>
+      </div>
     </div>
 
+    <div class="row my-3">
+      <label for="price" class="col-md-2 col-form-label">Current Price :
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{productResult.price}}</p>
+      </div>
 
-    <form action="/admin/editProduct/{{productResult._id}}" method="post" enctype="multipart/form-data">
+      <label for="newPrice" class="col-md-2 col-form-label">New Price:</label>
+      <div class="col-md-3">
+        <input type="text" name="newPrice" class="form-control" id="newPrice" />
+      </div>
+    </div>
 
-        <div class="row mb-3">
-            <label for="data" class="col-md-2 col-form-label">Current description : </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{productResult.description}}</p>
-            </div>
-            <label for="newDescription" class="col-md-2 col-form-label">New description</label>
-            <div class="col-md-3">
-                <textarea type="text" id="newDescription" class="form-control" name="newDescription"></textarea>
-            </div>
-        </div>
+    <div class="row my-3">
+      <label for="stock" class="col-md-2 col-form-label">Current Stock :
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{productResult.stock}}</p>
+      </div>
 
-        <div class="row my-3">
-            <label for="price" class="col-md-2 col-form-label">Current Price : </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{productResult.price}}</p>
-            </div>
+      <label for="newStock" class="col-md-2 col-form-label">New Stock:</label>
+      <div class="col-md-3">
+        <input type="text" name="newStock" class="form-control" id="newStock" />
+      </div>
+    </div>
 
-            <label for="newPrice" class="col-md-2 col-form-label">New Price:</label>
-            <div class="col-md-3">
-                <input type="text" name="newPrice" class="form-control" id="newPrice">
-            </div>
-        </div>
+    <div class="row my-3">
+      <label for="image1" class="col-md-2 col-form-label">Current Image 1:
+      </label>
+      <div class="col-md-3">
+        <img
+          src="/images/image1{{productResult._id}}.jpg"
+          alt="Cycle"
+          class="productImg border"
+          style="width: 5rem; height: 5rem; object-fit: contain;"
+        />
+      </div>
 
-        <div class="row my-3">
-            <label for="stock" class="col-md-2 col-form-label">Current Stock : </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{productResult.stock}}</p>
-            </div>
+      <label for="newImage1" class="col-md-2 col-form-label">New Image 1:</label>
+      <div class="col-md-3">
+        <input
+          type="file"
+          name="newImage1"
+          class="form-control"
+          id="newImage1"
+        />
+      </div>
+    </div>
 
-            <label for="newStock" class="col-md-2 col-form-label">New Stock:</label>
-            <div class="col-md-3">
-                <input type="text" name="newStock" class="form-control" id="newStock">
-            </div>
-        </div>
+    <div class="row my-3">
+      <label for="image2" class="col-md-2 col-form-label">Current Image 2:
+      </label>
+      <div class="col-md-3">
+        <img
+          src="/images/image2{{productResult._id}}.jpg"
+          alt="Cycle"
+          class="productImg border"
+          style="width: 5rem; height: 5rem; object-fit: contain;"
+        />
+      </div>
 
-        <div class="row my-3">
-            <label for="image1" class="col-md-2 col-form-label">Current Image 1: </label>
-            <div class="col-md-3">
-                <img src="/images/image1{{productResult._id}}.jpg" alt="Cycle" class="productImg border"
-                    style="width: 5rem; height: 5rem; object-fit: contain;">
-            </div>
+      <label for="newImage2" class="col-md-2 col-form-label">New Image 2:</label>
+      <div class="col-md-3">
+        <input
+          type="file"
+          name="newImage2"
+          class="form-control"
+          id="newImage2"
+        />
+      </div>
+    </div>
 
-            <label for="newImage1" class="col-md-2 col-form-label">New Image 1:</label>
-            <div class="col-md-3">
-                <input type="file" name="newImage1" class="form-control" id="newImage1">
-            </div>
-        </div>
+    <div class="row my-3">
+      <label for="image3" class="col-md-2 col-form-label">Current Image 3:
+      </label>
+      <div class="col-md-3">
+        <img
+          src="/images/image3{{productResult._id}}.jpg"
+          alt="Cycle"
+          class="productImg border"
+          style="width: 5rem; height: 5rem; object-fit: contain;"
+        />
+      </div>
 
-        <div class="row my-3">
-            <label for="image2" class="col-md-2 col-form-label">Current Image 2: </label>
-            <div class="col-md-3">
-                <img src="/images/image2{{productResult._id}}.jpg" alt="Cycle" class="productImg border"
-                    style="width: 5rem; height: 5rem; object-fit: contain;">
-            </div>
+      <label for="newImage3" class="col-md-2 col-form-label">New Image 3:</label>
+      <div class="col-md-3">
+        <input
+          type="file"
+          name="newImage3"
+          class="form-control"
+          id="newImage3"
+        />
+      </div>
+    </div>
 
+    <div class="row my-3">
+      <label for="category" class="col-md-2 col-form-label">Current Category :
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{productResult.category}}</p>
+      </div>
 
-            <label for="newImage2" class="col-md-2 col-form-label">New Image 2:</label>
-            <div class="col-md-3">
-                <input type="file" name="newImage2" class="form-control" id="newImage2">
-            </div>
-        </div>
+      <label for="newCategory" class="col-md-2 col-form-label">New Category:</label>
+      <div class="col-md-3">
+        {{! <input type="text" name="newCategory" class="form-control" id="newCategory"> }}
+        <select name="newCategory" id="newCategory" style="width: 250px;">
+          {{#each categoryResult}}
+            <option value="{{categoryName}}">{{categoryName}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
 
-        <div class="row my-3">
-            <label for="image3" class="col-md-2 col-form-label">Current Image 3: </label>
-            <div class="col-md-3">
-                <img src="/images/image3{{productResult._id}}.jpg" alt="Cycle" class="productImg border"
-                    style="width: 5rem; height: 5rem; object-fit: contain;">
-            </div>
+    <div class="row my-3">
+      <label for="offer" class="col-md-2 col-form-label">Current Offer :
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{productResult.offer}}</p>
+      </div>
 
-            <label for="newImage3" class="col-md-2 col-form-label">New Image 3:</label>
-            <div class="col-md-3">
-                <input type="file" name="newImage3" class="form-control" id="newImage3">
-            </div>
-        </div>
+      <label for="newOffer" class="col-md-2 col-form-label">New Offer:</label>
+      <div class="col-md-3">
+        {{! <input type="text" name="newOffer" class="form-control" id="newOffer"> }}
+        <select name="newOffer" id="newOffer" style="width: 250px;">
+          {{#each offerResult}}
+            <option>{{offerName}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
 
+    <button type="submit" class="btn btn-dark mb-3">Update</button>
 
-        <div class="row my-3">
-            <label for="category" class="col-md-2 col-form-label">Current Category : </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{productResult.category}}</p>
-            </div>
-
-            <label for="newCategory" class="col-md-2 col-form-label">New Category:</label>
-            <div class="col-md-3">
-                {{!-- <input type="text" name="newCategory" class="form-control" id="newCategory"> --}}
-                <select name="newCategory" id="newCategory" style="width: 250px;">
-                    {{#each categoryResult}}
-                    <option value="{{categoryName}}">{{categoryName}}</option>
-                    {{/each}}
-                </select>
-            </div>
-        </div>
-
-        <div class="row my-3">
-            <label for="offer" class="col-md-2 col-form-label">Current Offer : </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{productResult.offer}}</p>
-            </div>
-
-            <label for="newOffer" class="col-md-2 col-form-label">New Offer:</label>
-            <div class="col-md-3">
-                {{!-- <input type="text" name="newOffer" class="form-control" id="newOffer"> --}}
-                <select name="newOffer" id="newOffer" style="width: 250px;">
-                    {{#each offerResult}}
-                    <option>{{offerName}}</option>
-                    {{/each}}
-                </select>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-dark mb-3">Update</button>
-
-    </form>
+  </form>
 </div>

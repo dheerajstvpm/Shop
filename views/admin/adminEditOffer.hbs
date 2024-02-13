@@ -1,35 +1,41 @@
 <div class="container minHeight">
-    <div class="d-flex justify-content-between my-3">
-        <h1 class="mt-5">Edit Offer</h1>
+  <div class="d-flex justify-content-between my-3">
+    <h1 class="mt-5">Edit Offer</h1>
+  </div>
+
+  <form action="/admin/editOffer/{{result._id}}" method="post">
+
+    <div class="row mb-3">
+      <label for="oldName" class="col-md-2 col-form-label">Current offer name:
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{result.offerName}}</p>
+      </div>
+      <label for="newName" class="col-md-2 col-form-label">New offer name</label>
+      <div class="col-md-3">
+        <input type="text" id="newName" class="form-control" name="newName" />
+      </div>
     </div>
 
+    <div class="row my-3">
+      <label for="discount" class="col-md-2 col-form-label">Current Discount %:
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{result.discount}}</p>
+      </div>
 
-    <form action="/admin/editOffer/{{result._id}}" method="post">
+      <label for="newDiscount" class="col-md-2 col-form-label">New Discount %:</label>
+      <div class="col-md-3">
+        <input
+          type="text"
+          name="newDiscount"
+          class="form-control"
+          id="newDiscount"
+        />
+      </div>
+    </div>
 
-        <div class="row mb-3">
-            <label for="oldName" class="col-md-2 col-form-label">Current offer name: </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{result.offerName}}</p>
-            </div>
-            <label for="newName" class="col-md-2 col-form-label">New offer name</label>
-            <div class="col-md-3">
-                <input type="text" id="newName" class="form-control" name="newName">
-            </div>
-        </div>
+    <button type="submit" class="btn btn-dark mb-3">Update</button>
 
-        <div class="row my-3">
-            <label for="discount" class="col-md-2 col-form-label">Current Discount %: </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{result.discount}}</p>
-            </div>
-
-            <label for="newDiscount" class="col-md-2 col-form-label">New Discount %:</label>
-            <div class="col-md-3">
-                <input type="text" name="newDiscount" class="form-control" id="newDiscount">
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-dark mb-3">Update</button>
-
-    </form>
+  </form>
 </div>

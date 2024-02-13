@@ -7,84 +7,84 @@
 } */
 
 body {
-    padding: 0;
-    margin: 0;
-    /* filter: invert(100%); */
+  padding: 0;
+  margin: 0;
+  /* filter: invert(100%); */
 }
 
-th,td{
-    vertical-align: middle;
+th,
+td {
+  vertical-align: middle;
 }
 
 .minHeight {
-    min-height: 77.7vh;
-    /* min-height: 64.4vh; */
+  min-height: 77.7vh;
+  /* min-height: 64.4vh; */
 }
 
-.zoomEffect{
-    display: flex;
-    /* justify-content: center; */
-    /* align-items: center; */
+.zoomEffect {
+  display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
 }
 
 .zoom1 {
-    height: 400px;
-    width: 468px;
-    background-color: transparent;
-    overflow: hidden;
+  height: 400px;
+  width: 468px;
+  background-color: transparent;
+  overflow: hidden;
 }
 
 .zoom1 > img {
-    object-fit: contain;
-    height: 200%;
-    transform:translate3d(0px,0px,0px);
+  object-fit: contain;
+  height: 200%;
+  transform: translate3d(0px, 0px, 0px);
 }
 
-.productImg1{
-    object-fit: contain;
-    height: 25vh;
-    margin-right: 20px;
+.productImg1 {
+  object-fit: contain;
+  height: 25vh;
+  margin-right: 20px;
 }
 
 .zoom2 {
-    height: 400px;
-    width: 468px;
-    background-color: transparent;
-    overflow: hidden;
+  height: 400px;
+  width: 468px;
+  background-color: transparent;
+  overflow: hidden;
 }
 
 .zoom2 > img {
-    object-fit: contain;
-    height: 200%;
-    transform:translate3d(0px,0px,0px);
+  object-fit: contain;
+  height: 200%;
+  transform: translate3d(0px, 0px, 0px);
 }
 
-.productImg2{
-    object-fit: contain;
-    height: 25vh;
-    margin-right: 20px;
+.productImg2 {
+  object-fit: contain;
+  height: 25vh;
+  margin-right: 20px;
 }
 
 .zoom3 {
-    height: 400px;
-    width: 468px;
-    background-color: transparent;
-    overflow: hidden;
+  height: 400px;
+  width: 468px;
+  background-color: transparent;
+  overflow: hidden;
 }
 
 .zoom3 > img {
-    object-fit: contain;
-    height: 200%;
-    transform:translate3d(0px,0px,0px);
+  object-fit: contain;
+  height: 200%;
+  transform: translate3d(0px, 0px, 0px);
 }
 
-.productImg3{
-    object-fit: contain;
-    height: 25vh;
-    margin-right: 20px;
+.productImg3 {
+  object-fit: contain;
+  height: 25vh;
+  margin-right: 20px;
 }
 
 /* .zoom:hover img {
     transform: scale(1.5);
 } */
-

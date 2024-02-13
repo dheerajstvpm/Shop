@@ -1,59 +1,79 @@
 <div class="container minHeight">
-    <div class="d-flex justify-content-between my-3">
-        <h1 class="mt-5">Edit Coupon</h1>
+  <div class="d-flex justify-content-between my-3">
+    <h1 class="mt-5">Edit Coupon</h1>
+  </div>
+
+  <form action="/admin/editCoupon/{{result._id}}" method="post">
+
+    <div class="row mb-3">
+      <label for="oldName" class="col-md-2 col-form-label">Current coupon name:
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{result.coupon}}</p>
+      </div>
+      <label for="newName" class="col-md-2 col-form-label">New coupon name</label>
+      <div class="col-md-3">
+        <input type="text" id="newName" class="form-control" name="newName" />
+      </div>
     </div>
 
+    <div class="row my-3">
+      <label for="reduction" class="col-md-2 col-form-label">Current reduction:
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{result.reduction}}</p>
+      </div>
 
-    <form action="/admin/editCoupon/{{result._id}}" method="post">
+      <label for="newReduction" class="col-md-2 col-form-label">New reduction:</label>
+      <div class="col-md-3">
+        <input
+          type="text"
+          name="newReduction"
+          class="form-control"
+          id="newReduction"
+        />
+      </div>
+    </div>
 
-        <div class="row mb-3">
-            <label for="oldName" class="col-md-2 col-form-label">Current coupon name: </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{result.coupon}}</p>
-            </div>
-            <label for="newName" class="col-md-2 col-form-label">New coupon name</label>
-            <div class="col-md-3">
-                <input type="text" id="newName" class="form-control" name="newName">
-            </div>
-        </div>
+    <div class="row my-3">
+      <label for="minOrder" class="col-md-2 col-form-label">Current minimum
+        order:
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{result.minOrder}}</p>
+      </div>
 
-        <div class="row my-3">
-            <label for="reduction" class="col-md-2 col-form-label">Current reduction: </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{result.reduction}}</p>
-            </div>
+      <label for="newMinOrder" class="col-md-2 col-form-label">New minimum
+        order:</label>
+      <div class="col-md-3">
+        <input
+          type="text"
+          name="newMinOrder"
+          class="form-control"
+          id="newMinOrder"
+        />
+      </div>
+    </div>
 
-            <label for="newReduction" class="col-md-2 col-form-label">New reduction:</label>
-            <div class="col-md-3">
-                <input type="text" name="newReduction" class="form-control" id="newReduction">
-            </div>
-        </div>
+    <div class="row my-3">
+      <label for="expiry" class="col-md-2 col-form-label">Current expiry date:
+      </label>
+      <div class="col-md-3">
+        <p class="pt-2">{{dateFormat result.expiry}}</p>
+      </div>
 
-        <div class="row my-3">
-            <label for="minOrder" class="col-md-2 col-form-label">Current minimum order: </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{result.minOrder}}</p>
-            </div>
+      <label for="newExpiry" class="col-md-2 col-form-label">New expiry date:</label>
+      <div class="col-md-3">
+        <input
+          type="date"
+          name="newExpiry"
+          class="form-control"
+          id="newExpiry"
+        />
+      </div>
+    </div>
 
-            <label for="newMinOrder" class="col-md-2 col-form-label">New minimum order:</label>
-            <div class="col-md-3">
-                <input type="text" name="newMinOrder" class="form-control" id="newMinOrder">
-            </div>
-        </div>
+    <button type="submit" class="btn btn-dark mb-3">Update</button>
 
-        <div class="row my-3">
-            <label for="expiry" class="col-md-2 col-form-label">Current expiry date: </label>
-            <div class="col-md-3">
-                <p class="pt-2">{{dateFormat result.expiry}}</p>
-            </div>
-
-            <label for="newExpiry" class="col-md-2 col-form-label">New expiry date:</label>
-            <div class="col-md-3">
-                <input type="date" name="newExpiry" class="form-control" id="newExpiry">
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-dark mb-3">Update</button>
-
-    </form>
+  </form>
 </div>

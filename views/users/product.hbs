@@ -1,183 +1,246 @@
 <div class="container minHeight">
-    {{!-- {{#each result}} --}}
-    <div class="d-flex justify-content-end border-bottom my-3">
-        <h1>{{result.productName}}</h1>
+  {{!-- {{#each result}} --}}
+  <div class="d-flex justify-content-end border-bottom my-3">
+    <h1>{{result.productName}}</h1>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col d-flex align-items-start">
+      <div
+        class="shadow nav flex-column nav-tabs me-3 border border-0"
+        id="v-nav-tab"
+        role="tablist"
+        aria-orientation="vertical"
+      >
+        <button
+          class="shadow nav-link active"
+          id="v-nav-home-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#v-nav-home"
+          type="button"
+          role="tab"
+          aria-controls="v-nav-home"
+          aria-selected="true"
+        ><img
+            src="/images/image1{{result._id}}.jpg"
+            class="border"
+            style="width :5rem; height: 5rem;object-fit: contain;"
+          /></button>
+        <button
+          class="shadow nav-link"
+          id="v-nav-profile-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#v-nav-profile"
+          type="button"
+          role="tab"
+          aria-controls="v-nav-profile"
+          aria-selected="false"
+        ><img
+            src="/images/image2{{result._id}}.jpg"
+            class="border"
+            style="width :5rem; height: 5rem;object-fit: contain;"
+          /></button>
+        <button
+          class="shadow nav-link"
+          id="v-nav-messages-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#v-nav-messages"
+          type="button"
+          role="tab"
+          aria-controls="v-nav-messages"
+          aria-selected="false"
+        ><img
+            src="/images/image3{{result._id}}.jpg"
+            class="border"
+            style="width :5rem; height: 5rem;object-fit: contain;"
+          /></button>
+      </div>
+      <div class="tab-content" id="v-nav-tabContent">
+        <div
+          class="tab-pane fade show active"
+          id="v-nav-home"
+          role="tabpanel"
+          aria-labelledby="v-nav-home-tab"
+          tabindex="0"
+        >
+          <div class="col zoomEffect d-flex justify-content between">
+            <img
+              src="/images/image1{{result._id}}.jpg"
+              alt="Cycle"
+              class="shadow productImg1 border"
+              style="width :500px; height: 400px"
+            />
+            <div class="shadow zoom1 border" style="display:none;">
+              <img
+                src="/images/image1{{result._id}}.jpg"
+                class="border"
+                alt="Cycle"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="tab-pane fade"
+          id="v-nav-profile"
+          role="tabpanel"
+          aria-labelledby="v-nav-profile-tab"
+          tabindex="0"
+        >
+          <div class="col zoomEffect d-flex justify-content between">
+            <img
+              src="/images/image2{{result._id}}.jpg"
+              alt="Cycle"
+              class="shadow productImg2 border"
+              style="width :500px; height: 400px"
+            />
+            <div class="shadow zoom2 border" style="display:none;">
+              <img
+                src="/images/image2{{result._id}}.jpg"
+                class="border"
+                alt="Cycle"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="tab-pane fade"
+          id="v-nav-messages"
+          role="tabpanel"
+          aria-labelledby="v-nav-messages-tab"
+          tabindex="0"
+        >
+          <div class="col zoomEffect d-flex justify-content between">
+            <img
+              src="/images/image3{{result._id}}.jpg"
+              alt="Cycle"
+              class="shadow productImg3 border"
+              style="width :500px; height: 400px"
+            />
+            <div class="shadow zoom3 border" style="display:none;">
+              <img
+                src="/images/image3{{result._id}}.jpg"
+                class="border"
+                alt="Cycle"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="row mb-5">
-        <div class="col d-flex align-items-start">
-            <div class="shadow nav flex-column nav-tabs me-3 border border-0" id="v-nav-tab" role="tablist"
-                aria-orientation="vertical">
-                <button class="shadow nav-link active" id="v-nav-home-tab" data-bs-toggle="tab"
-                    data-bs-target="#v-nav-home" type="button" role="tab" aria-controls="v-nav-home"
-                    aria-selected="true"><img src="/images/image1{{result._id}}.jpg" class="border"
-                        style="width :5rem; height: 5rem;object-fit: contain;"></button>
-                <button class="shadow nav-link" id="v-nav-profile-tab" data-bs-toggle="tab"
-                    data-bs-target="#v-nav-profile" type="button" role="tab" aria-controls="v-nav-profile"
-                    aria-selected="false"><img src="/images/image2{{result._id}}.jpg" class="border"
-                        style="width :5rem; height: 5rem;object-fit: contain;"></button>
-                <button class="shadow nav-link" id="v-nav-messages-tab" data-bs-toggle="tab"
-                    data-bs-target="#v-nav-messages" type="button" role="tab" aria-controls="v-nav-messages"
-                    aria-selected="false"><img src="/images/image3{{result._id}}.jpg" class="border"
-                        style="width :5rem; height: 5rem;object-fit: contain;"></button>
-            </div>
-            <div class="tab-content" id="v-nav-tabContent">
-                <div class="tab-pane fade show active" id="v-nav-home" role="tabpanel" aria-labelledby="v-nav-home-tab"
-                    tabindex="0">
-                    <div class="col zoomEffect d-flex justify-content between">
-                        <img src="/images/image1{{result._id}}.jpg" alt="Cycle" class="shadow productImg1 border"
-                            style="width :500px; height: 400px">
-                        <div class="shadow zoom1  border" style="display:none;">
-                            <img src="/images/image1{{result._id}}.jpg" class="border" alt="Cycle">
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="v-nav-profile" role="tabpanel" aria-labelledby="v-nav-profile-tab"
-                    tabindex="0">
-                    <div class="col zoomEffect d-flex justify-content between">
-                        <img src="/images/image2{{result._id}}.jpg" alt="Cycle" class="shadow productImg2 border"
-                            style="width :500px; height: 400px">
-                        <div class="shadow zoom2  border" style="display:none;">
-                            <img src="/images/image2{{result._id}}.jpg" class="border" alt="Cycle">
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="v-nav-messages" role="tabpanel" aria-labelledby="v-nav-messages-tab"
-                    tabindex="0">
-                    <div class="col zoomEffect d-flex justify-content between">
-                        <img src="/images/image3{{result._id}}.jpg" alt="Cycle" class="shadow productImg3 border"
-                            style="width :500px; height: 400px">
-                        <div class="shadow zoom3  border" style="display:none;">
-                            <img src="/images/image3{{result._id}}.jpg" class="border" alt="Cycle">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col ms-5 priceAndCart" style="max-width :500px;">
-            <div class="row my-5">
-                <div class="col text-nowrap">Price : &#x20B9;{{result.price}}</div>
-                <div class="col text-nowrap">Offer : {{result.offer}}</div>
-            </div>
-            <div class="row mb-5">
-                <div class="col text-nowrap">Offer Price : &#x20B9;{{offerPrice}}</div>
-            </div>
-            <div class="row">
-                {{#if result.stock}}
-                {{#if loginName}}
-                <div class="col"><a href="/addToCartFromProductPage/{{result._id}}"
-                        class="shadow btn btn-outline-dark mb-5" style="width:120px ;" onclick="Swal.fire({
+    <div class="col ms-5 priceAndCart" style="max-width :500px;">
+      <div class="row my-5">
+        <div class="col text-nowrap">Price : &#x20B9;{{result.price}}</div>
+        <div class="col text-nowrap">Offer : {{result.offer}}</div>
+      </div>
+      <div class="row mb-5">
+        <div class="col text-nowrap">Offer Price : &#x20B9;{{offerPrice}}</div>
+      </div>
+      <div class="row">
+        {{#if result.stock}}
+          {{#if loginName}}
+            <div class="col"><a
+                href="/addToCartFromProductPage/{{result._id}}"
+                class="shadow btn btn-outline-dark mb-5"
+                style="width:120px ;"
+                onclick="Swal.fire({
   position: 'top-center',
   icon: 'success',
   title: 'Item added to cart!',
   showConfirmButton: false,
   timer: 1500
-})">Add to cart</a></div>
-                {{else}}
-                <div class="col"><a href="/addToCartFromProductPage/{{result._id}}"
-                        class="shadow btn btn-outline-dark mb-5" style="width:120px ;">Add to cart</a></div>
-                {{/if}}
-                <div class="col"><a href="/buyNowToCart/{{result._id}}" class="shadow btn btn-outline-dark mb-5"
-                        style="width:120px ;">Buy now</a></div>
-                {{else}}
-                <div class="col"><a href="/" class="btn btn-outline-dark mb-5" style="width:120px ;">Out of
-                        stock</a></div>
-                {{/if}}
-            </div>
-            <div class="row mb-5">
-                {{#if loginName}}
-                <div class="col"><a href="/addToWishlist/{{result._id}}" class="shadow btn btn-outline-dark"
-                        style="width:120px ;" onclick="Swal.fire({
+})"
+              >Add to cart</a></div>
+          {{else}}
+            <div class="col"><a
+                href="/addToCartFromProductPage/{{result._id}}"
+                class="shadow btn btn-outline-dark mb-5"
+                style="width:120px ;"
+              >Add to cart</a></div>
+          {{/if}}
+          <div class="col"><a
+              href="/buyNowToCart/{{result._id}}"
+              class="shadow btn btn-outline-dark mb-5"
+              style="width:120px ;"
+            >Buy now</a></div>
+        {{else}}
+          <div class="col"><a
+              href="/"
+              class="btn btn-outline-dark mb-5"
+              style="width:120px ;"
+            >Out of stock</a></div>
+        {{/if}}
+      </div>
+      <div class="row mb-5">
+        {{#if loginName}}
+          <div class="col"><a
+              href="/addToWishlist/{{result._id}}"
+              class="shadow btn btn-outline-dark"
+              style="width:120px ;"
+              onclick="Swal.fire({
   position: 'top-center',
   icon: 'success',
   title: 'Item added to wishlist!',
   showConfirmButton: false,
   timer: 1500
-})">Wishlist</a></div>
-                {{else}}
-                <div class="col"><a href="/addToWishlist/{{result._id}}" class="shadow btn btn-outline-dark"
-                        style="width:120px ;">Wishlist</a></div>
-                {{/if}}
-            </div>
-        </div>
+})"
+            >Wishlist</a></div>
+        {{else}}
+          <div class="col"><a
+              href="/addToWishlist/{{result._id}}"
+              class="shadow btn btn-outline-dark"
+              style="width:120px ;"
+            >Wishlist</a></div>
+        {{/if}}
+      </div>
     </div>
-    <div class="row mb-5">
-        <div>
-            <h3>Product description</h3>
-            <div style="width: 100%; height:300px;" class="shadow-lg border p-3">
-                <p>{{result.description}}</p>
-            </div>
+  </div>
+  <div class="row mb-5">
+    <div>
+      <h3>Product description</h3>
+      <div style="width: 100%; height:300px;" class="shadow-lg border p-3">
+        <p>{{result.description}}</p>
+      </div>
 
-        </div>
     </div>
-    {{!-- {{/each}} --}}
+  </div>
+  {{!-- {{/each}} --}}
 </div>
 
 <script>
 
-    //Image 1
-    let productImg1 = document.querySelector(".productImg1")
-    let zoomDiv1 = document.querySelector(".zoom1")
-    let zoomedImg1 = document.querySelector(".zoom1>img")
-    let priceAndCart = document.querySelector(".priceAndCart")
-    productImg1.addEventListener("mousemove", (e) => {
-        zoomDiv1.style.display = "block";
-        priceAndCart.style.display = "none";
-        console.log(e.pageX, e.pageY)
-        let x = (e.pageX - 179) / 500;//179
-        let y = (e.pageY - 160) / 400;//160
-        console.log(e.pageX)
-        console.log(e.pageY)
-        console.log(x, y)
-        zoomedImg1.style.transform = `translate3d(-${57 * x}%,-${48 * y}%,0)`
-    })
-    productImg1.addEventListener("mouseleave", (e) => {
-        zoomDiv1.style.display = "none"
-        priceAndCart.style.display = "block";
-    })
-
-    //Image 2
-    let productImg2 = document.querySelector(".productImg2")
-    let zoomDiv2 = document.querySelector(".zoom2")
-    let zoomedImg2 = document.querySelector(".zoom2>img")
-    //let priceAndCart = document.querySelector(".priceAndCart")
-    productImg2.addEventListener("mousemove", (e) => {
-        zoomDiv2.style.display = "block";
-        priceAndCart.style.display = "none";
-        console.log(e.pageX, e.pageY)
-        let x = (e.pageX - 179) / 500;//179
-        let y = (e.pageY - 160) / 400;//160
-        console.log(e.pageX)
-        console.log(e.pageY)
-        console.log(x, y)
-        zoomedImg2.style.transform = `translate3d(-${57 * x}%,-${48 * y}%,0)`
-    })
-    productImg2.addEventListener("mouseleave", (e) => {
-        zoomDiv2.style.display = "none"
-        priceAndCart.style.display = "block";
-    })
-
-    //Image 3
-    let productImg3 = document.querySelector(".productImg3")
-    let zoomDiv3 = document.querySelector(".zoom3")
-    let zoomedImg3 = document.querySelector(".zoom3>img")
-    //let priceAndCart = document.querySelector(".priceAndCart")
-    productImg3.addEventListener("mousemove", (e) => {
-        zoomDiv3.style.display = "block";
-        priceAndCart.style.display = "none";
-        console.log(e.pageX, e.pageY)
-        let x = (e.pageX - 179) / 500;//179
-        let y = (e.pageY - 160) / 400;//160
-        console.log(e.pageX)
-        console.log(e.pageY)
-        console.log(x, y)
-        zoomedImg3.style.transform = `translate3d(-${57 * x}%,-${48 * y}%,0)`
-    })
-    productImg3.addEventListener("mouseleave", (e) => {
-        zoomDiv3.style.display = "none"
-        priceAndCart.style.display = "block";
-    })
-
+  //Image 1 let productImg1 = document.querySelector(".productImg1") let
+  zoomDiv1 = document.querySelector(".zoom1") let zoomedImg1 =
+  document.querySelector(".zoom1>img") let priceAndCart =
+  document.querySelector(".priceAndCart")
+  productImg1.addEventListener("mousemove", (e) => { zoomDiv1.style.display =
+  "block"; priceAndCart.style.display = "none"; console.log(e.pageX, e.pageY)
+  let x = (e.pageX - 179) / 500;//179 let y = (e.pageY - 160) / 400;//160
+  console.log(e.pageX) console.log(e.pageY) console.log(x, y)
+  zoomedImg1.style.transform = `translate3d(-${57 * x}%,-${48 * y}%,0)` })
+  productImg1.addEventListener("mouseleave", (e) => { zoomDiv1.style.display =
+  "none" priceAndCart.style.display = "block"; }) //Image 2 let productImg2 =
+  document.querySelector(".productImg2") let zoomDiv2 =
+  document.querySelector(".zoom2") let zoomedImg2 =
+  document.querySelector(".zoom2>img") //let priceAndCart =
+  document.querySelector(".priceAndCart")
+  productImg2.addEventListener("mousemove", (e) => { zoomDiv2.style.display =
+  "block"; priceAndCart.style.display = "none"; console.log(e.pageX, e.pageY)
+  let x = (e.pageX - 179) / 500;//179 let y = (e.pageY - 160) / 400;//160
+  console.log(e.pageX) console.log(e.pageY) console.log(x, y)
+  zoomedImg2.style.transform = `translate3d(-${57 * x}%,-${48 * y}%,0)` })
+  productImg2.addEventListener("mouseleave", (e) => { zoomDiv2.style.display =
+  "none" priceAndCart.style.display = "block"; }) //Image 3 let productImg3 =
+  document.querySelector(".productImg3") let zoomDiv3 =
+  document.querySelector(".zoom3") let zoomedImg3 =
+  document.querySelector(".zoom3>img") //let priceAndCart =
+  document.querySelector(".priceAndCart")
+  productImg3.addEventListener("mousemove", (e) => { zoomDiv3.style.display =
+  "block"; priceAndCart.style.display = "none"; console.log(e.pageX, e.pageY)
+  let x = (e.pageX - 179) / 500;//179 let y = (e.pageY - 160) / 400;//160
+  console.log(e.pageX) console.log(e.pageY) console.log(x, y)
+  zoomedImg3.style.transform = `translate3d(-${57 * x}%,-${48 * y}%,0)` })
+  productImg3.addEventListener("mouseleave", (e) => { zoomDiv3.style.display =
+  "none" priceAndCart.style.display = "block"; })
 
 </script>

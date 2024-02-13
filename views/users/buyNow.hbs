@@ -1,371 +1,257 @@
 <div class="container minHeight">
 
-    <div class="d-flex justify-content-end border-bottom my-3">
+  <div class="d-flex justify-content-end border-bottom my-3">
 
-        <h1>Order summary</h1>
-    </div>
-    {{#if cartEmpty}}
+    <h1>Order summary</h1>
+  </div>
+  {{#if cartEmpty}}
     <h3 class="text-danger">Items in your cart are out of stock</h3>
-    {{else}}
+  {{else}}
     <div class="d-flex mb-3">
-        <table class=" table">
-            <thead>
-                <tr>
-                    <th scope="col" class="text-center">Sl.</th>
-                    <th scope="col" class="text-center">Product Name</th>
-                    <th scope="col" class="text-center">Price</th>
-                    <th scope="col" class="text-center">Offer price</th>
-                    <th scope="col" class="text-center">No.of items</th>
-                    <th scope="col" class="text-center">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each cartArray}}
-                <tr>
-                    <th scope="row" class="text-center">{{addOne @index}}.</th>
-                    <td class="text-center">{{this.productName}}</td>
-                    <td class="text-center">&#x20B9;{{this.price}}</td>
-                    <td class="text-center">&#x20B9;{{this.offerPrice}}</td>
-                    <td class="text-center">{{this.count}}</td>
-                    <td class="text-center">{{multiply this.offerPrice this.count}}</td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col" class="text-center">Sl.</th>
+            <th scope="col" class="text-center">Product Name</th>
+            <th scope="col" class="text-center">Price</th>
+            <th scope="col" class="text-center">Offer price</th>
+            <th scope="col" class="text-center">No.of items</th>
+            <th scope="col" class="text-center">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each cartArray}}
+            <tr>
+              <th scope="row" class="text-center">{{addOne @index}}.</th>
+              <td class="text-center">{{this.productName}}</td>
+              <td class="text-center">&#x20B9;{{this.price}}</td>
+              <td class="text-center">&#x20B9;{{this.offerPrice}}</td>
+              <td class="text-center">{{this.count}}</td>
+              <td class="text-center">{{multiply
+                  this.offerPrice
+                  this.count
+                }}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
     </div>
-
-
-
 
     <div class="row my-3 d-flex justify-content-end">
-        <div class="d-flex justify-content-end">
-            <h5>Total price : &#x20B9;{{ beforeTotal }}</h5>
-        </div>
-        <div class="d-flex justify-content-end mt-2">
-            <h5>Price after offer : &#x20B9;{{ total }}</h5>
-        </div>
+      <div class="d-flex justify-content-end">
+        <h5>Total price : &#x20B9;{{beforeTotal}}</h5>
+      </div>
+      <div class="d-flex justify-content-end mt-2">
+        <h5>Price after offer : &#x20B9;{{total}}</h5>
+      </div>
 
-        <div class="d-flex justify-content-between my-2 border-bottom">
-            <div class="d-flex flex-column align-items-start gap-3">
-                {{!-- <label>Select a coupon:</label> --}}
-                {{!-- <form id="coupon-form"> --}}
-                    <select name="couponName" id="couponName" style="width: 150px;">
-                        <option selected disabled>Select a coupon</option>
-                        {{#each couponList}}
-                        <option value='{{coupon}}'>{{coupon}}</option>
-                        {{/each}}
-                    </select>
-                    {{!-- <label for="couponName">Enter coupon code:</label>
-                    <input type="text" id="couponName" name="couponName" value=""> --}}
-                    <input type="submit" id="coupon-button" value="Apply Coupon" onclick=couponFun()
-                        class="shadow-lg btn btn-dark"><br>
-                    {{!-- <button type="submit" id="coupon-button" onclick=couponFun()
-                        class="shadow-lg btn btn-dark">Apply</button> --}}
-                    {{!--
-                </form> --}}
+      <div class="d-flex justify-content-between my-2 border-bottom">
+        <div class="d-flex flex-column align-items-start gap-3">
+          {{! <label>Select a coupon:</label> }}
+          {{! <form id="coupon-form"> }}
+          <select name="couponName" id="couponName" style="width: 150px;">
+            <option selected disabled>Select a coupon</option>
+            {{#each couponList}}
+              <option value="{{coupon}}">{{coupon}}</option>
+            {{/each}}
+          </select>
+          {{! <label for="couponName">Enter coupon code:</label>
+                    <input type="text" id="couponName" name="couponName" value=""> }}
+          <input
+            type="submit"
+            id="coupon-button"
+            value="Apply Coupon"
+            onclick="couponFun()"
+            class="shadow-lg btn btn-dark"
+          /><br />
+          {{! <button type="submit" id="coupon-button" onclick=couponFun()
+                        class="shadow-lg btn btn-dark">Apply</button> }}
+          {{!
+                </form> }}
+        </div>
+        <div class="d-flex flex-column align-items-end gap-2">
+          <h4 id="afterCoupon" class="text-danger">Amount to be paid : &#x20B9;{{total}}</h4>
+          <h5 id="savings">Total savings : &#x20B9;{{substract
+              beforeTotal
+              total
+            }}</h5>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end mt-3">
+        <h4>Select delivery address</h4>
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <div class="">
+          <form id="rzp-form">
+            <div class="d-flex justify-content-end flex-wrap">
+              <textarea
+                name="newAddress"
+                id="newAddress"
+                placeholder="Add new address"
+                class="text-end"
+                cols="20"
+                rows="3"
+              ></textarea>
+              {{#each result.address}}
+                <div class="form-check form-check-reverse ms-3 mt-1 border">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="address"
+                    id="exampleRadios1"
+                    value="{{this}}"
+                  />
+                  <label
+                    class="form-check-label"
+                    style="width:180px; height: 70px;"
+                    for="exampleRadios1"
+                  >
+                    {{this}}
+                  </label>
+                </div>
+              {{/each}}
+
             </div>
-            <div class="d-flex flex-column align-items-end gap-2">
-                <h4 id="afterCoupon" class="text-danger">Amount to be paid : &#x20B9;{{total}}</h4>
-                <h5 id="savings">Total savings : &#x20B9;{{substract beforeTotal total }}</h5>
+            <div class="d-flex justify-content-end mt-3">
+              <div class="d-flex justify-content-end">
+                {{! <label for="offer" class="col-md-5 col-form-label">Select payment option :</label>
+                            }}
+                <select
+                  name="paymentOption"
+                  id="paymentOption"
+                  style="width: 200px;"
+                >
+                  <option selected disabled>Select a payment option</option>
+                  <option value="COD">COD</option>
+                  <option value="Paypal">Paypal</option>
+                  <option value="Razorpay">Razorpay</option>
+                </select>
+              </div>
             </div>
+          </form>
         </div>
-
-
-
-        <div class="d-flex justify-content-end mt-3">
-            <h4>Select delivery address</h4>
-        </div>
-        <div class="d-flex justify-content-end mt-3">
-            <div class="">
-                <form id="rzp-form">
-                    <div class="d-flex justify-content-end flex-wrap">
-                        <textarea name="newAddress" id="newAddress" placeholder="Add new address" class="text-end"
-                            cols="20" rows="3"></textarea>
-                        {{#each result.address}}
-                        <div class="form-check form-check-reverse ms-3 mt-1 border">
-                            <input class="form-check-input" type="radio" name="address" id="exampleRadios1"
-                                value="{{this}}">
-                            <label class="form-check-label" style="width:180px; height: 70px;" for="exampleRadios1">
-                                {{this}}
-                            </label>
-                        </div>
-                        {{/each}}
-
-                    </div>
-                    <div class="d-flex justify-content-end mt-3">
-                        <div class="d-flex justify-content-end">
-                            {{!-- <label for="offer" class="col-md-5 col-form-label">Select payment option :</label>
-                            --}}
-                            <select name="paymentOption" id="paymentOption" style="width: 200px;">
-                                <option selected disabled>Select a payment option</option>
-                                <option value="COD">COD</option>
-                                <option value="Paypal">Paypal</option>
-                                <option value="Razorpay">Razorpay</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="d-flex justify-content-between my-3">
-            <h3 class="text-danger">{{msg}}</h3>
-            <button type="submit" id="rzp-button" class="shadow-lg btn btn-dark">Continue</button>
-        </div>
+      </div>
+      <div class="d-flex justify-content-between my-3">
+        <h3 class="text-danger">{{msg}}</h3>
+        <button
+          type="submit"
+          id="rzp-button"
+          class="shadow-lg btn btn-dark"
+        >Continue</button>
+      </div>
     </div>
 
+  {{/if}}
 
+  <!-- Set up a container element for the button -->
+  <div class="d-flex justify-content-end mt-3">
+    <div id="paypal-button-container" class="col-md-4"></div>
+  </div>
 
-    {{/if}}
+  <!-- Replace "test" with your own sandbox Business account app client ID -->
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=ASKeh3WF4s3YQ9QymJrj0XiOQpaIm3o-R9Pa8UHPt3Ogr_6mbzLMkrV_r6Hi5BQnc6v7WGxBEA5xnxho&currency=USD"
+  ></script>
 
-    <!-- Set up a container element for the button -->
-    <div class="d-flex justify-content-end mt-3">
-        <div id="paypal-button-container" class="col-md-4"></div>
-    </div>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-    <!-- Replace "test" with your own sandbox Business account app client ID -->
-    <script
-        src="https://www.paypal.com/sdk/js?client-id=ASKeh3WF4s3YQ9QymJrj0XiOQpaIm3o-R9Pa8UHPt3Ogr_6mbzLMkrV_r6Hi5BQnc6v7WGxBEA5xnxho&currency=USD"></script>
+  <script>
+    let couponAmt; let reduction = 0; const amountBefore =
+    {{total}}; const beforeOffer =
+    {{beforeTotal}}
 
+    async function couponFun() { console.log({{total}}) console.log(typeof
+    {{total}}) try { //const form2 = document.querySelector("#coupon-form")
+    //console.log(form2) //coupon = form2.couponName.value coupon =
+    document.getElementById('couponName').value couponOut = await
+    fetch('/coupon', { method: 'POST', // or 'PUT' headers: { 'Content-Type':
+    'application/json', }, body: JSON.stringify({ amountBefore, coupon }), })
+    couponAmt = await couponOut.json() console.log(couponAmt) if (couponAmt.id
+    == "noLogin") { window.location.href = "/login"; } else if (couponAmt.id ==
+    "couponAlready") { document.getElementById("afterCoupon").innerHTML =
+    "Coupon already availed"; reduction = 0; const savings = beforeOffer -
+    amountBefore + reduction document.getElementById("savings").innerHTML =
+    `Total Savings : &#x20B9;${savings}`; } else if (couponAmt.id ==
+    "couponExpired") { document.getElementById("afterCoupon").innerHTML =
+    "Coupon expired"; reduction = 0; const savings = beforeOffer - amountBefore
+    + reduction document.getElementById("savings").innerHTML = `Total Savings :
+    &#x20B9;${savings}`; } else if (couponAmt.id == "notApplicable") {
+    document.getElementById("afterCoupon").innerHTML = "Coupon not applicable";
+    reduction = 0; const savings = beforeOffer - amountBefore + reduction
+    document.getElementById("savings").innerHTML = `Total Savings :
+    &#x20B9;${savings}`; } else { reduction = couponAmt.id;
+    console.log(reduction) console.log(amountBefore) const savings = beforeOffer
+    - amountBefore + reduction console.log(beforeOffer) console.log(savings)
+    document.getElementById("afterCoupon").innerHTML = `Amount to be paid :
+    &#x20B9;${amountBefore - reduction}`;
+    document.getElementById("savings").innerHTML = `Total Savings :
+    &#x20B9;${savings}`; } } catch (err) { console.log(err) } } async function
+    f() { const form = document.querySelector("#rzp-form") console.log(form)
+    console.log({{total}}) console.log(typeof
+    {{total}}) //console.log(amount) //console.log(typeof amount) const currency
+    = "INR" console.log(currency) console.log(typeof currency) const newAddress
+    = form.newAddress.value const addAddress = function (address = "") { return
+    address = form.address.value }; const address = addAddress() const
+    paymentOption = form.paymentOption.value const amount = amountBefore -
+    reduction let order = await fetch('/buyNow', { method: 'POST', // or 'PUT'
+    headers: { 'Content-Type': 'application/json', }, body: JSON.stringify({
+    amount, currency, newAddress, address, paymentOption }), }) order = await
+    order.json() console.log(order) if (order.success) { Swal.fire({ position:
+    'top-center', icon: 'success', title: 'Order placed', showConfirmButton:
+    false, timer: 1500 }) window.location.href = "/order"; } else if (order.id
+    === 'noValidOption') { window.location.href = "/buyNow"; } else if (order.id
+    === 'noValidAddressError') { window.location.href = "/buyNow"; } else if
+    (order.id === 'addAddressError') { window.location.href = "/buyNow"; } else
+    if (order.id === 'Paypal') { paypal.Buttons({ // Order is created on the
+    server and the order id is returned createOrder: (data, actions) => { return
+    fetch('/paymentPaypal', { method: "post", headers: { 'Content-Type':
+    'application/json', }, body: JSON.stringify({ amount, currency, address,
+    paymentOption }), // use the "body" param to optionally pass additional
+    order information // like product ids or amount }) .then((response) =>
+    response.json()) .then((order) => order.id); }, // Finalize the transaction
+    on the server after payer approval onApprove: (data, actions) => { return
+    fetch(`/verifyPaymentPaypal/${data.orderID}/capture`, { method: "post", })
+    .then((response) => response.json()) .then((orderData) => { // Successful
+    capture! For dev/demo purposes: console.log('Capture result', orderData,
+    JSON.stringify(orderData, null, 2)); const transaction =
+    orderData.purchase_units[0].payments.captures[0]; //alert(`Transaction
+    ${transaction.status}: ${transaction.id}\n\nSee console for all available
+    details`); // When ready to go live, remove the alert and show a success
+    message within this page. For example: // const element =
+    document.getElementById('paypal-button-container'); // element.innerHTML =
+    '<h3>Thank you for your payment!</h3>'; // Or go to another URL:
+    actions.redirect('thank_you.html'); async function g() { if (transaction.id)
+    { const saveRes = await fetch('/saveOrder', { method: 'GET', // or 'PUT'
+    headers: { 'Content-Type': 'application/json', }, }) console.log(saveRes +
+    "saveRes") if (saveRes) { Swal.fire({ position: 'top-center', icon:
+    'success', title: 'Order placed', showConfirmButton: false, timer: 1500 })
+    window.location.href = "/order"; } } } g(); }); }
+    }).render('#paypal-button-container'); } else if (order.id) {
+    console.log(order) const options = { "key": "rzp_test_VdJI59WlbDKQw7", //
+    Enter the Key ID generated from the Dashboard "amount": order.amount, //
+    Amount is in currency subunits. Default currency is INR. Hence, 50000 refers
+    to 50000 paise "currency": "INR", "name": "Shop. Corp", "description": "Test
+    Transaction", "image": "https://example.com/your_logo", "order_id":
+    order.id, //This is a sample Order ID. Pass the `id` obtained in the
+    response of Step 1 "handler": async function (response) {
+    console.log(response) const res = await fetch('/verifyPaymentRazorPay', {
+    method: 'POST', // or 'PUT' headers: { 'Content-Type': 'application/json',
+    }, body: JSON.stringify(response), }) console.log(res + "res") if (res) {
+    const saveRes = await fetch('/saveOrder', { method: 'GET', // or 'PUT'
+    headers: { 'Content-Type': 'application/json', }, }) console.log(saveRes +
+    "saveRes") if (saveRes) { Swal.fire({ position: 'top-center', icon:
+    'success', title: 'Order placed', showConfirmButton: false, timer: 1500 })
+    window.location.href = "/order"; } } }, "prefill": { "name": "Gaurav Kumar",
+    "email": "gaurav.kumar@example.com", "contact": "9999999999" }, "notes": {
+    "address": "Razorpay Corporate Office" }, "theme": { "color": "#3399cc" } };
+    const rzp1 = new Razorpay(options); rzp1.on('payment.failed', function
+    (response) { alert(response.error.code); alert(response.error.description);
+    alert(response.error.source); alert(response.error.step);
+    alert(response.error.reason); alert(response.error.metadata.order_id);
+    alert(response.error.metadata.payment_id); }); rzp1.open(); } }
+    document.getElementById('rzp-button').onclick = function (e) { f()
+    e.preventDefault(); }
 
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-    <script>
-        let couponAmt;
-        let reduction = 0;
-        const amountBefore = {{ total }};
-
-        const beforeOffer = {{ beforeTotal }}
-
-
-        async function couponFun() {
-
-            console.log({{ total }})
-        console.log(typeof {{ total }})
-
-        try {
-            //const form2 = document.querySelector("#coupon-form")
-            //console.log(form2)
-            //coupon = form2.couponName.value
-            coupon = document.getElementById('couponName').value
-            couponOut = await fetch('/coupon', {
-                method: 'POST', // or 'PUT'
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ amountBefore, coupon }),
-            })
-            couponAmt = await couponOut.json()
-            console.log(couponAmt)
-            if (couponAmt.id == "noLogin") {
-                window.location.href = "/login";
-
-            } else if (couponAmt.id == "couponAlready") {
-                document.getElementById("afterCoupon").innerHTML = "Coupon already availed";
-                reduction = 0;
-                const savings = beforeOffer - amountBefore + reduction
-                document.getElementById("savings").innerHTML = `Total Savings : &#x20B9;${savings}`;
-            } else if (couponAmt.id == "couponExpired") {
-                document.getElementById("afterCoupon").innerHTML = "Coupon expired";
-                reduction = 0;
-                const savings = beforeOffer - amountBefore + reduction
-                document.getElementById("savings").innerHTML = `Total Savings : &#x20B9;${savings}`;
-            } else if (couponAmt.id == "notApplicable") {
-                document.getElementById("afterCoupon").innerHTML = "Coupon not applicable";
-                reduction = 0;
-                const savings = beforeOffer - amountBefore + reduction
-                document.getElementById("savings").innerHTML = `Total Savings : &#x20B9;${savings}`;
-            } else {
-                reduction = couponAmt.id;
-                console.log(reduction)
-                console.log(amountBefore)
-                const savings = beforeOffer - amountBefore + reduction
-                console.log(beforeOffer)
-                console.log(savings)
-
-                document.getElementById("afterCoupon").innerHTML = `Amount to be paid : &#x20B9;${amountBefore - reduction}`;
-                document.getElementById("savings").innerHTML = `Total Savings : &#x20B9;${savings}`;
-            }
-        } catch (err) {
-            console.log(err)
-        }
-        }
-
-        async function f() {
-
-            const form = document.querySelector("#rzp-form")
-            console.log(form)
-            console.log({{ total }})
-        console.log(typeof {{ total }})
-        //console.log(amount)
-        //console.log(typeof amount)
-        const currency = "INR"
-        console.log(currency)
-        console.log(typeof currency)
-        const newAddress = form.newAddress.value
-        const addAddress = function (address = "") {
-            return address = form.address.value
-        };
-        const address = addAddress()
-        const paymentOption = form.paymentOption.value
-        const amount = amountBefore - reduction
-
-        let order = await fetch('/buyNow', {
-            method: 'POST', // or 'PUT'
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ amount, currency, newAddress, address, paymentOption }),
-        })
-        order = await order.json()
-        console.log(order)
-
-        if (order.success) {
-            Swal.fire({
-                position: 'top-center',
-                icon: 'success',
-                title: 'Order placed',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            window.location.href = "/order";
-        } else if (order.id === 'noValidOption') {
-            window.location.href = "/buyNow";
-        } else if (order.id === 'noValidAddressError') {
-            window.location.href = "/buyNow";
-        } else if (order.id === 'addAddressError') {
-            window.location.href = "/buyNow";
-        } else if (order.id === 'Paypal') {
-            paypal.Buttons({
-                // Order is created on the server and the order id is returned
-                createOrder: (data, actions) => {
-                    return fetch('/paymentPaypal', {
-                        method: "post",
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ amount, currency, address, paymentOption }),
-                        // use the "body" param to optionally pass additional order information
-                        // like product ids or amount
-                    })
-                        .then((response) => response.json())
-                        .then((order) => order.id);
-                },
-                // Finalize the transaction on the server after payer approval
-                onApprove: (data, actions) => {
-                    return fetch(`/verifyPaymentPaypal/${data.orderID}/capture`, {
-                        method: "post",
-                    })
-                        .then((response) => response.json())
-                        .then((orderData) => {
-                            // Successful capture! For dev/demo purposes:
-                            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-
-                            const transaction = orderData.purchase_units[0].payments.captures[0];
-                            //alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
-                            // When ready to go live, remove the alert and show a success message within this page. For example:
-                            // const element = document.getElementById('paypal-button-container');
-                            // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-                            // Or go to another URL:  actions.redirect('thank_you.html');
-                            async function g() {
-                                if (transaction.id) {
-                                    const saveRes = await fetch('/saveOrder', {
-                                        method: 'GET', // or 'PUT'
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                    })
-
-                                    console.log(saveRes + "saveRes")
-                                    if (saveRes) {
-                                        Swal.fire({
-                                            position: 'top-center',
-                                            icon: 'success',
-                                            title: 'Order placed',
-                                            showConfirmButton: false,
-                                            timer: 1500
-                                        })
-                                        window.location.href = "/order";
-                                    }
-                                }
-                            }
-                            g();
-                        });
-                }
-            }).render('#paypal-button-container');
-        } else if (order.id) {
-
-            console.log(order)
-
-            const options = {
-                "key": "rzp_test_VdJI59WlbDKQw7", // Enter the Key ID generated from the Dashboard
-                "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-                "currency": "INR",
-                "name": "Shop. Corp",
-                "description": "Test Transaction",
-                "image": "https://example.com/your_logo",
-                "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-                "handler": async function (response) {
-                    console.log(response)
-                    const res = await fetch('/verifyPaymentRazorPay', {
-                        method: 'POST', // or 'PUT'
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(response),
-                    })
-                    console.log(res + "res")
-
-                    if (res) {
-                        const saveRes = await fetch('/saveOrder', {
-                            method: 'GET', // or 'PUT'
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                        })
-
-                        console.log(saveRes + "saveRes")
-                        if (saveRes) {
-                            Swal.fire({
-                                position: 'top-center',
-                                icon: 'success',
-                                title: 'Order placed',
-                                showConfirmButton: false,
-                                timer: 1500
-                            })
-                            window.location.href = "/order";
-                        }
-                    }
-                },
-                "prefill": {
-                    "name": "Gaurav Kumar",
-                    "email": "gaurav.kumar@example.com",
-                    "contact": "9999999999"
-                },
-                "notes": {
-                    "address": "Razorpay Corporate Office"
-                },
-                "theme": {
-                    "color": "#3399cc"
-                }
-            };
-
-            const rzp1 = new Razorpay(options);
-            rzp1.on('payment.failed', function (response) {
-                alert(response.error.code);
-                alert(response.error.description);
-                alert(response.error.source);
-                alert(response.error.step);
-                alert(response.error.reason);
-                alert(response.error.metadata.order_id);
-                alert(response.error.metadata.payment_id);
-            });
-            rzp1.open();
-        }
-        }
-        document.getElementById('rzp-button').onclick = function (e) {
-            f()
-            e.preventDefault();
-        }
-
-    </script>
+  </script>
 </div>

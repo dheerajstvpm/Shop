@@ -1,31 +1,47 @@
 <div class="container minHeight">
-    <div class="d-flex justify-content-center my-3">
-        <h1 class="mt-5 d-flex justify-content-center">Login</h1>
-    </div>
+  <div class="d-flex justify-content-center my-3">
+    <h1 class="mt-5 d-flex justify-content-center">Login</h1>
+  </div>
 
-    <div class="container-fluid d-flex justify-content-center">
-        <form class="col-md-12" action="/login" method="post">
-            <div class="my-3 d-flex justify-content-center">
-                <div class="col-md-4"></div>
-                <div class="col-md-4"> <input name="username" class="form-control text-center"
-                        id="exampleInputEmail" placeholder="Username" aria-describedby="emailHelp"></div>
-                <div class="text-start col-md-4 ps-2 pt-2 text-danger">{{usernameMessage}}</div>
-            </div>
-            <div class="mb-3 d-flex justify-content-center">
-                <div class="col-md-4"></div>
-                <div class="col-md-4"> <input type="password" name="password" class="form-control text-center"
-                        id="exampleInputPassword" placeholder="Password"></div>
-                <div class="text-start col-md-4 ps-2 pt-1 text-danger">{{passwordMessage}}</div>
-            </div>
-            <div class='mb-3 d-flex justify-content-center'>
-                <button type="submit" class="shadow btn btn-outline-dark">Login</button>
-            </div>
-            <div class="my-3 d-flex justify-content-center">
-                <a href="/mobileLogin" class="link-dark">Login using mobile number</a>
-            </div>
-            <div class="my-3 d-flex justify-content-center">
-                <a href="/signup" class="link-dark">Create an account</a>
-            </div>
-        </form>
-    </div>
+  <div class="container-fluid d-flex justify-content-center">
+    <form class="col-md-12" action="/login" method="post">
+      <div class="my-3 d-flex justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <input
+            name="username"
+            class="form-control text-center"
+            id="exampleInputEmail"
+            placeholder="Username"
+            aria-describedby="emailHelp"
+          /></div>
+        <div
+          class="text-start col-md-4 ps-2 pt-2 text-danger"
+        >{{usernameMessage}}</div>
+      </div>
+      <div class="mb-3 d-flex justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <input
+            type="password"
+            name="password"
+            class="form-control text-center"
+            id="exampleInputPassword"
+            placeholder="Password"
+          /></div>
+        <div
+          class="text-start col-md-4 ps-2 pt-1 text-danger"
+        >{{passwordMessage}}</div>
+      </div>
+      <div class="mb-3 d-flex justify-content-center">
+        <button type="submit" class="shadow btn btn-outline-dark">Login</button>
+      </div>
+      <div class="my-3 d-flex justify-content-center">
+        <a href="/mobileLogin" class="link-dark">Login using mobile number</a>
+      </div>
+      <div class="my-3 d-flex justify-content-center">
+        <a href="/signup" class="link-dark">Create an account</a>
+      </div>
+    </form>
+  </div>
 </div>

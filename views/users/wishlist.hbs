@@ -1,10 +1,10 @@
 <div class="container minHeight">
 
-    <div class="d-flex justify-content-end border-bottom my-3">
-        <h1>Wishlist</h1>
-    </div>
+  <div class="d-flex justify-content-end border-bottom my-3">
+    <h1>Wishlist</h1>
+  </div>
 
-    {{!-- <form action="/search" method="post" class="d-flex mb-3">
+  {{! <form action="/search" method="post" class="d-flex mb-3">
         <div>
             <button type="submit" class="shadow-lg btn btn-dark me-1">Search</button>
         </div>
@@ -14,29 +14,36 @@
                     id="searchInput">
             </div>
         </div>
-    </form> --}}
-    <div class="d-flex mb-3">
-        <table class=" table">
-            <thead>
-                <tr class="mt-5">
-                    <th class="text-center">Sl.</th>
-                    <th class="text-center">Image</th>
-                    <th class="text-center">Product Name</th>
-                    <th class="text-center">Price</th>
-                    <th class="text-center"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each result.wishlist}}
-                <tr class="mt-5">
-                    <th scope="row" class="text-center"><br>{{addOne @index}}.</th>
-                    <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image" style="width: 5rem; height: 5rem; object-fit: contain;"></td>
-                    <td class="text-center"><br>{{this.productName}}</td>
-                    <td class="text-center"><br>&#x20B9;{{this.price}}</td>
-                    <td class="text-center"><br><a href="/removeFromWishlist/{{this._id}}" class="shadow-lg btn btn-outline-danger">Remove</a></td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-    </div>
+    </form> }}
+  <div class="d-flex mb-3">
+    <table class="table">
+      <thead>
+        <tr class="mt-5">
+          <th class="text-center">Sl.</th>
+          <th class="text-center">Image</th>
+          <th class="text-center">Product Name</th>
+          <th class="text-center">Price</th>
+          <th class="text-center"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each result.wishlist}}
+          <tr class="mt-5">
+            <th scope="row" class="text-center"><br />{{addOne @index}}.</th>
+            <td class="text-center"><img
+                src="/images/image1{{this._id}}.jpg"
+                alt="image"
+                style="width: 5rem; height: 5rem; object-fit: contain;"
+              /></td>
+            <td class="text-center"><br />{{this.productName}}</td>
+            <td class="text-center"><br />&#x20B9;{{this.price}}</td>
+            <td class="text-center"><br /><a
+                href="/removeFromWishlist/{{this._id}}"
+                class="shadow-lg btn btn-outline-danger"
+              >Remove</a></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </div>

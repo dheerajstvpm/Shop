@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "E-commerce",
   "main": "app.js",
-    "engines": {
-      "node": ">18.18",
-      "npm": "Please use pnpm",
-      "pnpm": ">=8.15.1"
-    },
+  "engines": {
+    "node": ">=20.10",
+    "npm": "Please use pnpm",
+    "pnpm": ">=8.15.1"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "format": "pnpm exec prettier . --write"
   },
   "author": "",
   "license": "ISC",
@@ -34,5 +34,12 @@
     "razorpay": "^2.8.3",
     "twilio": "^3.82.2",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0 || ^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "prettier": "^3.2.5"
   }
 }

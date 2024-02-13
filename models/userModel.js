@@ -1,7 +1,6 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
-
 
 // const Product = require('../models/productModel')
 
@@ -19,7 +18,8 @@ const Schema = mongoose.Schema;
 //     count:{ type: String }
 // }, { timestamps: true })
 
-const cartSchema = new Schema({
+const cartSchema = new Schema(
+  {
     productName: { type: String },
     description: { type: String },
     price: { type: Number },
@@ -28,10 +28,13 @@ const cartSchema = new Schema({
     croppedImage: { type: String },
     category: { type: String },
     offer: { type: String },
-    count: { type: Number }
-}, { timestamps: true })
+    count: { type: Number },
+  },
+  { timestamps: true },
+);
 
-const wishlistSchema = new Schema({
+const wishlistSchema = new Schema(
+  {
     productName: { type: String },
     description: { type: String },
     price: { type: Number },
@@ -39,10 +42,13 @@ const wishlistSchema = new Schema({
     image: { type: String },
     croppedImage: { type: String },
     category: { type: String },
-    offer: { type: String }
-}, { timestamps: true })
+    offer: { type: String },
+  },
+  { timestamps: true },
+);
 
-const orderSchema = new Schema({
+const orderSchema = new Schema(
+  {
     productName: { type: String },
     description: { type: String },
     price: { type: Number },
@@ -60,38 +66,39 @@ const orderSchema = new Schema({
     updateBtn: { type: Boolean, default: true },
     returnBtn: { type: Boolean, default: false },
     cancelBtn: { type: Boolean, default: true },
-    orderStatus: { type: String, default: 'Order is under process' }
-}, { timestamps: true })
+    orderStatus: { type: String, default: "Order is under process" },
+  },
+  { timestamps: true },
+);
 
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     name: { type: String },
     username: { type: String },
     password: { type: String },
     mobile: { type: String },
     address: {
-        type: [],
-        default: []
+      type: [],
+      default: [],
     },
-    status: { type: String, default: ''},
+    status: { type: String, default: "" },
     wishlist: {
-        type: [wishlistSchema],
-        default: []
+      type: [wishlistSchema],
+      default: [],
     },
     cart: {
-        type: [cartSchema],
-        default: []
+      type: [cartSchema],
+      default: [],
     },
     order: {
-        type: [orderSchema],
-        default: []
-    }    
-}, { timestamps: true })
+      type: [orderSchema],
+      default: [],
+    },
+  },
+  { timestamps: true },
+);
 
-
-
-module.exports = mongoose.model('User', userSchema)
-
-
+module.exports = mongoose.model("User", userSchema);
 
 // User schema
 // User ID: _id
@@ -128,7 +135,6 @@ module.exports = mongoose.model('User', userSchema)
 // Minimum amount to qualify for discount: number
 // Discount percent: number
 // Maximum discount: number
-
 
 // Category schema
 // Category ID: _id

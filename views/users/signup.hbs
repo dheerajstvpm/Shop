@@ -1,57 +1,91 @@
 <div class="container minHeight">
-    <div class="d-flex justify-content-center my-3">
-        <h1 class="mt-5 text-center">Signup</h1>
-    </div>
+  <div class="d-flex justify-content-center my-3">
+    <h1 class="mt-5 text-center">Signup</h1>
+  </div>
 
-    <div class="container-fluid d-flex justify-content-center">
-        <form class="col-md-12" action="/signup" method="post">
-            <div class="my-3 d-flex justify-content-center">
-                <div class="col-md-4"></div>
-                <input type="text" name="name" class="form-control text-center" id="exampleInputName" placeholder="Name"
-                    aria-describedby="nameHelp">
-                <div class="col-md-4 text-start ps-2 pt-2 text-danger">{{nameMsg}}</div>
-            </div>
-            {{!-- <div class="my-3 d-flex justify-content-center">
+  <div class="container-fluid d-flex justify-content-center">
+    <form class="col-md-12" action="/signup" method="post">
+      <div class="my-3 d-flex justify-content-center">
+        <div class="col-md-4"></div>
+        <input
+          type="text"
+          name="name"
+          class="form-control text-center"
+          id="exampleInputName"
+          placeholder="Name"
+          aria-describedby="nameHelp"
+        />
+        <div class="col-md-4 text-start ps-2 pt-2 text-danger">{{nameMsg}}</div>
+      </div>
+      {{!-- <div class="my-3 d-flex justify-content-center">
                 <div class="col-md-4"></div>
                 <input type="text" name="address" class="form-control text-center" id="exampleInputAddress"
                     placeholder="Address" aria-describedby="addressHelp">
                 <div class="col-md-4 text-start ps-2 pt-2 text-danger">{{addressMsg}}</div>
             </div> --}}
-            <div class="my-3 d-flex justify-content-center">
-                <div class="col-md-4"></div>
-                <input type="text" name="mobileNumber" class="form-control text-center" id="exampleInputMobile"
-                    placeholder="Mobile Number" aria-describedby="mobileHelp">
-                <div class="col-md-4 text-start ps-2 pt-2 text-danger">{{mobileMsg}}</div>
-            </div>
-            <div class="my-3 d-flex justify-content-center">
-                <div class="col-md-4"></div>
-                <input type="text" name='username' class="form-control text-center" id="exampleInputEmail"
-                    placeholder="Username" aria-describedby="emailHelp">
-                <div class="col-md-4 text-start ps-2 pt-2 text-danger">{{usernameMsg}}</div>
-            </div>
-            <div class="mb-3 d-flex justify-content-center">
-                <div class="col-md-4"></div>
-                <input type="password" name="password" class="form-control text-center" id="exampleInputPassword"
-                    placeholder="Password">
-                <div class="col-md-4 text-start ps-2 pt-2 text-danger">{{pwdMsg}}</div>
-            </div>
-            <div class="mb-3 d-flex justify-content-center">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    (Password must contain atleast eight characters, one small letter, one capital letter, one number
-                    and one special character)
-                </div>
-                <div class="col-md-4"></div>
-            </div>
-            <div class="mb-3 d-flex justify-content-center">
-                <div class="col-md-4"></div>
-                <input type="password" name="confirmPassword" class="form-control text-center"
-                    id="exampleInputConfirmPassword" placeholder="Confirm Password">
-                <div class="col-md-4 text-start ps-2 pt-2 text-danger">{{confirmPwdMsg}}</div>
-            </div>
-            <div class='mb-3 d-flex justify-content-center'>
-                <button type="submit" class="shadow btn btn-dark">Signup</button>
-            </div>
-        </form>
-    </div>
+      <div class="my-3 d-flex justify-content-center">
+        <div class="col-md-4"></div>
+        <input
+          type="text"
+          name="mobileNumber"
+          class="form-control text-center"
+          id="exampleInputMobile"
+          placeholder="Mobile Number"
+          aria-describedby="mobileHelp"
+        />
+        <div
+          class="col-md-4 text-start ps-2 pt-2 text-danger"
+        >{{mobileMsg}}</div>
+      </div>
+      <div class="my-3 d-flex justify-content-center">
+        <div class="col-md-4"></div>
+        <input
+          type="text"
+          name="username"
+          class="form-control text-center"
+          id="exampleInputEmail"
+          placeholder="Username"
+          aria-describedby="emailHelp"
+        />
+        <div
+          class="col-md-4 text-start ps-2 pt-2 text-danger"
+        >{{usernameMsg}}</div>
+      </div>
+      <div class="mb-3 d-flex justify-content-center">
+        <div class="col-md-4"></div>
+        <input
+          type="password"
+          name="password"
+          class="form-control text-center"
+          id="exampleInputPassword"
+          placeholder="Password"
+        />
+        <div class="col-md-4 text-start ps-2 pt-2 text-danger">{{pwdMsg}}</div>
+      </div>
+      <div class="mb-3 d-flex justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          (Password must contain atleast eight characters, one small letter, one
+          capital letter, one number and one special character)
+        </div>
+        <div class="col-md-4"></div>
+      </div>
+      <div class="mb-3 d-flex justify-content-center">
+        <div class="col-md-4"></div>
+        <input
+          type="password"
+          name="confirmPassword"
+          class="form-control text-center"
+          id="exampleInputConfirmPassword"
+          placeholder="Confirm Password"
+        />
+        <div
+          class="col-md-4 text-start ps-2 pt-2 text-danger"
+        >{{confirmPwdMsg}}</div>
+      </div>
+      <div class="mb-3 d-flex justify-content-center">
+        <button type="submit" class="shadow btn btn-dark">Signup</button>
+      </div>
+    </form>
+  </div>
 </div>

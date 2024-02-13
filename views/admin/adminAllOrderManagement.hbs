@@ -1,10 +1,10 @@
 <div class="container minHeight">
 
-    <div class="d-flex justify-content-between mt-5">
-        <h1>Order management</h1>
-    </div>
+  <div class="d-flex justify-content-between mt-5">
+    <h1>Order management</h1>
+  </div>
 
-    {{!-- <form action="/search" method="post" class="d-flex mb-3">
+  {{! <form action="/search" method="post" class="d-flex mb-3">
         <div>
             <button type="submit" class="btn btn-dark me-1">Search</button>
         </div>
@@ -14,45 +14,69 @@
                     id="searchInput">
             </div>
         </div>
-    </form> --}}
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
-            {{#if page.previous}}
-            <li class="page-item"><a class="page-link" href="{{page.previous}}">Previous</a></li>
-            {{else}}
-            <li class="page-item disabled"><a class="page-link" href="{{page.previous}}">Previous</a></li>
-            {{/if}}
-            {{#if page.page1Active}}
-            <li class="page-item active" aria-current="page"><a class="page-link"
-                    href="/admin/allOrderManagement/{{page.page1}}">{{page.page1}}</a></li>
-            {{else}}
-            <li class="page-item"><a class="page-link"
-                    href="/admin/allOrderManagement/{{page.page1}}">{{page.page1}}</a></li>
-            {{/if}}
-            {{#if page.page2Active}}
-            <li class="page-item active"><a class="page-link"
-                    href="/admin/allOrderManagement/{{page.page2}}">{{page.page2}}</a></li>
-            {{else}}
-            <li class="page-item"><a class="page-link"
-                    href="/admin/allOrderManagement/{{page.page2}}">{{page.page2}}</a></li>
-            {{/if}}
-            {{#if page.page3Active}}
-            <li class="page-item active"><a class="page-link"
-                    href="/admin/allOrderManagement/{{page.page3}}">{{page.page3}}</a></li>
-            {{else}}
-            <li class="page-item"><a class="page-link"
-                    href="/admin/allOrderManagement/{{page.page3}}">{{page.page3}}</a></li>
-            {{/if}}
-            {{#if page.next}}
-            <li class="page-item"><a class="page-link" href="{{page.next}}">Next</a></li>
-            {{else}}
-            <li class="page-item disabled"><a class="page-link" href="{{page.next}}">Next</a></li>
-            {{/if}}
-        </ul>
-    </nav>
-    <div class="d-flex flex-column mb-3">
-        <table class=" table" id="table_id">
-            {{!-- <thead>
+    </form> }}
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+      {{#if page.previous}}
+        <li class="page-item"><a
+            class="page-link"
+            href="{{page.previous}}"
+          >Previous</a></li>
+      {{else}}
+        <li class="page-item disabled"><a
+            class="page-link"
+            href="{{page.previous}}"
+          >Previous</a></li>
+      {{/if}}
+      {{#if page.page1Active}}
+        <li class="page-item active" aria-current="page"><a
+            class="page-link"
+            href="/admin/allOrderManagement/{{page.page1}}"
+          >{{page.page1}}</a></li>
+      {{else}}
+        <li class="page-item"><a
+            class="page-link"
+            href="/admin/allOrderManagement/{{page.page1}}"
+          >{{page.page1}}</a></li>
+      {{/if}}
+      {{#if page.page2Active}}
+        <li class="page-item active"><a
+            class="page-link"
+            href="/admin/allOrderManagement/{{page.page2}}"
+          >{{page.page2}}</a></li>
+      {{else}}
+        <li class="page-item"><a
+            class="page-link"
+            href="/admin/allOrderManagement/{{page.page2}}"
+          >{{page.page2}}</a></li>
+      {{/if}}
+      {{#if page.page3Active}}
+        <li class="page-item active"><a
+            class="page-link"
+            href="/admin/allOrderManagement/{{page.page3}}"
+          >{{page.page3}}</a></li>
+      {{else}}
+        <li class="page-item"><a
+            class="page-link"
+            href="/admin/allOrderManagement/{{page.page3}}"
+          >{{page.page3}}</a></li>
+      {{/if}}
+      {{#if page.next}}
+        <li class="page-item"><a
+            class="page-link"
+            href="{{page.next}}"
+          >Next</a></li>
+      {{else}}
+        <li class="page-item disabled"><a
+            class="page-link"
+            href="{{page.next}}"
+          >Next</a></li>
+      {{/if}}
+    </ul>
+  </nav>
+  <div class="d-flex flex-column mb-3">
+    <table class="table" id="table_id">
+      {{! <thead>
                 <tr>
                     <th scope="col" class="text-center">Sl.</th>
                     <th scope="col" class="text-center">Product Name</th>
@@ -62,43 +86,53 @@
                     <th scope="col" class="text-center">Total</th>
                     <th scope="col" class="text-center">Status</th>
                 </tr>
-            </thead> --}}
-            <tbody class="table-group-divider">
-                {{#each order}}
-                <tr>
-                    {{!-- <th scope="row" class="text-center">{{addOne @index}}.</th> --}}
-                    <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
-                            style="width: 5rem; height: 5rem; object-fit: contain;">
-                    </td>
-                    <td class="text-center">{{this.productName}}</td>
-                    <td class="text-center">&#x20B9;{{this.price}}</td>
-                    {{!-- <td class="text-center">{{this.count}}</td>
+            </thead> }}
+      <tbody class="table-group-divider">
+        {{#each order}}
+          <tr>
+            {{!-- <th scope="row" class="text-center">{{addOne @index}}.</th> --}}
+            <td class="text-center"><img
+                src="/images/image1{{this._id}}.jpg"
+                alt="image"
+                style="width: 5rem; height: 5rem; object-fit: contain;"
+              />
+            </td>
+            <td class="text-center">{{this.productName}}</td>
+            <td class="text-center">&#x20B9;{{this.price}}</td>
+            {{!-- <td class="text-center">{{this.count}}</td>
                     <td class="text-center">{{multiply this.price this.count}}</td> --}}
-                    <td class="text-center">Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
-                    <form action="/admin/adminAllOrderUpdate/{{this.unique}}" method="post">
-                        <td class="text-center">
-                            {{#if returned}}
-                            <select name="status" id="status" disabled>
-                                <option selected disabled>Select status</option>
-                                <option value="dispatched">Dispatched</option>
-                                <option value="delivered">Delivered</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
-                            {{else}}
-                            <select name="status" id="status">
-                                <option selected disabled>Select status</option>
-                                <option value="Dispatched">Dispatched</option>
-                                <option value="Delivered">Delivered</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
-                            {{/if}}
-                        </td>
-                        <td class="text-center"><button type="submit" class="btn btn-dark">Update</button>
-                        </td>
-                    </form>
-                </tr>
-                {{/each}}
-                {{!-- <tr>
+            <td class="text-center">Ordered on
+              {{dateFormat createdAt}}<br />{{orderStatus}}</td>
+            <form
+              action="/admin/adminAllOrderUpdate/{{this.unique}}"
+              method="post"
+            >
+              <td class="text-center">
+                {{#if returned}}
+                  <select name="status" id="status" disabled>
+                    <option selected disabled>Select status</option>
+                    <option value="dispatched">Dispatched</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                {{else}}
+                  <select name="status" id="status">
+                    <option selected disabled>Select status</option>
+                    <option value="Dispatched">Dispatched</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                {{/if}}
+              </td>
+              <td class="text-center"><button
+                  type="submit"
+                  class="btn btn-dark"
+                >Update</button>
+              </td>
+            </form>
+          </tr>
+        {{/each}}
+        {{!-- <tr>
                     <th scope="row" class="text-center"></th>
                     <td class="text-center"></td>
                     <td class="text-center"></td>
@@ -106,12 +140,10 @@
                     <td class="text-center">{{total}}</td>
                     <td class="text-center"></td>
                 </tr> --}}
-            </tbody>
-        </table>
-    </div>
-    <script>
-        $(document).ready(function () {
-            $('#table_id').DataTable();
-        });
-    </script>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    $(document).ready(function () { $('#table_id').DataTable(); });
+  </script>
 </div>

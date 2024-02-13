@@ -1,10 +1,10 @@
 <div class="container minHeight">
 
-    <div class="d-flex justify-content-between mt-5 border-bottom">
-        <h1>User order management</h1>
-    </div>
+  <div class="d-flex justify-content-between mt-5 border-bottom">
+    <h1>User order management</h1>
+  </div>
 
-    {{!-- <form action="/search" method="post" class="d-flex mb-3">
+  {{! <form action="/search" method="post" class="d-flex mb-3">
         <div>
             <button type="submit" class="btn btn-dark me-1">Search</button>
         </div>
@@ -14,41 +14,52 @@
                     id="searchInput">
             </div>
         </div>
-    </form> --}}
-    <div class="d-flex flex-column my-3">
-        <table id="table_id" class=" table">
-            <thead>
-                <tr>                    
-                    <th scope="col" class="text-center">Image</th>
-                    <th scope="col" class="text-center">Product Name</th>
-                    <th scope="col" class="text-center">Total</th>
-                    <th scope="col" class="text-center">Status</th>
-                    <th scope="col" class="text-center"></th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider">
-                {{#each result}}
-                <tr>
-                    {{!-- <th scope="row" class="text-center">{{addOne @index}}.</th> --}}
-                    <td class="text-center"><img src="/images/image1{{this._id}}.jpg" alt="image"
-                            style="width: 5rem; height: 5rem; object-fit: contain;">
-                    </td>
-                    <td class="text-center">{{this.productName}}</td>
-                    <td class="text-center">&#x20B9;{{multiply this.count this.price}}</td>
-                    {{!-- <td class="text-center">{{this.count}}</td>
+    </form> }}
+  <div class="d-flex flex-column my-3">
+    <table id="table_id" class="table">
+      <thead>
+        <tr>
+          <th scope="col" class="text-center">Image</th>
+          <th scope="col" class="text-center">Product Name</th>
+          <th scope="col" class="text-center">Total</th>
+          <th scope="col" class="text-center">Status</th>
+          <th scope="col" class="text-center"></th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {{#each result}}
+          <tr>
+            {{!-- <th scope="row" class="text-center">{{addOne @index}}.</th> --}}
+            <td class="text-center"><img
+                src="/images/image1{{this._id}}.jpg"
+                alt="image"
+                style="width: 5rem; height: 5rem; object-fit: contain;"
+              />
+            </td>
+            <td class="text-center">{{this.productName}}</td>
+            <td class="text-center">&#x20B9;{{multiply
+                this.count
+                this.price
+              }}</td>
+            {{!-- <td class="text-center">{{this.count}}</td>
                     <td class="text-center">{{multiply this.price this.count}}</td> --}}
-                    <td class="text-center">Ordered on {{dateFormat createdAt}}<br>{{orderStatus}}</td>
-                    {{#if cancelBtn}}
-                    <td class="text-center"><a href="/admin/adminOrderCancel/{{this.unique}}"
-                            class="btn btn-dark">Cancel</a></td>
-                    {{else}}
-                    <td class="text-center"><a href="/admin/adminOrderCancel/{{this.unique}}"
-                            class="btn btn-dark disabled">Cancel</a></td>
-                    {{/if}}
+            <td class="text-center">Ordered on
+              {{dateFormat createdAt}}<br />{{orderStatus}}</td>
+            {{#if cancelBtn}}
+              <td class="text-center"><a
+                  href="/admin/adminOrderCancel/{{this.unique}}"
+                  class="btn btn-dark"
+                >Cancel</a></td>
+            {{else}}
+              <td class="text-center"><a
+                  href="/admin/adminOrderCancel/{{this.unique}}"
+                  class="btn btn-dark disabled"
+                >Cancel</a></td>
+            {{/if}}
 
-                </tr>
-                {{/each}}
-                {{!-- <tr>
+          </tr>
+        {{/each}}
+        {{!-- <tr>
                     <th scope="row" class="text-center"></th>
                     <td class="text-center"></td>
                     <td class="text-center"></td>
@@ -56,12 +67,10 @@
                     <td class="text-center">{{total}}</td>
                     <td class="text-center"></td>
                 </tr> --}}
-            </tbody>
-        </table>
-    </div>
-    <script>
-        $(document).ready(function () {
-            $('#table_id').DataTable();
-        });
-    </script>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    $(document).ready(function () { $('#table_id').DataTable(); });
+  </script>
 </div>

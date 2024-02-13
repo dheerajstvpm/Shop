@@ -1,20 +1,19 @@
 <div class="container minHeight">
-    <div class="d-flex justify-content-between my-3">
-        <h1 class="mt-5">Add New Category</h1>
+  <div class="d-flex justify-content-between my-3">
+    <h1 class="mt-5">Add New Category</h1>
+  </div>
+
+  <form action="/admin/addNewCategory" method="post">
+    <div class="row my-3">
+      <label for="category" class="col-md-1 col-form-label">Category</label>
+      <div class="col-md-3">
+        <input type="text" name="category" class="form-control" id="category" />
+      </div>
+      <div class="col-md-4 text-danger" role="alert">
+        {{categoryMsg}}
+      </div>
     </div>
 
-
-    <form action="/admin/addNewCategory" method="post">
-        <div class="row my-3">
-            <label for="category" class="col-md-1 col-form-label">Category</label>
-            <div class="col-md-3">
-                <input type="text" name="category" class="form-control" id="category">
-            </div>
-            <div class="col-md-4 text-danger" role="alert">
-                {{categoryMsg}}
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-dark mb-3">Add category</button>
-    </form>
+    <button type="submit" class="btn btn-dark mb-3">Add category</button>
+  </form>
 </div>

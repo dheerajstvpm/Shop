@@ -1,75 +1,36 @@
 <!-- Inside index.html -->
 <div class="container minHeight">
-    <button id="rzp-button1">Pay</button>
+  <button id="rzp-button1">Pay</button>
 
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    const order =
+    {{{order}}}
 
-    <script>
-        const order = {{{ order }}}
+    console.log(order) const options = { "key": "rzp_test_VdJI59WlbDKQw7", //
+    Enter the Key ID generated from the Dashboard "amount": order.amount, //
+    Amount is in currency subunits. Default currency is INR. Hence, 50000 refers
+    to 50000 paise "currency": "INR", "name": "Shop. Corp", "description": "Test
+    Transaction", "image": "https://example.com/your_logo", "order_id":
+    order.id, //This is a sample Order ID. Pass the `id` obtained in the
+    response of Step 1 "handler": async function (response) {
+    console.log(response) const res = await fetch('/verifyPaymentRazorPay', {
+    method: 'POST', // or 'PUT' headers: { 'Content-Type': 'application/json',
+    }, body: JSON.stringify(response), }) console.log(res + "res") if (res) {
+    const saveRes = await fetch('/saveOrder', { method: 'GET', // or 'PUT'
+    headers: { 'Content-Type': 'application/json', }, }) console.log(saveRes +
+    "saveRes") if (saveRes) { window.location.href = "/order"; } } }, "prefill":
+    { "name": "Gaurav Kumar", "email": "gaurav.kumar@example.com", "contact":
+    "9999999999" }, "notes": { "address": "Razorpay Corporate Office" },
+    "theme": { "color": "#3399cc" } }; const rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response) { alert(response.error.code);
+    alert(response.error.description); alert(response.error.source);
+    alert(response.error.step); alert(response.error.reason);
+    alert(response.error.metadata.order_id);
+    alert(response.error.metadata.payment_id); });
+    document.getElementById('rzp-button1').onclick = function (e) { rzp1.open();
+    e.preventDefault(); }
 
-        console.log(order)
-
-        const options = {
-            "key": "rzp_test_VdJI59WlbDKQw7", // Enter the Key ID generated from the Dashboard
-            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-            "currency": "INR",
-            "name": "Shop. Corp",
-            "description": "Test Transaction",
-            "image": "https://example.com/your_logo",
-            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            "handler": async function (response) {
-                console.log(response)
-                const res = await fetch('/verifyPaymentRazorPay', {
-                    method: 'POST', // or 'PUT'
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(response),
-                })
-                console.log(res + "res")
-
-                if (res) {
-                    const saveRes = await fetch('/saveOrder', {
-                        method: 'GET', // or 'PUT'
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
-
-                    console.log(saveRes + "saveRes")
-                    if (saveRes) {
-                        window.location.href = "/order";
-                    }
-                }
-            },
-            "prefill": {
-                "name": "Gaurav Kumar",
-                "email": "gaurav.kumar@example.com",
-                "contact": "9999999999"
-            },
-            "notes": {
-                "address": "Razorpay Corporate Office"
-            },
-            "theme": {
-                "color": "#3399cc"
-            }
-        };
-
-        const rzp1 = new Razorpay(options);
-        rzp1.on('payment.failed', function (response) {
-            alert(response.error.code);
-            alert(response.error.description);
-            alert(response.error.source);
-            alert(response.error.step);
-            alert(response.error.reason);
-            alert(response.error.metadata.order_id);
-            alert(response.error.metadata.payment_id);
-        });
-        document.getElementById('rzp-button1').onclick = function (e) {
-            rzp1.open();
-            e.preventDefault();
-        }
-
-    </script>
+  </script>
 </div>
