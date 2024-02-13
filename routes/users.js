@@ -1,17 +1,6 @@
 const express = require("express");
+
 const router = express.Router();
-
-// var bcrypt = require('bcryptjs');
-
-// const User = require('../models/userModel')
-// const Category = require('../models/categoryModel')
-// const Homepage = require('../models/homepageModel')
-// const Offer = require('../models/offerModel')
-// const Product = require('../models/productModel')
-// const Order = require('../models/orderModel')
-
-// const config = require('../controllers/config')
-// const client = require('twilio')(config.accountSid, config.authToken)
 
 const { check, validationResult } = require("express-validator");
 
