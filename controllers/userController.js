@@ -11,7 +11,7 @@ const Order = require('../models/orderModel')
 
 // const config = require('./config')
 
-require('dotenv').config()
+require('dotenv')
 
 const client = require('twilio')(process.env.accountSid, process.env.authToken);
 
