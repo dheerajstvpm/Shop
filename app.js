@@ -94,6 +94,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/", usersRouter);
+app.use("/healthCheck", (req,res)=>[
+  res.status(200).send({ status: "Invalid route" })
+]);
 app.use("/admin", adminRouter);
 
 //404 page
