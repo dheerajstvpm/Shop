@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "E-commerce",
   "main": "app.js",
+    "engines": {
+      "node": ">20.00",
+      "npm": "Please use pnpm",
+      "pnpm": ">=8.15.1"
+    },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js"

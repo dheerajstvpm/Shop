@@ -33,15 +33,13 @@ var moment = require('moment'); // require
 
 //connect to MongoDB
 // const dbURI = "mongodb://0.0.0.0:27017/Shop"
-console.log('connecting to db');
-
 mongoose.connect(process.env.dbURI)
   .then(() => {
-
-    //listening for requests
-    app.listen(process.env.PORT);
     console.log('connected to db');
-    console.log(`Node Express server listening on http://localhost:${process.env.PORT}`);
+    //listening for requests
+    // app.listen(process.env.PORT, () => {
+    //   console.log(`Example app listening on port ${process.env.PORT}`)
+    // });
   })
   .catch((err) => console.log(err))
 
@@ -107,3 +105,7 @@ app.use((req, res) => {
     res.status(404).render('error', { title: 'Shop.'})
   }
 })
+
+app.listen(process.env.PORT, () => {
+  console.log(`Example app listening on port ${process.env.PORT}`)
+});
