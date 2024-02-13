@@ -39,7 +39,8 @@ mongoose.connect(process.env.dbURI)
 
     //listening for requests
     app.listen(process.env.PORT);
-    console.log('connected to db')
+    console.log('connected to db');
+    console.log(`Node Express server listening on http://localhost:${process.env.PORT}`);
   })
   .catch((err) => console.log(err))
 
