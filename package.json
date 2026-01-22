@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "E-commerce",
   "main": "app.js",
-  "engines": {
-    "node": ">=18.18.0 <=20.11.0",
-    "npm": "Please use pnpm",
-    "pnpm": ">=8.15.1"
-  },
   "scripts": {
     "start": "nodemon app.js",
     "format": "pnpm exec prettier . --write"
