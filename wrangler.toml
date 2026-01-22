@@ -1,4 +1,4 @@
 name = "shop"
 main = "./app.js" # Or wherever your entry file is
-compatibility_date = "2024-09-23" # Must be this date or later
+compatibility_date = "2025-11-17" # Must be this date or later
 compatibility_flags = ["nodejs_compat"]
