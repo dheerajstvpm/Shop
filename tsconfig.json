@@ -3,6 +3,9 @@
     "compilerOptions": {
         "moduleResolution": "bundler",
         "jsx": "preserve",
-        "strict": true
+        "strict": true,
+        "types": [
+            "@cloudflare/workers-types"
+        ]
     }
 }

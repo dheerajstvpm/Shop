@@ -1,5 +1,6 @@
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
+/// <reference types="@astrojs/cloudflare" />
 
 declare namespace App {
     interface Locals {
