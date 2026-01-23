@@ -5,5 +5,10 @@ export default defineConfig({
     output: 'server',
     adapter: cloudflare({
         imageService: 'compile',
-    })
+    }),
+    vite: {
+        ssr: {
+            external: ['node:crypto', 'crypto']
+        }
+    }
 });

@@ -4,7 +4,7 @@ import dbConnect from '../lib/db';
 import User from '../models/userModel';
 import Product from '../models/productModel';
 import Offer from '../models/offerModel';
-import { randomUUID, createHmac } from 'node:crypto';
+// import { randomUUID, createHmac } from 'node:crypto'; // Removed static import
 // import Razorpay from 'razorpay'; // Removed static import
 // import 'dotenv/config'; // Handled by Astro
 
