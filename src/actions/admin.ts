@@ -5,22 +5,35 @@ import Admin from '../models/adminModel';
 import Product from '../models/productModel';
 import User from '../models/userModel';
 import bcrypt from 'bcryptjs';
-import fs from 'node:fs/promises';
-import path from 'node:path';
+// import fs from 'node:fs/promises'; // Removed static import
+// import path from 'node:path';      // Removed static import
 
 // Helper to save file (Note: This only works in Node/Local env, not Edge/Workers without R2/S3)
-// For migration purposes to keep it functioning locally as requested.
 async function saveFile(file: File, filename: string) {
-    const publicDir = path.resolve('./public/images');
-    // Ensure dir exists
-    try {
-        await fs.access(publicDir);
-    } catch {
-        await fs.mkdir(publicDir, { recursive: true });
+    if (import.meta.env.PROD) {
+        // In Cloudflare/Prod, filesystem writing is not possible.
+        // We'd need R2 or similar. For now, logging warning.
+        console.warn("Skipping file save in production (readonly fs).");
+        return;
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await fs.writeFile(path.join(publicDir, filename), buffer);
+    try {
+        const fs = (await import('node:fs/promises')).default;
+        const path = (await import('node:path')).default;
+
+        const publicDir = path.resolve('./public/images');
+        // Ensure dir exists
+        try {
+            await fs.access(publicDir);
+        } catch {
+            await fs.mkdir(publicDir, { recursive: true });
+        }
+
+        const buffer = Buffer.from(await file.arrayBuffer());
+        await fs.writeFile(path.join(publicDir, filename), buffer);
+    } catch (e) {
+        console.error("Dynamic import or save error:", e);
+    }
 }
 
 export const server = {
@@ -174,10 +187,14 @@ export const server = {
             await Product.findByIdAndDelete(id);
 
             try {
-                const publicDir = path.resolve('./public/images');
-                await fs.unlink(path.join(publicDir, `image1${id}.jpg`)).catch(() => { });
-                await fs.unlink(path.join(publicDir, `image2${id}.jpg`)).catch(() => { });
-                await fs.unlink(path.join(publicDir, `image3${id}.jpg`)).catch(() => { });
+                if (!import.meta.env.PROD) {
+                    const fs = (await import('node:fs/promises')).default;
+                    const path = (await import('node:path')).default;
+                    const publicDir = path.resolve('./public/images');
+                    await fs.unlink(path.join(publicDir, `image1${id}.jpg`)).catch(() => { });
+                    await fs.unlink(path.join(publicDir, `image2${id}.jpg`)).catch(() => { });
+                    await fs.unlink(path.join(publicDir, `image3${id}.jpg`)).catch(() => { });
+                }
             } catch (e) {
                 console.error("File delete error:", e);
             }
