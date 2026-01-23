@@ -5,7 +5,7 @@ import User from '../models/userModel';
 import Product from '../models/productModel';
 import Offer from '../models/offerModel';
 import { randomUUID, createHmac } from 'node:crypto';
-import Razorpay from 'razorpay';
+// import Razorpay from 'razorpay'; // Removed static import
 // import 'dotenv/config'; // Handled by Astro
 
 
@@ -49,7 +49,7 @@ async function saveOrderLogic(user: any, address: string, paymentOption: string)
             // But legacy logic used separate entries. Mongoose creates new _id for embedded doc by default.
             address: address,
             paymentOption: paymentOption,
-            unique: (await import('node:crypto')).randomUUID(),
+            unique: (await import('node:crypto' + '')).randomUUID(),
             orderStatus: "Order is under process",
             userId: user.name,
             priceAfterOffer: Math.round(offerPrice * item.count),
@@ -132,14 +132,17 @@ export const server = {
 
             const amount = await calculateTotal(user.cart);
 
-            const instance = new Razorpay({
-                key_id: process.env.razorPayTestKeyId || "",
-                key_secret: process.env.razorPayTestKeySecret || ""
-            });
-
             try {
-                const cryptoModule = (await import('node:crypto'));
+                const cryptoName = 'node:crypto';
+                const cryptoModule = (await import(cryptoName));
                 const receiptId = cryptoModule.randomUUID();
+
+                const Razorpay = (await import('razorpay')).default;
+                const instance = new Razorpay({
+                    key_id: process.env.razorPayTestKeyId || "",
+                    key_secret: process.env.razorPayTestKeySecret || ""
+                });
+
                 const order = await instance.orders.create({
                     amount: amount * 100, // paise
                     currency: "INR",
@@ -176,7 +179,8 @@ export const server = {
             if (!uidCookie) return { success: false, error: "Unauthorized" };
 
             const secret = process.env.razorPayTestKeySecret || "";
-            const cryptoModule = (await import('node:crypto'));
+            const cryptoName = 'node:crypto';
+            const cryptoModule = (await import(cryptoName));
             const generated_signature = cryptoModule.createHmac('sha256', secret)
                 .update(input.razorpay_order_id + "|" + input.razorpay_payment_id)
                 .digest('hex');

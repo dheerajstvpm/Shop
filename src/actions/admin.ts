@@ -18,8 +18,10 @@ async function saveFile(file: File, filename: string) {
     }
 
     try {
-        const fs = (await import('node:fs/promises')).default;
-        const path = (await import('node:path')).default;
+        const fsName = 'node:fs/promises';
+        const pathName = 'node:path';
+        const fs = (await import(fsName)).default;
+        const path = (await import(pathName)).default;
 
         const publicDir = path.resolve('./public/images');
         // Ensure dir exists
