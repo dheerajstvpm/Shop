@@ -1,4 +1,5 @@
 name = "shop"
-main = "./app.js" # Or wherever your entry file is
-compatibility_date = "2025-11-17" # Must be this date or later
+pages_build_output_dir = "./dist"
+compatibility_date = "2025-11-17"
 compatibility_flags = ["nodejs_compat"]
+
