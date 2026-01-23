@@ -49,7 +49,7 @@ async function saveOrderLogic(user: any, address: string, paymentOption: string)
             // But legacy logic used separate entries. Mongoose creates new _id for embedded doc by default.
             address: address,
             paymentOption: paymentOption,
-            unique: randomUUID(),
+            unique: (await import('node:crypto')).randomUUID(),
             orderStatus: "Order is under process",
             userId: user.name,
             priceAfterOffer: Math.round(offerPrice * item.count),
@@ -138,10 +138,12 @@ export const server = {
             });
 
             try {
+                const cryptoModule = (await import('node:crypto'));
+                const receiptId = cryptoModule.randomUUID();
                 const order = await instance.orders.create({
                     amount: amount * 100, // paise
                     currency: "INR",
-                    receipt: randomUUID(),
+                    receipt: receiptId,
                 });
                 return {
                     success: true,
@@ -174,7 +176,8 @@ export const server = {
             if (!uidCookie) return { success: false, error: "Unauthorized" };
 
             const secret = process.env.razorPayTestKeySecret || "";
-            const generated_signature = createHmac('sha256', secret)
+            const cryptoModule = (await import('node:crypto'));
+            const generated_signature = cryptoModule.createHmac('sha256', secret)
                 .update(input.razorpay_order_id + "|" + input.razorpay_payment_id)
                 .digest('hex');
 
