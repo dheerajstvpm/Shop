@@ -1,0 +1,147 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import dbConnect from "../../../lib/db";
+import Category from "../../../models/categoryModel";
+import Offer from "../../../models/offerModel";
+import { actions } from "astro:actions";
+
+const admin = Astro.locals.admin;
+if (!admin) {
+    return Astro.redirect("/admin/login");
+}
+
+await dbConnect();
+const categories = await Category.find({}).lean();
+const offers = await Offer.find({}).lean();
+
+const result = Astro.getActionResult(actions.admin.addProduct);
+
+if (result && !result.error && result.data?.success) {
+    return Astro.redirect("/admin/products");
+}
+---
+
+<Layout title="Shop.admin | Add Product" admin={true}>
+    <div class="container minHeight">
+        <div
+            class="d-flex justify-content-between my-3 border-bottom align-items-center"
+        >
+            <h1>Add Product</h1>
+            <a href="/admin/products" class="btn btn-dark">Back</a>
+        </div>
+
+        {
+            result?.data?.error && (
+                <div class="alert alert-danger">{result.data.error}</div>
+            )
+        }
+
+        <form
+            method="POST"
+            action={actions.admin.addProduct}
+            enctype="multipart/form-data"
+            class="row g-3 mb-5"
+        >
+            <div class="col-md-6">
+                <label for="productName" class="form-label">Product Name</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="productName"
+                    required
+                />
+            </div>
+            <div class="col-md-6">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" name="category" required>
+                    <option value="">Select Category</option>
+                    {
+                        categories.map((cat) => (
+                            <option value={cat.categoryName}>
+                                {cat.categoryName}
+                            </option>
+                        ))
+                    }
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label for="description" class="form-label">Description</label>
+                <textarea
+                    class="form-control"
+                    name="description"
+                    rows="3"
+                    required></textarea>
+            </div>
+
+            <div class="col-md-4">
+                <label for="price" class="form-label">Price</label>
+                <input
+                    type="number"
+                    class="form-control"
+                    name="price"
+                    required
+                />
+            </div>
+            <div class="col-md-4">
+                <label for="stock" class="form-label">Stock</label>
+                <input
+                    type="number"
+                    class="form-control"
+                    name="stock"
+                    required
+                />
+            </div>
+            <div class="col-md-4">
+                <label for="offer" class="form-label">Offer</label>
+                <select class="form-select" name="offer">
+                    <option value="">No Offer</option>
+                    {
+                        offers.map((off) => (
+                            <option value={off.offerName}>
+                                {off.offerName}
+                            </option>
+                        ))
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="image1" class="form-label">Image 1</label>
+                <input
+                    type="file"
+                    class="form-control"
+                    name="image1"
+                    accept="image/*"
+                    required
+                />
+            </div>
+            <div class="col-md-4">
+                <label for="image2" class="form-label">Image 2</label>
+                <input
+                    type="file"
+                    class="form-control"
+                    name="image2"
+                    accept="image/*"
+                    required
+                />
+            </div>
+            <div class="col-md-4">
+                <label for="image3" class="form-label">Image 3</label>
+                <input
+                    type="file"
+                    class="form-control"
+                    name="image3"
+                    accept="image/*"
+                    required
+                />
+            </div>
+
+            <div class="col-12 d-flex justify-content-center mt-4">
+                <button type="submit" class="btn btn-primary px-5"
+                    >Add Product</button
+                >
+            </div>
+        </form>
+    </div>
+</Layout>

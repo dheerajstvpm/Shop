@@ -1,0 +1,63 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { actions } from "astro:actions";
+
+const admin = Astro.locals.admin;
+if (!admin) {
+    return Astro.redirect("/admin/login");
+}
+---
+
+<Layout title="Shop.admin" admin={true}>
+    <div class="container minHeight">
+        <div class="d-flex justify-content-between my-3 border-bottom">
+            <h1>Admin Homepage</h1>
+            <form method="POST" action={actions.admin.logout}>
+                <button type="submit" class="btn btn-dark">Logout</button>
+            </form>
+        </div>
+
+        <div class="d-flex justify-content-between my-5">
+            <a
+                class="link-dark fs-3 text-decoration-none"
+                href="/admin/products">Product Management</a
+            >
+            {/* Note: product management page to be created */}
+            <a
+                class="link-dark fs-3 text-decoration-none"
+                href="/admin/categories">Category Management</a
+            >
+        </div>
+        <div class="d-flex justify-content-between my-5">
+            <a class="link-dark fs-3 text-decoration-none" href="/admin/offers"
+                >Offer Management</a
+            >
+            <a class="link-dark fs-3 text-decoration-none" href="/admin/coupons"
+                >Coupon Management</a
+            >
+        </div>
+        <div class="d-flex justify-content-between my-5">
+            <a class="link-dark fs-3 text-decoration-none" href="/admin/users"
+                >User Management</a
+            >
+            <a class="link-dark fs-3 text-decoration-none" href="/admin/orders"
+                >Order Management</a
+            >
+        </div>
+        <div class="d-flex justify-content-between my-5">
+            <a class="link-dark fs-3 text-decoration-none" href="#"
+                >Homepage Layout</a
+            >
+            <a
+                class="link-dark fs-3 text-decoration-none"
+                href="/admin/dashboard">Admin Dashboard</a
+            >
+        </div>
+        <div class="d-flex justify-content-center my-5">
+            <a
+                class="link-dark fs-3 text-decoration-none"
+                href="/admin/add-admin">Add new admin</a
+            >
+        </div>
+    </div>
+</Layout>

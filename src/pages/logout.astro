@@ -1,0 +1,12 @@
+---
+import { actions } from "astro:actions";
+
+const result = Astro.getActionResult(actions.logout);
+
+// If not already submitted/processed, trigger it or handle it manually via cookie clearing if actions need form submission.
+// However, since we are in a GET request page, we cannot "trigger" a POST action easily without a form.
+// But we can manually clear the cookie here in frontmatter for a "GET" logout.
+
+Astro.cookies.delete("uid", { path: "/" });
+return Astro.redirect("/");
+---

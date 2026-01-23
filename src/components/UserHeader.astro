@@ -1,0 +1,92 @@
+---
+const { loginName, cartCount, wishlistCount } = Astro.props;
+---
+<div class="container">
+  <nav class="navbar navbar-expand-lg border-bottom">
+    <div class="container-fluid p-0">
+      <a class="navbar-brand fs-1" href="/">Shop.</a>
+      {loginName && (
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      )}
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarSupportedContent"
+        >
+          <ul class="navbar-nav mb-2 mb-lg-0">
+            {loginName ? (
+                <>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/cart/"><button
+                    class="dropdown-item position-relative"
+                    type="button"
+                  >Cart
+                    {cartCount && (
+                      <span
+                        class="position-absolute top-100 start-0 mt-1 translate-middle badge rounded-pill text-primary border"
+                      >
+                        {cartCount}
+                      </span>
+                    )}
+                  </button></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/wishlist/"><button
+                    class="dropdown-item position-relative"
+                    type="button"
+                  >Wishlist
+                    {wishlistCount && (
+                      <span
+                        class="position-absolute top-100 start-0 mt-1 translate-middle badge rounded-pill text-primary border"
+                      >
+                        {wishlistCount}
+                      </span>
+                    )}
+                  </button></a>
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {loginName}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-lg-end">
+                  <li><a class="dropdown-item" href="/order/">Orders</a></li>
+                  <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                  <li>
+                    <hr class="dropdown-divider" />
+                  </li>
+                  <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
+              </li>
+              </>
+            ) : (
+              <li class="nav-item">
+                <a href="/login"><button
+                    type="button"
+                    class="shadow btn btn-outline-dark me-2"
+                  >Login</button></a>
+                <a href="/signup"><button
+                    type="button"
+                    class="shadow btn btn-dark"
+                  >Sign up</button></a>
+              </li>
+            )}
+          </ul>
+        </div>
+    </div>
+  </nav>
+</div>

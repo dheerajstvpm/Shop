@@ -1,0 +1,126 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { actions } from "astro:actions";
+
+const result = Astro.getActionResult(actions.signup);
+
+if (result && !result.error && result.data?.success) {
+    return Astro.redirect("/login");
+}
+---
+
+<Layout title="Shop. | Signup">
+    <div class="container minHeight">
+        <div class="d-flex justify-content-center my-3">
+            <h1 class="mt-5 text-center">Signup</h1>
+        </div>
+
+        <div class="container-fluid d-flex justify-content-center">
+            <form class="col-md-12" method="POST" action={actions.signup}>
+                {
+                    result?.data?.error && (
+                        <div
+                            class="alert alert-danger text-center col-md-4 mx-auto"
+                            role="alert"
+                        >
+                            {result.data.error}
+                        </div>
+                    )
+                }
+                {
+                    result?.error && (
+                        <div
+                            class="alert alert-danger text-center col-md-4 mx-auto"
+                            role="alert"
+                        >
+                            {result.error.message}
+                        </div>
+                    )
+                }
+
+                <div class="my-3 d-flex justify-content-center">
+                    <div class="col-md-4"></div>
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control text-center"
+                        id="exampleInputName"
+                        placeholder="Name"
+                        aria-describedby="nameHelp"
+                        required
+                    />
+                    <div class="col-md-4 text-start ps-2 pt-2 text-danger">
+                    </div>
+                </div>
+                <div class="my-3 d-flex justify-content-center">
+                    <div class="col-md-4"></div>
+                    <input
+                        type="text"
+                        name="mobileNumber"
+                        class="form-control text-center"
+                        id="exampleInputMobile"
+                        placeholder="Mobile Number"
+                        aria-describedby="mobileHelp"
+                        required
+                    />
+                    <div class="col-md-4 text-start ps-2 pt-2 text-danger">
+                    </div>
+                </div>
+                <div class="my-3 d-flex justify-content-center">
+                    <div class="col-md-4"></div>
+                    <input
+                        type="text"
+                        name="username"
+                        class="form-control text-center"
+                        id="exampleInputEmail"
+                        placeholder="Username"
+                        aria-describedby="emailHelp"
+                        required
+                    />
+                    <div class="col-md-4 text-start ps-2 pt-2 text-danger">
+                    </div>
+                </div>
+                <div class="mb-3 d-flex justify-content-center">
+                    <div class="col-md-4"></div>
+                    <input
+                        type="password"
+                        name="password"
+                        class="form-control text-center"
+                        id="exampleInputPassword"
+                        placeholder="Password"
+                        required
+                    />
+                    <div class="col-md-4 text-start ps-2 pt-2 text-danger">
+                    </div>
+                </div>
+                <div class="mb-3 d-flex justify-content-center">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        (Password must contain atleast eight characters, one
+                        small letter, one capital letter, one number and one
+                        special character)
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+                <div class="mb-3 d-flex justify-content-center">
+                    <div class="col-md-4"></div>
+                    <input
+                        type="password"
+                        name="confirmPassword"
+                        class="form-control text-center"
+                        id="exampleInputConfirmPassword"
+                        placeholder="Confirm Password"
+                        required
+                    />
+                    <div class="col-md-4 text-start ps-2 pt-2 text-danger">
+                    </div>
+                </div>
+                <div class="mb-3 d-flex justify-content-center">
+                    <button type="submit" class="shadow btn btn-dark"
+                        >Signup</button
+                    >
+                </div>
+            </form>
+        </div>
+    </div>
+</Layout>

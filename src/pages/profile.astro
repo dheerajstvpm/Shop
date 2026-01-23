@@ -1,0 +1,179 @@
+---
+import Layout from "../layouts/Layout.astro";
+import dbConnect from "../lib/db";
+import User from "../models/userModel";
+import { actions } from "astro:actions";
+
+const userLocals = Astro.locals.user;
+if (!userLocals) {
+    return Astro.redirect("/login");
+}
+
+await dbConnect();
+const user = await User.findById(userLocals._id).lean();
+
+const updateResult = Astro.getActionResult(actions.updateProfile);
+const addressResult = Astro.getActionResult(actions.manageAddress);
+---
+
+<Layout
+    title="My Profile"
+    loginName={user.name}
+    cartCount={user.cart?.length}
+    wishlistCount={user.wishlist?.length}
+>
+    <div class="container minHeight">
+        <div class="d-flex justify-content-center my-3 border-bottom">
+            <h1>My Profile</h1>
+        </div>
+
+        {
+            updateResult?.error && (
+                <div class="alert alert-danger">
+                    {updateResult.error.message}
+                </div>
+            )
+        }
+        {
+            addressResult?.error && (
+                <div class="alert alert-danger">
+                    {addressResult.error.message}
+                </div>
+            )
+        }
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Personal Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form
+                            method="POST"
+                            action={actions.updateProfile}
+                            class="d-flex flex-column gap-3"
+                        >
+                            <div>
+                                <label class="form-label"
+                                    >Username (Email)</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    value={user.username}
+                                    disabled
+                                    readonly
+                                />
+                            </div>
+                            <div>
+                                <label class="form-label">Name</label>
+                                <div class="input-group">
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        class="form-control"
+                                        value={user.name}
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-secondary"
+                                        >Update</button
+                                    >
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Mobile</label>
+                                <div class="input-group">
+                                    <input
+                                        type="text"
+                                        name="mobile"
+                                        class="form-control"
+                                        value={user.mobile}
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-secondary"
+                                        >Update</button
+                                    >
+                                </div>
+                            </div>
+                            <div>
+                                <a
+                                    href="/change-password"
+                                    class="btn btn-sm btn-outline-warning"
+                                    >Change Password</a
+                                >
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Manage Addresses</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group mb-3">
+                            {
+                                user.address && user.address.length > 0 ? (
+                                    user.address.map(
+                                        (addr: string, idx: number) => (
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span>{addr}</span>
+                                                <form
+                                                    method="POST"
+                                                    action={
+                                                        actions.manageAddress
+                                                    }
+                                                    style="display:inline;"
+                                                >
+                                                    <input
+                                                        type="hidden"
+                                                        name="action"
+                                                        value="delete"
+                                                    />
+                                                    <input
+                                                        type="hidden"
+                                                        name="address"
+                                                        value={addr}
+                                                    />
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-sm btn-danger"
+                                                    >
+                                                        &times;
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        ),
+                                    )
+                                ) : (
+                                    <li class="list-group-item text-muted">
+                                        No addresses saved.
+                                    </li>
+                                )
+                            }
+                        </ul>
+
+                        <form method="POST" action={actions.manageAddress}>
+                            <input type="hidden" name="action" value="add" />
+                            <div class="input-group">
+                                <textarea
+                                    name="address"
+                                    class="form-control"
+                                    placeholder="Add new address"
+                                    required></textarea>
+                                <button type="submit" class="btn btn-primary"
+                                    >Add</button
+                                >
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>

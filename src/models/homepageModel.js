@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const Product = require("../models/productModel");
+// Product import removed as it was unused in the original file.
+// import Product from "./productModel.js";
 
 const productSchema = new Schema(
   {
@@ -63,6 +64,7 @@ const homepageSchema = new Schema({
     type: productSchema,
     default: {},
   },
-});
+  // Ensure we can add more fields without error if schema evolves
+}, { strict: false });
 
-module.exports = mongoose.model("Homepage", homepageSchema);
+export default mongoose.models.Homepage || mongoose.model("Homepage", homepageSchema);

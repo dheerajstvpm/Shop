@@ -1,0 +1,409 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import dbConnect from "../../lib/db";
+import User from "../../models/userModel";
+import Offer from "../../models/offerModel";
+import { actions } from "astro:actions";
+
+const userLocals = Astro.locals.user;
+if (!userLocals) {
+    return Astro.redirect("/login");
+}
+
+await dbConnect();
+const user = await User.findById(userLocals._id);
+const cartItems = user.cart;
+const offers = await Offer.find({}).lean();
+
+let total = 0;
+let beforeTotal = 0;
+const enrichedCart = [];
+
+for (const item of cartItems) {
+    const itemObj = item.toObject();
+    let offerPrice = item.price;
+    const appliedOffer = offers.find((o: any) => o.offerName === item.offer);
+
+    if (appliedOffer) {
+        const discount = (appliedOffer.discount * item.price) / 100;
+        offerPrice = item.price - discount;
+    }
+
+    itemObj.offerPrice = Math.round(offerPrice);
+    itemObj.total = Math.round(offerPrice * item.count);
+    total += itemObj.total;
+    beforeTotal += item.price * item.count;
+    enrichedCart.push(itemObj);
+}
+
+const result = Astro.getActionResult(actions.checkout.placeOrder);
+if (result && !result.error && result.data?.success) {
+    return Astro.redirect("/orders");
+}
+
+const addressResult = Astro.getActionResult(actions.checkout.addAddress);
+const paypalClientId = process.env.paypalClientid;
+---
+
+<Layout title="Checkout">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    {
+        paypalClientId && (
+            <script
+                src={`https://www.paypal.com/sdk/js?client-id=${paypalClientId}&currency=USD`}
+            />
+        )
+    }
+
+    <div class="container minHeight">
+        <div class="d-flex justify-content-end border-bottom my-3">
+            <h1>Checkout Summary</h1>
+        </div>
+
+        {
+            cartItems.length === 0 ? (
+                <h3 class="text-danger">Your cart is empty</h3>
+            ) : (
+                <>
+                    <div class="d-flex mb-3 table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-center">
+                                        Sl.
+                                    </th>
+                                    <th scope="col" class="text-center">
+                                        Product Name
+                                    </th>
+                                    <th scope="col" class="text-center">
+                                        Price
+                                    </th>
+                                    <th scope="col" class="text-center">
+                                        Offer price
+                                    </th>
+                                    <th scope="col" class="text-center">
+                                        Qty
+                                    </th>
+                                    <th scope="col" class="text-center">
+                                        Total
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {enrichedCart.map((item, index) => (
+                                    <tr>
+                                        <th scope="row" class="text-center">
+                                            {index + 1}.
+                                        </th>
+                                        <td class="text-center">
+                                            {item.productName}
+                                        </td>
+                                        <td class="text-center">
+                                            &#x20B9;{item.price}
+                                        </td>
+                                        <td class="text-center">
+                                            &#x20B9;{item.offerPrice}
+                                        </td>
+                                        <td class="text-center">
+                                            {item.count}
+                                        </td>
+                                        <td class="text-center">
+                                            &#x20B9;{item.total}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row my-3 d-flex justify-content-end">
+                        <div class="d-flex justify-content-end">
+                            <h5>Total price : &#x20B9;{beforeTotal}</h5>
+                        </div>
+                        <div class="d-flex justify-content-end mt-2">
+                            <h5>
+                                Amount to be paid :{" "}
+                                <span class="text-danger">&#x20B9;{total}</span>
+                            </h5>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Select Delivery Address</h4>
+                            <form method="POST" id="orderForm">
+                                <div class="d-flex flex-column gap-2 mt-3">
+                                    {user.address && user.address.length > 0 ? (
+                                        user.address.map(
+                                            (addr: string, idx: number) => (
+                                                <div class="form-check border p-3 rounded">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="radio"
+                                                        name="address"
+                                                        id={`addr-${idx}`}
+                                                        value={addr}
+                                                        required
+                                                    />
+                                                    <label
+                                                        class="form-check-label w-100"
+                                                        for={`addr-${idx}`}
+                                                    >
+                                                        {addr}
+                                                    </label>
+                                                </div>
+                                            ),
+                                        )
+                                    ) : (
+                                        <p class="text-muted">
+                                            No addresses found. Please add one
+                                            below.
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div class="mt-4">
+                                    <label class="form-label fw-bold">
+                                        Payment Method
+                                    </label>
+                                    <select
+                                        class="form-select"
+                                        name="paymentOption"
+                                        id="paymentOption"
+                                        required
+                                    >
+                                        <option value="COD">
+                                            Cash on Delivery (COD)
+                                        </option>
+                                        <option value="Razorpay">
+                                            Razorpay
+                                        </option>
+                                        <option value="Paypal">Paypal</option>
+                                    </select>
+                                </div>
+
+                                {result?.data?.error && (
+                                    <div class="alert alert-danger mt-3">
+                                        {result.data.error}
+                                    </div>
+                                )}
+                                <div
+                                    id="paymentError"
+                                    class="alert alert-danger mt-3 d-none"
+                                />
+
+                                <button
+                                    type="button"
+                                    id="placeOrderBtn"
+                                    class="btn btn-dark w-100 mt-4 py-2 fs-5"
+                                >
+                                    Place Order
+                                </button>
+                                <div
+                                    id="paypal-button-container"
+                                    class="mt-3 d-none"
+                                />
+                            </form>
+                        </div>
+
+                        <div class="col-md-6 border-start ps-5">
+                            <h4>Add New Address</h4>
+                            <form
+                                method="POST"
+                                action={actions.checkout.addAddress}
+                                class="mt-3"
+                            >
+                                <div class="mb-3">
+                                    <textarea
+                                        name="newAddress"
+                                        class="form-control"
+                                        rows="3"
+                                        placeholder="Enter your full address"
+                                        required
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    class="btn btn-outline-dark"
+                                >
+                                    Save Address
+                                </button>
+                                {addressResult?.data?.error && (
+                                    <div class="text-danger mt-2">
+                                        {addressResult.data.error}
+                                    </div>
+                                )}
+                            </form>
+                        </div>
+                    </div>
+                </>
+            )
+        }
+    </div>
+
+    <script>
+        import { actions } from "astro:actions";
+
+        const btn = document.getElementById("placeOrderBtn");
+        const form = document.getElementById("orderForm") as HTMLFormElement;
+        const errorDiv = document.getElementById("paymentError");
+        const paypalContainer = document.getElementById(
+            "paypal-button-container",
+        );
+        const paymentSelect = document.getElementById(
+            "paymentOption",
+        ) as HTMLSelectElement;
+
+        if (paymentSelect && btn && paypalContainer) {
+            paymentSelect.addEventListener("change", () => {
+                if (paymentSelect.value === "Paypal") {
+                    btn.classList.add("d-none");
+                    paypalContainer.classList.remove("d-none");
+                    renderPaypal();
+                } else {
+                    btn.classList.remove("d-none");
+                    paypalContainer.classList.add("d-none");
+                }
+            });
+        }
+
+        function renderPaypal() {
+            if (
+                (window as any).paypal &&
+                paypalContainer &&
+                paypalContainer.innerHTML === ""
+            ) {
+                (window as any).paypal
+                    .Buttons({
+                        createOrder: async (data: any, actions_paypal: any) => {
+                            const formData = new FormData(form);
+                            const address = formData.get("address");
+                            if (!address) {
+                                alert("Please select an address");
+                                return;
+                            }
+                            const { data: initData, error } =
+                                await actions.checkout.initiatePaypal({
+                                    address: address.toString(),
+                                });
+                            if (error || !initData?.success) {
+                                console.error(error);
+                                throw new Error("PayPal Init Failed");
+                            }
+                            return initData.orderId;
+                        },
+                        onApprove: async (data: any, actions_paypal: any) => {
+                            const formData = new FormData(form);
+                            const address = formData.get("address");
+                            const verifyRes =
+                                await actions.checkout.capturePaypal({
+                                    orderId: data.orderID,
+                                    address: address ? address.toString() : "",
+                                });
+                            if (verifyRes.data?.success) {
+                                window.location.href = "/orders";
+                            } else {
+                                alert("PayPal Capture Failed");
+                            }
+                        },
+                        onError: (err: any) => {
+                            console.error(err);
+                            if (errorDiv) {
+                                errorDiv.innerText = "PayPal Error occurred.";
+                                errorDiv.classList.remove("d-none");
+                            }
+                        },
+                    })
+                    .render("#paypal-button-container");
+            }
+        }
+
+        if (btn && form) {
+            btn.addEventListener("click", async (e) => {
+                e.preventDefault();
+                errorDiv?.classList.add("d-none");
+
+                const formData = new FormData(form);
+                const address = formData.get("address");
+                const paymentOption = formData.get("paymentOption");
+
+                if (!address) {
+                    alert("Please select an address");
+                    return;
+                }
+
+                if (paymentOption === "COD") {
+                    form.action = actions.checkout.placeOrder;
+                    form.submit();
+                } else if (paymentOption === "Razorpay") {
+                    btn.disabled = true;
+                    btn.innerText = "Processing...";
+
+                    try {
+                        const { data, error } =
+                            await actions.checkout.initiateRazorpay({
+                                address: address.toString(),
+                            });
+
+                        if (error || !data?.success) {
+                            throw new Error(
+                                error?.message ||
+                                    data?.error ||
+                                    "Initialization failed",
+                            );
+                        }
+
+                        const options = {
+                            key: data.keyId,
+                            amount: data.amount,
+                            currency: "INR",
+                            name: "Shop App",
+                            description: "Purchase",
+                            order_id: data.orderId,
+                            handler: async function (response: any) {
+                                const verifyRes =
+                                    await actions.checkout.verifyRazorpay({
+                                        razorpay_payment_id:
+                                            response.razorpay_payment_id,
+                                        razorpay_order_id:
+                                            response.razorpay_order_id,
+                                        razorpay_signature:
+                                            response.razorpay_signature,
+                                        address: address.toString(),
+                                    });
+
+                                if (verifyRes.data?.success) {
+                                    window.location.href = "/orders";
+                                } else {
+                                    alert("Payment verification failed");
+                                    btn.disabled = false;
+                                    btn.innerText = "Place Order";
+                                }
+                            },
+                            theme: { color: "#3399cc" },
+                        };
+
+                        const rzp1 = new (window as any).Razorpay(options);
+                        rzp1.on("payment.failed", function (response: any) {
+                            alert(
+                                "Payment Failed: " + response.error.description,
+                            );
+                            btn.disabled = false;
+                            btn.innerText = "Place Order";
+                        });
+                        rzp1.open();
+                    } catch (err: any) {
+                        if (errorDiv) {
+                            errorDiv.innerText = err.message;
+                            errorDiv.classList.remove("d-none");
+                        }
+                        btn.disabled = false;
+                        btn.innerText = "Place Order";
+                    }
+                }
+            });
+        }
+    </script>
+</Layout>

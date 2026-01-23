@@ -1,0 +1,86 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import dbConnect from "../../../lib/db";
+import Category from "../../../models/categoryModel";
+import { actions } from "astro:actions";
+
+const admin = Astro.locals.admin;
+if (!admin) {
+    return Astro.redirect("/admin/login");
+}
+
+await dbConnect();
+const categories = await Category.find({}).sort({ _id: -1 }).lean();
+
+const result = Astro.getActionResult(actions.admin.deleteCategory);
+---
+
+<Layout title="Shop.admin | Categories" admin={true}>
+    <div class="container minHeight">
+        <div
+            class="d-flex justify-content-between my-3 border-bottom align-items-center"
+        >
+            <h1>Category Management</h1>
+            <div>
+                <a
+                    href="/admin/categories/add"
+                    class="btn btn-outline-dark me-2">Add Category</a
+                >
+                <a href="/admin" class="btn btn-dark">Back</a>
+            </div>
+        </div>
+
+        {
+            result?.error && (
+                <div class="alert alert-danger">{result.error.message}</div>
+            )
+        }
+
+        <div class="table-responsive col-md-8 mx-auto">
+            <table
+                class="table table-striped table-hover align-middle text-center"
+            >
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Category Name</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        categories.map((cat, index) => (
+                            <tr>
+                                <th scope="row">{index + 1}</th>
+                                <td>{cat.categoryName}</td>
+                                <td>
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <form
+                                            method="POST"
+                                            action={
+                                                actions.admin.deleteCategory
+                                            }
+                                            onsubmit="return confirm('Are you sure?');"
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="categoryName"
+                                                value={cat.categoryName}
+                                            />
+                                            <button
+                                                type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                            >
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</Layout>

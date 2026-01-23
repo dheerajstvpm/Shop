@@ -1,0 +1,305 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import dbConnect from "../../lib/db";
+import Product from "../../models/productModel";
+import Offer from "../../models/offerModel";
+import { actions } from "astro:actions";
+
+const { id } = Astro.params;
+
+await dbConnect();
+const productModel = await Product.findOne({ _id: id }).lean();
+
+if (!productModel) {
+    return Astro.redirect("/404");
+}
+
+let result = JSON.parse(JSON.stringify(productModel));
+
+const offer = result.offer
+    ? await Offer.findOne({ offerName: result.offer }).lean()
+    : null;
+
+let offerPrice = result.price;
+if (offer) {
+    const discount = (offer.discount * result.price) / 100;
+    offerPrice = result.price - discount;
+}
+
+const user = Astro.locals.user;
+const loginName = user ? user.name : null;
+const cartCount = user?.cart?.length || 0;
+const wishlistCount = user?.wishlist?.length || 0;
+---
+
+<Layout
+    title="Shop."
+    loginName={loginName}
+    cartCount={cartCount}
+    wishlistCount={wishlistCount}
+>
+    <div class="container minHeight">
+        <div class="d-flex justify-content-end border-bottom my-3">
+            <h1>{result.productName}</h1>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col d-flex align-items-start">
+                <div
+                    class="shadow nav flex-column nav-tabs me-3 border border-0"
+                    id="v-nav-tab"
+                    role="tablist"
+                    aria-orientation="vertical"
+                >
+                    <button
+                        class="shadow nav-link active"
+                        id="v-nav-home-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#v-nav-home"
+                        type="button"
+                        role="tab"
+                        aria-controls="v-nav-home"
+                        aria-selected="true"
+                    >
+                        <img
+                            src={`/images/image1${result._id}.jpg`}
+                            class="border"
+                            style="width :5rem; height: 5rem;object-fit: contain;"
+                        />
+                    </button>
+                    <button
+                        class="shadow nav-link"
+                        id="v-nav-profile-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#v-nav-profile"
+                        type="button"
+                        role="tab"
+                        aria-controls="v-nav-profile"
+                        aria-selected="false"
+                    >
+                        <img
+                            src={`/images/image2${result._id}.jpg`}
+                            class="border"
+                            style="width :5rem; height: 5rem;object-fit: contain;"
+                        />
+                    </button>
+                    <button
+                        class="shadow nav-link"
+                        id="v-nav-messages-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#v-nav-messages"
+                        type="button"
+                        role="tab"
+                        aria-controls="v-nav-messages"
+                        aria-selected="false"
+                    >
+                        <img
+                            src={`/images/image3${result._id}.jpg`}
+                            class="border"
+                            style="width :5rem; height: 5rem;object-fit: contain;"
+                        />
+                    </button>
+                </div>
+                <div class="tab-content" id="v-nav-tabContent">
+                    <div
+                        class="tab-pane fade show active"
+                        id="v-nav-home"
+                        role="tabpanel"
+                        aria-labelledby="v-nav-home-tab"
+                        tabindex="0"
+                    >
+                        <div
+                            class="col zoomEffect d-flex justify-content between"
+                        >
+                            <img
+                                src={`/images/image1${result._id}.jpg`}
+                                alt="Cycle"
+                                class="shadow productImg1 border"
+                                style="width :500px; height: 400px"
+                            />
+                            <div
+                                class="shadow zoom1 border"
+                                style="display:none;"
+                            >
+                                <img
+                                    src={`/images/image1${result._id}.jpg`}
+                                    class="border"
+                                    alt="Cycle"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="tab-pane fade"
+                        id="v-nav-profile"
+                        role="tabpanel"
+                        aria-labelledby="v-nav-profile-tab"
+                        tabindex="0"
+                    >
+                        <div
+                            class="col zoomEffect d-flex justify-content between"
+                        >
+                            <img
+                                src={`/images/image2${result._id}.jpg`}
+                                alt="Cycle"
+                                class="shadow productImg2 border"
+                                style="width :500px; height: 400px"
+                            />
+                            <div
+                                class="shadow zoom2 border"
+                                style="display:none;"
+                            >
+                                <img
+                                    src={`/images/image2${result._id}.jpg`}
+                                    class="border"
+                                    alt="Cycle"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="tab-pane fade"
+                        id="v-nav-messages"
+                        role="tabpanel"
+                        aria-labelledby="v-nav-messages-tab"
+                        tabindex="0"
+                    >
+                        <div
+                            class="col zoomEffect d-flex justify-content between"
+                        >
+                            <img
+                                src={`/images/image3${result._id}.jpg`}
+                                alt="Cycle"
+                                class="shadow productImg3 border"
+                                style="width :500px; height: 400px"
+                            />
+                            <div
+                                class="shadow zoom3 border"
+                                style="display:none;"
+                            >
+                                <img
+                                    src={`/images/image3${result._id}.jpg`}
+                                    class="border"
+                                    alt="Cycle"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col ms-5 priceAndCart" style="max-width :500px;">
+                <div class="row my-5">
+                    <div class="col text-nowrap">
+                        Price : &#x20B9;{result.price}
+                    </div>
+                    <div class="col text-nowrap">Offer : {result.offer}</div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col text-nowrap">
+                        Offer Price : &#x20B9;{offerPrice}
+                    </div>
+                </div>
+                <div class="row">
+                    {
+                        result.stock ? (
+                            <>
+                                <div class="col">
+                                    {/* Use Actions for Add to Cart */}
+                                    <form
+                                        method="POST"
+                                        action={actions.addToCart}
+                                        class="inline-block"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="productId"
+                                            value={result._id}
+                                        />
+                                        <button
+                                            type="submit"
+                                            class="shadow btn btn-outline-dark mb-5"
+                                            style="width:120px ;"
+                                        >
+                                            Add to cart
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col">
+                                    {/* Buy Now also needs conversion to action or similar flow */}
+                                    <a
+                                        href={`/buyNowToCart/${result._id}`}
+                                        class="shadow btn btn-outline-dark mb-5"
+                                        style="width:120px ;"
+                                    >
+                                        Buy now
+                                    </a>
+                                </div>
+                            </>
+                        ) : (
+                            <div class="col">
+                                <a
+                                    href="/"
+                                    class="btn btn-outline-dark mb-5"
+                                    style="width:120px ;"
+                                >
+                                    Out of stock
+                                </a>
+                            </div>
+                        )
+                    }
+                </div>
+                <div class="row mb-5">
+                    <div class="col">
+                        <a
+                            href={`/addToWishlist/${result._id}`}
+                            class="shadow btn btn-outline-dark"
+                            style="width:120px ;">Wishlist</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div>
+                <h3>Product description</h3>
+                <div
+                    style="width: 100%; height:300px;"
+                    class="shadow-lg border p-3"
+                >
+                    <p>{result.description}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script is:inline>
+        const setupZoom = (imgClass, zoomClass) => {
+            let productImg = document.querySelector(imgClass);
+            let zoomDiv = document.querySelector(zoomClass);
+            let zoomedImg = document.querySelector(`${zoomClass}>img`);
+            let priceAndCart = document.querySelector(".priceAndCart");
+
+            if (productImg && zoomDiv && zoomedImg) {
+                productImg.addEventListener("mousemove", (e) => {
+                    zoomDiv.style.display = "block";
+                    if (priceAndCart) priceAndCart.style.display = "none";
+
+                    const rect = productImg.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width;
+                    const y = (e.clientY - rect.top) / rect.height;
+
+                    zoomedImg.style.transform = `translate3d(-${x * 100}%,-${y * 100}%,0)`;
+                });
+                productImg.addEventListener("mouseleave", (e) => {
+                    zoomDiv.style.display = "none";
+                    if (priceAndCart) priceAndCart.style.display = "block";
+                });
+            }
+        };
+
+        setupZoom(".productImg1", ".zoom1");
+        setupZoom(".productImg2", ".zoom2");
+        setupZoom(".productImg3", ".zoom3");
+    </script>
+</Layout>

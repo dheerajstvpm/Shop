@@ -1,0 +1,114 @@
+---
+import Layout from "../layouts/Layout.astro";
+import dbConnect from "../lib/db";
+import User from "../models/userModel";
+import { actions } from "astro:actions";
+
+const userLocals = Astro.locals.user;
+if (!userLocals) {
+    return Astro.redirect("/login");
+}
+
+await dbConnect();
+const user = await User.findById(userLocals._id);
+const wishlistItems = user.wishlist || [];
+
+const addResult = Astro.getActionResult(actions.addToCart);
+const removeResult = Astro.getActionResult(actions.removeFromWishlist);
+---
+
+<Layout
+    title="My Wishlist"
+    loginName={user.name}
+    cartCount={user.cart?.length}
+    wishlistCount={wishlistItems.length}
+>
+    <div class="container minHeight">
+        <div class="d-flex justify-content-center my-3 border-bottom">
+            <h1>My Wishlist</h1>
+        </div>
+
+        {
+            addResult?.error && (
+                <div class="alert alert-danger">{addResult.error.message}</div>
+            )
+        }
+        {
+            removeResult?.error && (
+                <div class="alert alert-danger">
+                    {removeResult.error.message}
+                </div>
+            )
+        }
+
+        {
+            wishlistItems.length === 0 ? (
+                <div class="text-center mt-5">
+                    <h3>Your wishlist is empty</h3>
+                    <a href="/" class="btn btn-dark mt-3">
+                        Start Shopping
+                    </a>
+                </div>
+            ) : (
+                <div class="row">
+                    {wishlistItems.map((item: any) => (
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <img
+                                    src={`/images/image1${item._id}.jpg`}
+                                    class="card-img-top p-3"
+                                    style="height: 250px; object-fit: contain;"
+                                    alt={item.productName}
+                                />
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-truncate">
+                                        {item.productName}
+                                    </h5>
+                                    <p class="card-text fw-bold text-success">
+                                        &#x20B9;{item.price}
+                                    </p>
+
+                                    <div class="mt-auto d-flex gap-2">
+                                        <form
+                                            method="POST"
+                                            action={actions.addToCart}
+                                            class="flex-grow-1"
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="productId"
+                                                value={item._id.toString()}
+                                            />
+                                            <button
+                                                type="submit"
+                                                class="btn btn-dark w-100"
+                                            >
+                                                Add to Cart
+                                            </button>
+                                        </form>
+                                        <form
+                                            method="POST"
+                                            action={actions.removeFromWishlist}
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="productId"
+                                                value={item._id.toString()}
+                                            />
+                                            <button
+                                                type="submit"
+                                                class="btn btn-outline-danger"
+                                            >
+                                                <i class="bi bi-trash" />
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+    </div>
+</Layout>

@@ -1,0 +1,411 @@
+---
+import Layout from "../layouts/Layout.astro";
+import dbConnect from "../lib/db";
+import Homepage from "../models/homepageModel";
+import User from "../models/userModel";
+
+await dbConnect();
+
+const user = Astro.locals.user;
+const loginName = user ? user.name : null;
+const cartCount = user?.cart?.length || 0;
+const wishlistCount = user?.wishlist?.length || 0;
+
+const result = await Homepage.find({}).lean();
+---
+
+<Layout
+    title="Shop."
+    loginName={loginName}
+    cartCount={cartCount}
+    wishlistCount={wishlistCount}
+>
+    <div class="container minHeight">
+        {
+            result.map((home) => (
+                <>
+                    <div
+                        id="carouselExampleDark"
+                        class="shadow-lg carousel carousel-dark slide mt-5 border"
+                        data-bs-ride="carousel"
+                    >
+                        <div class="carousel-indicators">
+                            <button
+                                type="button"
+                                data-bs-target="#carouselExampleDark"
+                                data-bs-slide-to="0"
+                                class="active"
+                                aria-current="true"
+                                aria-label="Slide 1"
+                            />
+                            <button
+                                type="button"
+                                data-bs-target="#carouselExampleDark"
+                                data-bs-slide-to="1"
+                                aria-label="Slide 2"
+                            />
+                            <button
+                                type="button"
+                                data-bs-target="#carouselExampleDark"
+                                data-bs-slide-to="2"
+                                aria-label="Slide 3"
+                            />
+                        </div>
+                        <div class="carousel-inner">
+                            <div
+                                class="carousel-item active"
+                                data-bs-interval="2000"
+                            >
+                                <a href={`/product/${home.banner1?._id}`}>
+                                    <img
+                                        src={`/images/image1${home.banner1?._id}.jpg`}
+                                        class="d-block w-45 mx-auto"
+                                        style="height:300px;"
+                                        alt="image"
+                                    />
+                                </a>
+                                <div class="carousel-caption d-none d-md-block text-danger"></div>
+                            </div>
+                            <div class="carousel-item" data-bs-interval="2000">
+                                <a href={`/product/${home.banner2?._id}`}>
+                                    <img
+                                        src={`/images/image1${home.banner2?._id}.jpg`}
+                                        class="d-block w-45 mx-auto"
+                                        style="height:300px;"
+                                        alt="image"
+                                    />
+                                </a>
+                            </div>
+                            <div class="carousel-item" data-bs-interval="2000">
+                                <a href={`/product/${home.banner3?._id}`}>
+                                    <img
+                                        src={`/images/image1${home.banner3?._id}.jpg`}
+                                        class="d-block w-45 mx-auto"
+                                        style="height:300px;"
+                                        alt="image"
+                                    />
+                                </a>
+                            </div>
+                        </div>
+                        <button
+                            class="carousel-control-prev"
+                            type="button"
+                            data-bs-target="#carouselExampleDark"
+                            data-bs-slide="next"
+                        >
+                            <span
+                                class="carousel-control-prev-icon"
+                                aria-hidden="true"
+                            />
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button
+                            class="carousel-control-next"
+                            type="button"
+                            data-bs-target="#carouselExampleDark"
+                            data-bs-slide="prev"
+                        >
+                            <span
+                                class="carousel-control-next-icon"
+                                aria-hidden="true"
+                            />
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
+                    <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link active"
+                                id="home-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#home-tab-pane"
+                                type="button"
+                                role="tab"
+                                aria-controls="home-tab-pane"
+                                aria-selected="true"
+                            >
+                                All cycles
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link"
+                                id="profile-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#profile-tab-pane"
+                                type="button"
+                                role="tab"
+                                aria-controls="profile-tab-pane"
+                                aria-selected="false"
+                            >
+                                Dutch cycles
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link"
+                                id="contact-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#contact-tab-pane"
+                                type="button"
+                                role="tab"
+                                aria-controls="contact-tab-pane"
+                                aria-selected="false"
+                            >
+                                Fixie
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link"
+                                id="another-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#another-tab-pane"
+                                type="button"
+                                role="tab"
+                                aria-controls="another-tab-pane"
+                                aria-selected="false"
+                            >
+                                Belt drive
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mb-5" id="myTabContent">
+                        <div
+                            class="tab-pane fade show active"
+                            id="home-tab-pane"
+                            role="tabpanel"
+                            aria-labelledby="home-tab"
+                            tabindex="0"
+                        >
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 gx-5">
+                                {[
+                                    "firstRow1",
+                                    "firstRow2",
+                                    "firstRow3",
+                                    "firstRow4",
+                                ].map((row) => (
+                                    <div class="col mt-5 d-flex justify-content-center">
+                                        <div
+                                            class="shadow-lg card"
+                                            style="width: 15rem; height: 22rem"
+                                        >
+                                            <a
+                                                href={`/product/${home[row]?._id}`}
+                                            >
+                                                <img
+                                                    src={`/images/image1${home[row]?._id}.jpg`}
+                                                    style="height: 15rem; object-fit: contain;"
+                                                    class="card-img-top"
+                                                    alt="cycle"
+                                                />
+                                            </a>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <h5 class="card-title">
+                                                        {home[row]?.productName}
+                                                    </h5>
+                                                    <p>
+                                                        &#x20B9;
+                                                        {home[row]?.price}
+                                                    </p>
+                                                </div>
+                                                <p class="card-title text-truncate">
+                                                    {home[row]?.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                                {[
+                                    "lastRow1",
+                                    "lastRow2",
+                                    "lastRow3",
+                                    "lastRow4",
+                                ].map((row) => (
+                                    <div class="col mt-5 d-flex justify-content-center">
+                                        <div
+                                            class="shadow-lg card"
+                                            style="width: 15rem; height: 22rem"
+                                        >
+                                            <a
+                                                href={`/product/${home[row]?._id}`}
+                                            >
+                                                <img
+                                                    src={`/images/image1${home[row]?._id}.jpg`}
+                                                    style="height: 15rem; object-fit: contain;"
+                                                    class="card-img-top"
+                                                    alt="cycle"
+                                                />
+                                            </a>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <h5 class="card-title">
+                                                        {home[row]?.productName}
+                                                    </h5>
+                                                    <p>
+                                                        &#x20B9;
+                                                        {home[row]?.price}
+                                                    </p>
+                                                </div>
+                                                <p class="card-title text-truncate">
+                                                    {home[row]?.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div
+                            class="tab-pane fade"
+                            id="profile-tab-pane"
+                            role="tabpanel"
+                            aria-labelledby="profile-tab"
+                            tabindex="0"
+                        >
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-5">
+                                {[
+                                    "firstRow1",
+                                    "firstRow2",
+                                    "firstRow3",
+                                    "firstRow4",
+                                ].map((row) => (
+                                    <div class="col mt-5 d-flex justify-content-center">
+                                        <div
+                                            class="shadow-lg card"
+                                            style="width: 15rem; height: 22rem"
+                                        >
+                                            <a
+                                                href={`/product/${home[row]?._id}`}
+                                            >
+                                                <img
+                                                    src={`/images/image1${home[row]?._id}.jpg`}
+                                                    style="height: 15rem; object-fit: contain;"
+                                                    class="card-img-top"
+                                                    alt="cycle"
+                                                />
+                                            </a>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <h5 class="card-title">
+                                                        {home[row]?.productName}
+                                                    </h5>
+                                                    <p>
+                                                        &#x20B9;
+                                                        {home[row]?.price}
+                                                    </p>
+                                                </div>
+                                                <p class="card-title text-truncate">
+                                                    {home[row]?.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        {/* Repetitive logic for other tabs simplified or copied as needed. */}
+                        <div
+                            class="tab-pane fade"
+                            id="contact-tab-pane"
+                            role="tabpanel"
+                            aria-labelledby="contact-tab"
+                            tabindex="0"
+                        >
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-5">
+                                {["lastRow1", "lastRow2"].map((row) => (
+                                    <div class="col mt-5 d-flex justify-content-center">
+                                        <div
+                                            class="shadow-lg card"
+                                            style="width: 15rem; height: 22rem"
+                                        >
+                                            <a
+                                                href={`/product/${home[row]?._id}`}
+                                            >
+                                                <img
+                                                    src={`/images/image1${home[row]?._id}.jpg`}
+                                                    style="height: 15rem; object-fit: contain;"
+                                                    class="card-img-top"
+                                                    alt="cycle"
+                                                />
+                                            </a>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <h5 class="card-title">
+                                                        {home[row]?.productName}
+                                                    </h5>
+                                                    <p>
+                                                        &#x20B9;
+                                                        {home[row]?.price}
+                                                    </p>
+                                                </div>
+                                                <p class="card-title text-truncate">
+                                                    {home[row]?.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div
+                            class="tab-pane fade"
+                            id="another-tab-pane"
+                            role="tabpanel"
+                            aria-labelledby="another-tab"
+                            tabindex="0"
+                        >
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 gx-5">
+                                {["lastRow3", "lastRow4"].map((row) => (
+                                    <div class="col mt-5 d-flex justify-content-center">
+                                        <div
+                                            class="shadow-lg card"
+                                            style="width: 15rem; height: 22rem"
+                                        >
+                                            <a
+                                                href={`/product/${home[row]?._id}`}
+                                            >
+                                                <img
+                                                    src={`/images/image1${home[row]?._id}.jpg`}
+                                                    style="height: 15rem; object-fit: contain;"
+                                                    class="card-img-top"
+                                                    alt="cycle"
+                                                />
+                                            </a>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <h5 class="card-title">
+                                                        {home[row]?.productName}
+                                                    </h5>
+                                                    <p>
+                                                        &#x20B9;
+                                                        {home[row]?.price}
+                                                    </p>
+                                                </div>
+                                                <p class="card-title text-truncate">
+                                                    {home[row]?.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </>
+            ))
+        }
+    </div>
+
+    <script is:inline>
+        const myCarousel = document.getElementById("myCarousel");
+        if (myCarousel) {
+            myCarousel.addEventListener("slid.bs.carousel", (event) => {
+                myCarousel.direction = "right";
+            });
+        }
+    </script>
+</Layout>

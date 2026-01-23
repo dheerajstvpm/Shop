@@ -1,0 +1,179 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import dbConnect from "../../lib/db";
+import User from "../../models/userModel";
+import Product from "../../models/productModel";
+import { actions } from "astro:actions";
+
+const admin = Astro.locals.admin;
+if (!admin) {
+    return Astro.redirect("/admin/login");
+}
+
+await dbConnect();
+
+// Dashboard Logic ported from adminController.js
+// Note: This logic iterates all users and orders. In a production app, use Aggregation Pipeline.
+const users = await User.find({}).lean();
+const sales: number[] = [];
+const timeOfSale: string[] = [];
+let total = 0;
+
+for (const user of users) {
+    if (user.order && user.order.length > 0) {
+        for (const order of user.order) {
+            if (order.orderStatus !== "Order cancelled") {
+                const saleAmount = order.count * order.price;
+                sales.push(saleAmount);
+                timeOfSale.push(
+                    new Date(order.createdAt).toISOString().substring(0, 10),
+                );
+            }
+        }
+    }
+}
+
+// Calculate Total Sales from Products (as per original logic, though it seems to calculate potential sales?)
+// Original logic: sum(result, "price", "sales") on Products.
+// Product schema has "sales" field which is incremented on order?
+// Yes, adminOrderCancel increments stock and decrements sales.
+// So we can use Product.sales to get total sales?
+// Original used: Product.find({}) -> sum(result, "price", "sales")
+const products = await Product.find({}).lean();
+total = products.reduce((acc, curr) => acc + curr.price * (curr.sales || 0), 0);
+
+// Product Chart Data (using Product sales)
+// Actually the original chart used 'users' orders data for chart, and Product data for Table?
+// Original:
+// Chart x: timeOfSale, y: sales (from Orders)
+// Table: Product.find({}) -> list products with sales figures.
+---
+
+<Layout title="Shop.admin | Dashboard" admin={true}>
+    <div class="container minHeight">
+        <div class="d-flex justify-content-between my-3 border-bottom">
+            <h1>Admin Dashboard</h1>
+            <form method="POST" action={actions.admin.logout}>
+                <button type="submit" class="btn btn-dark">Logout</button>
+            </form>
+        </div>
+
+        <div class="row d-flex justify-content-between">
+            <div id="myBar" style="max-width:500px" class="col my-3"></div>
+            <div id="myPlot" style="max-width:500px" class="col my-3"></div>
+        </div>
+
+        <div class="d-flex flex-column mb-3">
+            <table class="table table-hover" id="example">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-center">Sl.</th>
+                        <th scope="col" class="text-center">Product Name</th>
+                        <th scope="col" class="text-center">Price</th>
+                        <th scope="col" class="text-center">Sales in numbers</th
+                        >
+                        <th scope="col" class="text-center">Sales in amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        products.map((item, index) => (
+                            <tr>
+                                <th scope="row" class="text-center">
+                                    {index + 1}
+                                </th>
+                                <td class="text-center">{item.productName}</td>
+                                <td class="text-center">
+                                    &#x20B9;{item.price}
+                                </td>
+                                <td class="text-center">{item.sales || 0}</td>
+                                <td class="text-center">
+                                    &#x20B9;{item.price * (item.sales || 0)}
+                                </td>
+                            </tr>
+                        ))
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th scope="row" class="text-center"></th>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                        <td class="fw-bold text-center">Total sales</td>
+                        <td class="text-center">&#x20B9;{total}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="timeOfSale d-none">{timeOfSale.join(",")}</div>
+    <div class="salesData d-none">{sales.join(",")}</div>
+
+    <script is:inline>
+        // Logic ported from adminDashboard.hbs
+        const timeOfSaleEl = document.querySelector(".timeOfSale");
+        const salesDataEl = document.querySelector(".salesData");
+
+        if (timeOfSaleEl && salesDataEl) {
+            let timeOfSale = timeOfSaleEl.innerHTML;
+            let xArray = timeOfSale.split(",");
+
+            // sales is passed as string join, need to parse
+            let yArray = salesDataEl.innerHTML.split(",").map(Number);
+
+            // Define Data
+            let data = [
+                {
+                    x: xArray,
+                    y: yArray,
+                    mode: "markers",
+                    type: "scatter",
+                },
+            ];
+
+            let barData = [
+                {
+                    x: xArray,
+                    y: yArray,
+                    mode: "lines",
+                    type: "bar",
+                },
+            ];
+
+            // Define Layout
+            let layout = {
+                xaxis: { type: "date" },
+                yaxis: { title: "Sales" },
+                title: "Individual orders",
+            };
+
+            let barLayout = {
+                xaxis: { type: "date" },
+                yaxis: { title: "Sales" },
+                title: "Sales",
+            };
+
+            if (typeof Plotly !== "undefined") {
+                Plotly.newPlot("myPlot", data, layout);
+                Plotly.newPlot("myBar", barData, barLayout);
+            }
+        }
+
+        if (typeof $ !== "undefined") {
+            $(document).ready(function () {
+                if ($.fn.DataTable) {
+                    $("#example").DataTable({
+                        dom: "Bfrtip",
+                        buttons: [
+                            { extend: "copyHtml5", footer: true },
+                            { extend: "excelHtml5", footer: true },
+                            { extend: "csvHtml5", footer: true },
+                            { extend: "pdfHtml5", footer: true },
+                        ],
+                    });
+                }
+            });
+        }
+    </script>
+</Layout>

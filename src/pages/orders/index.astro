@@ -1,0 +1,94 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import dbConnect from "../../lib/db";
+import User from "../../models/userModel";
+
+const userLocals = Astro.locals.user;
+if (!userLocals) {
+    return Astro.redirect("/login");
+}
+
+await dbConnect();
+const user = await User.findById(userLocals._id);
+// Orders are embedded in user document
+const orders = user.order ? user.order.reverse() : [];
+
+// Calculate total for an order or show individual item?
+// Legacy showed individual items as table rows.
+---
+
+<Layout
+    title="My Orders"
+    loginName={user.name}
+    cartCount={user.cart?.length}
+    wishlistCount={user.wishlist?.length}
+>
+    <div class="container minHeight">
+        <div class="d-flex justify-content-center my-3 border-bottom">
+            <h1>My Orders</h1>
+        </div>
+
+        {
+            orders.length === 0 ? (
+                <div class="text-center mt-5">
+                    <h3>No orders found</h3>
+                    <a href="/" class="btn btn-dark mt-3">
+                        Start Shopping
+                    </a>
+                </div>
+            ) : (
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Product</th>
+                                <th scope="col">Image</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {orders.map((order: any) => (
+                                <tr>
+                                    <td>
+                                        {new Date(
+                                            order.createdAt,
+                                        ).toLocaleDateString()}
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">
+                                            {order.productName}
+                                        </div>
+                                        <small>Qty: {order.count}</small>
+                                    </td>
+                                    <td>
+                                        <img
+                                            src={`/images/image1${order._id}.jpg`}
+                                            style="width: 50px; height: 50px; object-fit: contain;"
+                                            alt={order.productName}
+                                        />
+                                    </td>
+                                    <td>
+                                        &#x20B9;
+                                        {order.priceAfterOffer ||
+                                            order.price * order.count}
+                                    </td>
+                                    <td>
+                                        <span
+                                            class={`badge ${order.orderStatus.includes("cancelled") ? "bg-danger" : "bg-success"}`}
+                                        >
+                                            {order.orderStatus}
+                                        </span>
+                                    </td>
+                                    <td>{order.paymentOption}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )
+        }
+    </div>
+</Layout>

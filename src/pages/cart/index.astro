@@ -1,0 +1,297 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import dbConnect from "../../lib/db";
+import User from "../../models/userModel";
+import Offer from "../../models/offerModel";
+import { actions } from "astro:actions";
+
+await dbConnect();
+const user = Astro.locals.user;
+
+if (!user) {
+    return Astro.redirect("/login");
+}
+
+let cartArray = [];
+let total = 0;
+
+// Re-fetch user to ensure latest cart data if coming from action
+const fetchedUser = await User.findById(user._id).lean();
+const carts = fetchedUser?.cart || [];
+
+for (let cart of carts) {
+    let offerPrice = cart.price;
+    if (cart.offer) {
+        try {
+            const out = await Offer.findOne({ offerName: cart.offer }).lean();
+            if (out) {
+                const discount = (out.discount * cart.price) / 100;
+                offerPrice = cart.price - discount;
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    // Ensure numeric types
+    cart = { ...cart, offerPrice };
+    cartArray.push(cart);
+    total += parseInt(offerPrice) * parseInt(cart.count);
+}
+
+const loginName = user.name;
+const cartCount = cartArray.length;
+const wishlistCount = user.wishlist?.length || 0;
+---
+
+<Layout
+    title="Shop. | Cart"
+    loginName={loginName}
+    cartCount={cartCount}
+    wishlistCount={wishlistCount}
+>
+    <div class="container minHeight">
+        <div class="d-flex justify-content-end border-bottom my-3">
+            <h1>Cart</h1>
+        </div>
+
+        <div class="d-flex mb-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-center">Sl.</th>
+                        <th class="text-center">Image</th>
+                        <th scope="col" class="text-center">Product Name</th>
+                        <th scope="col" class="text-center">Price</th>
+                        <th scope="col" class="text-center">Offer price</th>
+                        <th scope="col" class="text-center">No.of items</th>
+                        <th scope="col" class="text-center">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        cartArray.map((item, index) => (
+                            <tr>
+                                <th scope="row" class="text-center">
+                                    <br />
+                                    {index + 1}.
+                                </th>
+                                <td class="text-center">
+                                    <img
+                                        src={`/images/image1${item._id}.jpg`}
+                                        alt="image"
+                                        style="width: 5rem; height: 5rem; object-fit: contain;"
+                                    />
+                                </td>
+                                <td class="text-center">
+                                    <br />
+                                    {item.productName}
+                                </td>
+                                <td class="text-center">
+                                    <>
+                                        <br />
+                                        <span>&#x20B9;{item.price}</span>
+                                    </>
+                                </td>
+                                <td class="text-center">
+                                    <>
+                                        <br />
+                                        <span>&#x20B9;{item.offerPrice}</span>
+                                    </>
+                                </td>
+                                <td class="text-center" style="width:200px;">
+                                    <br />
+                                    <div class="d-flex justify-content-center">
+                                        {/* Reduce Count Form */}
+                                        {item.count > 1 ? (
+                                            <form
+                                                method="POST"
+                                                action={
+                                                    actions.updateCartQuantity
+                                                }
+                                                class="inline"
+                                            >
+                                                <input
+                                                    type="hidden"
+                                                    name="productId"
+                                                    value={item._id.toString()}
+                                                />
+                                                <input
+                                                    type="hidden"
+                                                    name="action"
+                                                    value="decrement"
+                                                />
+                                                <button
+                                                    type="submit"
+                                                    class="ms-1 me-4 text-decoration-none text-dark bg-transparent border-0"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="16"
+                                                        height="16"
+                                                        fill="currentColor"
+                                                        class="bi bi-dash-circle"
+                                                        viewBox="0 0 16 16"
+                                                    >
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                        <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                class="ms-1 me-4 text-decoration-none text-dark bg-transparent border-0"
+                                                data-bs-toggle="modal"
+                                                data-bs-target={`#removeModal${item._id}`}
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="16"
+                                                    height="16"
+                                                    fill="currentColor"
+                                                    class="bi bi-dash-circle"
+                                                    viewBox="0 0 16 16"
+                                                >
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                    <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
+                                                </svg>
+                                            </button>
+                                        )}
+
+                                        <span>{item.count}</span>
+
+                                        {/* Add Count Form */}
+                                        <form
+                                            method="POST"
+                                            action={actions.updateCartQuantity}
+                                            class="inline"
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="productId"
+                                                value={item._id.toString()}
+                                            />
+                                            <input
+                                                type="hidden"
+                                                name="action"
+                                                value="increment"
+                                            />
+                                            <button
+                                                type="submit"
+                                                class="ms-4 text-decoration-none text-dark bg-transparent border-0"
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="16"
+                                                    height="16"
+                                                    fill="currentColor"
+                                                    class="bi bi-plus-circle"
+                                                    viewBox="0 0 16 16"
+                                                >
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <>
+                                        <br />
+                                        <span>
+                                            &#x20B9;
+                                            {item.offerPrice * item.count}
+                                        </span>
+                                    </>
+                                </td>
+                            </tr>
+                        ))
+                    }
+
+                    {/* Modals for removal */}
+                    {
+                        cartArray.map((item) => (
+                            <div
+                                class="modal"
+                                tabindex="-1"
+                                id={`removeModal${item._id}`}
+                            >
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Remove!</h5>
+                                            <button
+                                                type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"
+                                            />
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>
+                                                Are you sure you want to remove
+                                                the product from the cart?
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form
+                                                method="POST"
+                                                action={actions.removeFromCart}
+                                            >
+                                                <input
+                                                    type="hidden"
+                                                    name="productId"
+                                                    value={item._id.toString()}
+                                                />
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-outline-danger"
+                                                >
+                                                    Yes
+                                                </button>
+                                            </form>
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-success"
+                                                data-bs-dismiss="modal"
+                                            >
+                                                No
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    }
+
+                    <tr>
+                        <th scope="row" class="text-center"></th>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                        <td class="fw-bold text-center">Total</td>
+                        <td class="text-center"
+                            ><span id="Total">&#x20B9;{total}</span></td
+                        >
+                    </tr>
+                    <tr>
+                        <th scope="row"></th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-center"
+                            ><a
+                                href="/buyNow/"
+                                class="shadow-lg btn btn-dark"
+                                style="width: 100px;">Buy now</a
+                            >
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</Layout>

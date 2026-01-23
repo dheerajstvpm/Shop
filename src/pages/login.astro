@@ -1,0 +1,76 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { actions } from "astro:actions";
+
+const result = Astro.getActionResult(actions.login);
+
+if (result && !result.error && result.data?.success) {
+    return Astro.redirect("/");
+}
+---
+
+<Layout title="Shop. | Login">
+    <div class="container minHeight">
+        <div class="d-flex justify-content-center my-3">
+            <h1 class="mt-5 d-flex justify-content-center">Login</h1>
+        </div>
+
+        <div class="container-fluid d-flex justify-content-center">
+            <form class="col-md-12" method="POST" action={actions.login}>
+                {
+                    result?.data?.error && (
+                        <div
+                            class="alert alert-danger text-center col-md-4 mx-auto"
+                            role="alert"
+                        >
+                            {result.data.error}
+                        </div>
+                    )
+                }
+                <div class="my-3 d-flex justify-content-center">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <input
+                            name="username"
+                            class="form-control text-center"
+                            id="exampleInputEmail"
+                            placeholder="Username"
+                            aria-describedby="emailHelp"
+                            required
+                        />
+                    </div>
+                    <div class="text-start col-md-4 ps-2 pt-2 text-danger">
+                    </div>
+                </div>
+                <div class="mb-3 d-flex justify-content-center">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control text-center"
+                            id="exampleInputPassword"
+                            placeholder="Password"
+                            required
+                        />
+                    </div>
+                    <div class="text-start col-md-4 ps-2 pt-1 text-danger">
+                    </div>
+                </div>
+                <div class="mb-3 d-flex justify-content-center">
+                    <button type="submit" class="shadow btn btn-outline-dark"
+                        >Login</button
+                    >
+                </div>
+                <div class="my-3 d-flex justify-content-center">
+                    <a href="/mobileLogin" class="link-dark"
+                        >Login using mobile number</a
+                    >
+                </div>
+                <div class="my-3 d-flex justify-content-center">
+                    <a href="/signup" class="link-dark">Create an account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</Layout>
