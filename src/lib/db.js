@@ -1,12 +1,7 @@
 import mongoose from 'mongoose';
 
-const dbURI = import.meta.env.dbURI || process.env.dbURI;
 
-if (!dbURI) {
-    // In development, sometimes env vars aren't loaded immediately, or we might be running a script.
-    // But for the app to work, we need it.
-    console.error("dbURI is not defined");
-}
+// const dbURI = import.meta.env.dbURI || process.env.dbURI; // Moved inside function
 
 let cached = global.mongoose;
 
@@ -19,20 +14,33 @@ async function dbConnect() {
         return cached.conn;
     }
 
+    // Resolve URI at runtime (inside function) to ensure env vars are loaded
+    const dbURI = import.meta.env.dbURI || process.env.dbURI;
+
+    if (!dbURI) {
+        console.error("CRITICAL ERROR: dbURI is not defined in environment variables!");
+        throw new Error("dbURI is missing. Please check Cloudflare Pages settings.");
+    }
+
     if (!cached.promise) {
         const opts = {
             bufferCommands: false,
         };
 
+        console.log("Attempting to connect to MongoDB..."); // Debug log
         cached.promise = mongoose.connect(dbURI, opts).then((mongoose) => {
             console.log('Connected to MongoDB');
             return mongoose;
+        }).catch(err => {
+            console.error("Mongoose Connection Error:", err);
+            throw err;
         });
     }
     try {
         cached.conn = await cached.promise;
     } catch (e) {
         cached.promise = null;
+        console.error("Failed to await DB connection:", e);
         throw e;
     }
 
