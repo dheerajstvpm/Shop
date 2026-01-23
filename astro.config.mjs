@@ -25,7 +25,7 @@ export default defineConfig({
                 'node:tls', 'tls',
                 'node:os', 'os',
                 'node:child_process', 'child_process',
-                'node:timers', 'timers',
+                'node:timers', 'timers', 'node:timers/promises', 'timers/promises',
                 'node:dns', 'dns',
                 'async_hooks',
                 'assert'
