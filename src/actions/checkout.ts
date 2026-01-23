@@ -118,11 +118,11 @@ export const server = {
         }
     }),
     initiateRazorpay: defineAction({
-        accept: 'form',
+        accept: 'json',
         input: z.object({
             address: z.string() // Need address to validate before starting payment
         }),
-        handler: async ({ address }, context) => {
+        handler: async (_input, context) => {
             await dbConnect();
             const uidCookie = context.cookies.get('uid');
             if (!uidCookie) return { success: false, error: "Unauthorized" };
@@ -193,6 +193,82 @@ export const server = {
             await saveOrderLogic(user, input.address, 'Razorpay');
 
             return { success: true };
+        }
+    }),
+    initiatePaypal: defineAction({
+        accept: 'json',
+        input: z.object({
+            address: z.string()
+        }),
+        handler: async (_input, context) => {
+            await dbConnect();
+            const uidCookie = context.cookies.get('uid');
+            if (!uidCookie) return { success: false, error: "Unauthorized" };
+
+            const user = await User.findById(uidCookie.value);
+            if (!user || user.cart.length === 0) return { success: false, error: "Cart empty" };
+
+            const total = await calculateTotal(user.cart);
+
+            try {
+                const paypal = await import('@paypal/checkout-server-sdk');
+                const clientId = process.env.paypalClientid || '';
+                const clientSecret = process.env.paypalTopsecret || '';
+                const environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
+                const client = new paypal.core.PayPalHttpClient(environment);
+
+                const request = new paypal.orders.OrdersCreateRequest();
+                request.prefer("return=representation");
+                request.requestBody({
+                    intent: 'CAPTURE',
+                    purchase_units: [{
+                        amount: {
+                            currency_code: 'USD',
+                            value: total.toString()
+                        }
+                    }]
+                });
+
+                const order = await client.execute(request);
+                return { success: true, orderId: order.result.id };
+            } catch (e: any) {
+                console.error(e);
+                return { success: false, error: "Paypal initiation failed" };
+            }
+        }
+    }),
+    capturePaypal: defineAction({
+        accept: 'json',
+        input: z.object({
+            orderId: z.string(),
+            address: z.string()
+        }),
+        handler: async ({ orderId, address }, context) => {
+            await dbConnect();
+            const uidCookie = context.cookies.get('uid');
+            if (!uidCookie) return { success: false, error: "Unauthorized" };
+
+            try {
+                const paypal = await import('@paypal/checkout-server-sdk');
+                const clientId = process.env.paypalClientid || '';
+                const clientSecret = process.env.paypalTopsecret || '';
+                const environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
+                const client = new paypal.core.PayPalHttpClient(environment);
+
+                const request = new paypal.orders.OrdersCaptureRequest(orderId);
+                request.requestBody({});
+
+                await client.execute(request);
+
+                // If successful capture
+                const user = await User.findById(uidCookie.value);
+                await saveOrderLogic(user, address, 'Paypal');
+
+                return { success: true };
+            } catch (e: any) {
+                console.error(e);
+                return { success: false, error: "Paypal capture failed" };
+            }
         }
     })
 };

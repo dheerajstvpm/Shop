@@ -246,7 +246,9 @@ const paypalClientId = process.env.paypalClientid;
     <script>
         import { actions } from "astro:actions";
 
-        const btn = document.getElementById("placeOrderBtn");
+        const btn = document.getElementById(
+            "placeOrderBtn",
+        ) as HTMLButtonElement | null;
         const form = document.getElementById("orderForm") as HTMLFormElement;
         const errorDiv = document.getElementById("paymentError");
         const paypalContainer = document.getElementById(
@@ -277,7 +279,10 @@ const paypalClientId = process.env.paypalClientid;
             ) {
                 (window as any).paypal
                     .Buttons({
-                        createOrder: async (data: any, actions_paypal: any) => {
+                        createOrder: async (
+                            _data: any,
+                            _actions_paypal: any,
+                        ) => {
                             const formData = new FormData(form);
                             const address = formData.get("address");
                             if (!address) {
@@ -294,7 +299,7 @@ const paypalClientId = process.env.paypalClientid;
                             }
                             return initData.orderId;
                         },
-                        onApprove: async (data: any, actions_paypal: any) => {
+                        onApprove: async (data: any, _actions_paypal: any) => {
                             const formData = new FormData(form);
                             const address = formData.get("address");
                             const verifyRes =

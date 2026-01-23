@@ -16,3 +16,7 @@ declare namespace App {
         };
     }
 }
+
+declare module 'bcryptjs';
+declare module '@paypal/checkout-server-sdk';
+
